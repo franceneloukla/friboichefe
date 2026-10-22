@@ -110,11 +110,18 @@ def build(catalog: Path, out: Path) -> dict:
         orders = con.execute("select count(*) from orders").fetchone()[0]
         cart_items = con.execute("select count(*) from cart_items").fetchone()[0]
         with_image = con.execute("select count(*) from products where image_path is not null").fetchone()[0]
+        sem_search_blob = con.execute(
+            "select count(*) from products where search_blob is null or search_blob = ''"
+        ).fetchone()[0]
     finally:
         con.close()
 
     if users or orders or cart_items:
         raise RuntimeError("seed.db contaminado: contém usuários/carrinhos/pedidos")
+    if sem_search_blob:
+        raise RuntimeError(
+            f"seed.db inválido: {sem_search_blob} produtos sem search_blob (a busca quebraria)"
+        )
 
     elapsed = time.perf_counter() - started
     size_mb = out.stat().st_size / (1024 * 1024)
@@ -123,6 +130,7 @@ def build(catalog: Path, out: Path) -> dict:
         "products": products,
         "categories": categories,
         "with_image": with_image,
+        "search_blob": products - sem_search_blob,
         "users": users,
         "orders": orders,
         "size_mb": round(size_mb, 2),
@@ -150,6 +158,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  produtos     : {info['products']}")
     print(f"  categorias   : {info['categories']}")
     print(f"  com imagem   : {info['with_image']}")
+    print(f"  search_blob  : {info['search_blob']} produtos normalizados")
     print(f"  usuários     : {info['users']}  |  pedidos: {info['orders']}")
     print(f"  tamanho      : {info['size_mb']} MB")
     print(f"  build        : {info['build_elapsed_s']} s")

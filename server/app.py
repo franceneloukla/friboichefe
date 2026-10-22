@@ -46,6 +46,7 @@ try:  # pacote (python -m server.app)
         get_db,
         init_db,
     )
+    from .textutil import fold_text
     from .models import (
         Cart,
         CartItem,
@@ -70,6 +71,7 @@ except ImportError:  # módulo solto (uvicorn app:app rodando de dentro de serve
         get_db,
         init_db,
     )
+    from textutil import fold_text  # type: ignore[no-redef]
     from models import (  # type: ignore[no-redef]
         Cart,
         CartItem,
@@ -274,37 +276,8 @@ class CheckoutIn(BaseModel):
 # ---------------------------------------------------------------------------
 # Helpers: categorias
 # ---------------------------------------------------------------------------
-# O lower() do SQLite só rebaixa ASCII, então trocamos acentos nas DUAS caixas
-# antes de aplicar lower() — assim a mesma expressão funciona em SQLite e Postgres.
-_ACCENT_GROUPS = {
-    "a": "áàâãäåÁÀÂÃÄÅ",
-    "e": "éèêëÉÈÊË",
-    "i": "íìîïÍÌÎÏ",
-    "o": "óòôõöÓÒÔÕÖ",
-    "u": "úùûüÚÙÛÜ",
-    "c": "çÇ",
-    "n": "ñÑ",
-    "y": "ýÿÝŸ",
-}
-ACCENT_MAP = {ch: base for base, chars in _ACCENT_GROUPS.items() for ch in chars}
-
-
-def fold_text(value: str | None) -> str:
-    """Minúsculas e sem acento — mesma normalização usada no SQL de busca."""
-    import unicodedata
-
-    text = (value or "").strip().lower()
-    norm = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
-    return norm
-
-
-def fold_sql(column):
-    """Expressão SQL portável (SQLite e Postgres) que ignora caixa e acento."""
-    expr = column
-    for src, dst in ACCENT_MAP.items():
-        expr = func.replace(expr, src, dst)
-    return func.lower(expr)
-
+# Normalização de texto (fold_text/ACCENT_MAP) vem de server/textutil.py —
+# compartilhada com o seed para que a coluna products.search_blob use a MESMA regra.
 
 def _slugify(value: str) -> str:
     import unicodedata
@@ -596,13 +569,8 @@ def query_products(
 
     term = fold_text(q)
     if term:
-        like = f"%{term}%"
-        cond = or_(
-            fold_sql(Product.name).like(like),
-            fold_sql(func.coalesce(Product.brand, "")).like(like),
-            fold_sql(func.coalesce(Product.sku, "")).like(like),
-            fold_sql(func.coalesce(Product.ean, "")).like(like),
-        )
+        # search_blob = name+brand+sku+ean já em minúsculas e sem acento (seed)
+        cond = Product.search_blob.like(f"%{term}%")
         stmt = stmt.where(cond)
         count_stmt = count_stmt.where(cond)
 
@@ -628,7 +596,7 @@ def query_products(
         stmt = stmt.order_by(Product.created_at.desc(), Product.id.desc())
     else:
         if term:
-            prefix = case((fold_sql(Product.name).like(f"{term}%"), 0), else_=1)
+            prefix = case((Product.search_blob.like(f"{term}%"), 0), else_=1)
             stmt = stmt.order_by(prefix, in_stock_rank, func.lower(Product.name))
         else:
             stmt = stmt.order_by(in_stock_rank, func.lower(Product.name))
@@ -1902,6 +1870,38 @@ def _render_404(request: Request) -> HTMLResponse:
         db.close()
 
 
+# Token de diagnóstico: ?vg_diag=diag-9f2c ou header x-vg-diag: diag-9f2c
+# faz o 500 virar JSON com traceback (sem isso, resposta genérica normal).
+DIAG_TOKEN: str = os.environ.get("VG_DIAG_TOKEN", "diag-9f2c")
+
+
+def _diag_requested(request: Request) -> bool:
+    received = request.query_params.get("vg_diag") or request.headers.get("x-vg-diag") or ""
+    return bool(received) and received.strip() == DIAG_TOKEN
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    """Erro não tratado: loga sempre; com token de diag devolve o traceback em JSON."""
+    import traceback
+
+    logger.exception("Erro não tratado em %s %s", request.method, request.url.path)
+    if _diag_requested(request):
+        return JSONResponse(
+            {
+                "error": f"{type(exc).__name__}: {exc}",
+                "method": request.method,
+                "path": request.url.path,
+                "query": str(request.url.query),
+                "traceback": traceback.format_exc().splitlines(),
+            },
+            status_code=500,
+        )
+    if request.url.path.startswith("/api/"):
+        return JSONResponse({"detail": "Erro interno ao processar a solicitação"}, status_code=500)
+    return PlainTextResponse("Internal Server Error", status_code=500)
+
+
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     path = request.url.path
@@ -1930,36 +1930,3 @@ if __name__ == "__main__":  # pragma: no cover - atalho para desenvolvimento
     import uvicorn
 
     uvicorn.run("app:app", host="127.0.0.1", port=8099, reload=True)
-
-
-# ---------------------------------------------------------------------------
-# DIAGNÓSTICO TEMPORÁRIO (remover depois): expõe o traceback da busca
-# ---------------------------------------------------------------------------
-@app.get("/__diag_busca_9f2c", include_in_schema=False)
-def _diag_busca(q: str = "acem", token: str = ""):
-    import os as _os
-    import platform
-    import sqlite3 as _sqlite
-    import sys as _sys
-    import traceback
-
-    if token != _os.environ.get("DIAG_TOKEN", "diag-9f2c"):
-        raise HTTPException(status_code=404, detail="Not Found")
-
-    info = {
-        "python": _sys.version.split()[0],
-        "sqlite": _sqlite.sqlite_version,
-        "platform": platform.platform()[:80],
-        "q": q,
-    }
-    try:
-        with SessionLocal() as db:
-            like = f"%{fold_text(q)}%"
-            expr = fold_sql(Product.name)
-            stmt = select(Product.id).where(expr.like(like)).limit(5)
-            rows = [r[0] for r in db.execute(stmt).all()]
-        info.update({"ok": True, "hits": rows})
-    except Exception:
-        info.update({"ok": False, "traceback": traceback.format_exc()[-3000:]})
-        return JSONResponse(info, status_code=500)
-    return JSONResponse(info)

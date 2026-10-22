@@ -28,6 +28,7 @@ from pathlib import Path
 try:  # pacote
     from .db import DATA_DIR, ROOT_DIR, SessionLocal, catalog_path, init_db
     from .models import Cart, CartItem, Category, Order, OrderItem, Product, User
+    from .textutil import make_search_blob
     from . import auth
 except ImportError:  # módulo solto (python server/seed.py)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -42,6 +43,7 @@ except ImportError:  # módulo solto (python server/seed.py)
         User,
     )
     import auth  # type: ignore[no-redef]
+    from textutil import make_search_blob  # type: ignore[no-redef]
 
 IMAGES_DIR = DATA_DIR / "images"
 
@@ -300,6 +302,7 @@ def upsert_products(db, products: list[dict]) -> tuple[int, int]:
             weight_max=to_decimal(raw.get("weight_max")),
             stock=stock,
             max_qty=max(1, to_int(raw.get("max_qty"), 1)),
+            search_blob=make_search_blob(name, raw.get("brand"), raw.get("sku"), raw.get("ean")),
             description_html=raw.get("description_html"),
             video_url=raw.get("video_url"),
             image_path=derive_image_path(product_id, raw.get("images")),

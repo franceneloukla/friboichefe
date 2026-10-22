@@ -315,6 +315,58 @@ def install_seed_db(target: Path, seed_file: Path | None = None) -> bool:
         return False
 
 
+def _ensure_product_search_blob() -> None:
+    """Garante a coluna ``products.search_blob`` e preenche registros antigos.
+
+    Bancos criados antes da busca por coluna normalizada não têm a coluna; sem isso
+    a query de busca quebraria. Idempotente e barato (1 inspector + 1 query).
+    """
+    try:
+        from sqlalchemy import inspect, text
+
+        inspector = inspect(engine)
+        if "products" not in inspector.get_table_names():
+            return
+        columns = {col["name"] for col in inspector.get_columns("products")}
+        if "search_blob" not in columns:
+            with engine.begin() as conn:
+                conn.execute(text("ALTER TABLE products ADD COLUMN search_blob TEXT"))
+            logger.info("Migração: coluna products.search_blob criada")
+        try:
+            with engine.begin() as conn:
+                conn.execute(
+                    text(
+                        "CREATE INDEX IF NOT EXISTS ix_products_search_blob "
+                        "ON products (search_blob)"
+                    )
+                )
+        except Exception:  # noqa: BLE001 - índice é otimização, não requisito
+            logger.warning("Não foi possível criar o índice ix_products_search_blob", exc_info=True)
+
+        try:
+            from .models import Product
+            from .textutil import make_search_blob
+        except ImportError:
+            from models import Product  # type: ignore[no-redef]
+            from textutil import make_search_blob  # type: ignore[no-redef]
+
+        with SessionLocal() as db:
+            pendentes = (
+                db.query(Product)
+                .filter((Product.search_blob.is_(None)) | (Product.search_blob == ""))
+                .all()
+            )
+            if pendentes:
+                for product in pendentes:
+                    product.search_blob = make_search_blob(
+                        product.name, product.brand, product.sku, product.ean
+                    )
+                db.commit()
+                logger.info("Migração: search_blob preenchido em %d produtos", len(pendentes))
+    except Exception:  # noqa: BLE001 - boot nunca deve cair por causa da migração
+        logger.exception("Falha ao garantir products.search_blob (a busca pode falhar)")
+
+
 _auto_seed_running = False
 
 
@@ -335,6 +387,7 @@ def init_db(seed_if_empty: bool = True) -> None:
         install_seed_db(DB_PATH)
 
     Base.metadata.create_all(bind=engine)
+    _ensure_product_search_blob()
 
     if not seed_if_empty or _auto_seed_running:
         return
