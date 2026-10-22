@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{%- set _slug = (slug if slug else 'institucional')|string -%}
+
+{# ---------------------------------------------------------------------------
+   Conteúdo institucional — um registro por slug do rodapé.
+   Tolerante: se o backend não mandar `titulo`, usa o título daqui; se o slug
+   não existir no dicionário, cai num texto genérico com o slug capitalizado.
+   ------------------------------------------------------------------------ #}
+{%- set _paginas = {
+  'login-ou-cadastre-se': {
+    'titulo': 'Login ou Cadastre-se',
+    'resumo': 'Acesse sua conta Friboi Online ou crie um cadastro para comprar no atacado.',
+    'paragrafos': [
+      'O acesso ao Friboi Online é feito por e-mail e senha. Quem já é cliente entra com os
+       mesmos dados usados no cadastro; quem está chegando agora leva menos de dois minutos
+       para concluir o registro e já pode montar o primeiro pedido.',
+      'O cadastro é gratuito e destinado a estabelecimentos comerciais — restaurantes,
+       churrascarias, açougues, hotéis, cozinhas industriais e revendedores. Os dados
+       informados são usados para emissão da nota fiscal, cálculo do frete e contato da
+       nossa equipe comercial.',
+      'Na primeira compra, use o cupom PCFRIBOI5 e garanta 5% de desconto. Clientes
+       cadastrados também acompanham o histórico de pedidos, repetem compras anteriores e
+       recebem as ofertas da semana antes de todo mundo.'
+    ],
+    'cta': {'label': 'Fazer login', 'url': '/login'},
+    'links': [['Criar conta', '/cadastro'], ['Dúvidas frequentes', '/institucional/faq'], ['Entregas', '/institucional/entregas']]
+  },
+  'unidades': {
+    'titulo': 'Unidades de Atendimento',
+    'resumo': 'As unidades Friboi Online atendem o food service em todo o Brasil.',
+    'paragrafos': [
+      'A Friboi Online opera com uma rede de unidades de distribuição espalhadas pelas
+       principais regiões consumidoras do país. Cada unidade tem equipe comercial própria,
+       estoque local e rota de entrega definida — o que garante produto disponível e prazo
+       curto para o seu estabelecimento.',
+      'O atendimento comercial acontece de segunda a sexta, das 8h às 18h, e aos sábados pela
+       manhã. Para o cliente cadastrado, o pedido pode ser feito a qualquer hora pelo site:
+       a equipe da unidade responsável confirma a separação e agenda a entrega no próximo
+       dia útil.',
+      'Para saber qual unidade atende a sua cidade, informe o CEP no checkout. O sistema
+       direciona automaticamente o pedido para o centro de distribuição mais próximo, com a
+       disponibilidade e o prazo de entrega daquela região.'
+    ],
+    'links': [['Entregas', '/institucional/entregas'], ['Falar com o comercial', '/institucional/faq'], ['Ver produtos', '/']]
+  },
+  'segunda-via-boleto': {
+    'titulo': 'Segunda via de Boleto',
+    'resumo': 'Emita novamente o boleto de um pedido já concluído.',
+    'paragrafos': [
+      'Todo pedido finalizado no Friboi Online gera um boleto com vencimento na data acordada
+       com a unidade de atendimento. Se o boleto original for perdido ou vencer sem pagamento,
+       é possível solicitar a segunda via sem refazer a compra.',
+      'A segunda via respeita o valor original do pedido, com os mesmos itens, pesos e preços
+       registrados no momento do fechamento. Não há cobrança de taxa para reemitir o
+       documento dentro do prazo comercial.',
+      'Para solicitar, tenha em mãos o número do pedido e o CNPJ do estabelecimento. Nossa
+       equipe confere o status no sistema e envia o novo boleto por e-mail em até um dia
+       útil. Boletos vencidos há mais de 30 dias precisam de análise do financeiro.'
+    ],
+    'links': [['Minha conta', '/conta'], ['Formas de pagamento', '/institucional/faq'], ['Política de Privacidade', '/institucional/politica-de-privacidade']]
+  },
+  'exclusao-cancelamento-conta': {
+    'titulo': 'Exclusão/Cancelamento de Conta',
+    'resumo': 'Como pedir o encerramento do seu cadastro no Friboi Online.',
+    'paragrafos': [
+      'Você pode solicitar a exclusão da sua conta a qualquer momento. O encerramento é
+       definitivo para aquele cadastro: o histórico de pedidos e os dados de acesso deixam de
+       ficar disponíveis na área do cliente.',
+      'Antes de pedir o cancelamento, confirme que não existem pedidos em aberto, boletos
+       pendentes ou entregas agendadas. Pedidos em trânsito seguem o fluxo normal até a
+       conclusão, junto com a cobrança correspondente.',
+      'Por obrigação fiscal, os registros de notas e pedidos permanecem armazenados pelo
+       prazo legal exigido, mesmo depois do cancelamento — acesso restrito ao fisco e à
+       auditoria. Os dados de navegação e de marketing são eliminados do cadastro ativo.',
+      'Para abrir a solicitação, envie o CNPJ da empresa e o e-mail cadastrado para a nossa
+       equipe. O prazo de resposta é de até cinco dias úteis.'
+    ],
+    'links': [['Política de Privacidade', '/institucional/politica-de-privacidade'], ['Política de Cookies', '/institucional/politica-de-cookies'], ['Falar com a gente', '/institucional/faq']]
+  },
+  'entregas': {
+    'titulo': 'Entregas',
+    'resumo': 'Como funciona a entrega dos pedidos do Friboi Online.',
+    'paragrafos': [
+      'As entregas são feitas com frota refrigerada, do centro de distribuição até o seu
+       estabelecimento. O produto viaja na temperatura correta — congelado ou resfriado,
+       conforme a temperatura registrada para cada item do pedido.',
+      'O prazo varia conforme a região e a disponibilidade da unidade: em capitais e regiões
+       metropolitanas, a entrega costuma acontecer em 24 a 48 horas após a confirmação do
+       pagamento. Cidades do interior seguem o calendário de rotas da unidade responsável.',
+      'O frete é gratuito para os pedidos atendidos pelas unidades participantes, dentro da
+       área de cobertura. O valor aparece como "Grátis" no resumo do pedido, antes de
+       finalizar a compra.',
+      'No recebimento, confira a quantidade de volumes, a integridade das embalagens e a
+       temperatura do produto. Divergências devem ser registradas no ato da entrega e
+       informadas à nossa equipe em até 24 horas.'
+    ],
+    'links': [['Unidades de Atendimento', '/institucional/unidades'], ['Minha conta', '/conta'], ['Falar com a gente', '/institucional/faq']]
+  },
+  'nossa-historia': {
+    'titulo': 'Nossa História',
+    'resumo': 'Da fazenda ao food service: a trajetória da Friboi.',
+    'paragrafos': [
+      'A Friboi nasceu do trabalho com pecuária no interior do Brasil e cresceu junto com o
+       churrasco brasileiro. Hoje é a marca de carnes mais lembrada do país e está presente na
+       mesa de milhões de famílias e em milhares de cozinhas profissionais.',
+      'O Friboi Online é o braço de atacado da marca: a mesma origem, o mesmo controle de
+       qualidade e a mesma rastreabilidade dos cortes que chegam ao varejo, agora em caixas
+       fechadas, com preço por quilo e entrega no estabelecimento comercial.',
+      'Cada lote é identificado e rastreado da origem até a expedição. O controle de
+       temperatura acompanha todo o trajeto, e cada corte é classificado conforme a
+       temperatura de conservação e o tipo de porção — informação que aparece na ficha de
+       cada produto no site.',
+      'Trabalhamos com as marcas Friboi, Do Chef, Maturatta, Black Friboi e 1953 para cobrir
+       do churrasco de domingo ao prato assinado de um restaurante. O objetivo é simples: dar
+       ao profissional de cozinha previsibilidade de preço, padrão de corte e produto sempre
+       disponível.'
+    ],
+    'links': [['Nossas marcas', '/busca?q=friboi'], ['Ver produtos', '/'], ['Falar com o comercial', '/institucional/faq']]
+  },
+  'politica-de-privacidade': {
+    'titulo': 'Política de Privacidade',
+    'resumo': 'Quais dados coletamos, por que coletamos e como você pode exercer seus direitos.',
+    'paragrafos': [
+      'Coletamos os dados necessários para vender e entregar produtos: nome, e-mail, telefone,
+       CNPJ/CPF, endereço de entrega e histórico de pedidos. Também registramos informações
+       técnicas de navegação, como endereço IP e páginas visitadas, para segurança e melhoria
+       do site.',
+      'Os dados são usados para emitir nota fiscal, calcular frete, processar pagamentos,
+       atender pedidos e comunicações sobre a compra. Com o seu consentimento, também podem
+       ser usados para enviar ofertas e novidades — consentimento que pode ser revogado a
+       qualquer momento.',
+      'Não vendemos dados pessoais. O compartilhamento acontece apenas com quem é necessário
+       para a compra acontecer: transportadora, meio de pagamento, emissão fiscal e
+       prestadores de tecnologia que operam sob contrato de confidencialidade.',
+      'Você pode solicitar acesso, correção, portabilidade ou exclusão dos seus dados pelo
+       canal de atendimento. Respondemos em até 15 dias. As informações fiscais são mantidas
+       pelo prazo legal, mesmo após pedido de exclusão.'
+    ],
+    'links': [['Política de Cookies', '/institucional/politica-de-cookies'], ['Exclusão/Cancelamento de Conta', '/institucional/exclusao-cancelamento-conta'], ['Falar com a gente', '/institucional/faq']]
+  },
+  'politica-de-cookies': {
+    'titulo': 'Política de Cookies',
+    'resumo': 'O que são cookies, quais usamos e como gerenciá-los.',
+    'paragrafos': [
+      'Cookies são pequenos arquivos gravados no seu navegador. Usamos cookies essenciais para
+       manter o carrinho, guardar a sessão de login e lembrar preferências de navegação — sem
+       eles, a loja não funciona corretamente.',
+      'Também usamos cookies de desempenho e de marketing, que registram páginas visitadas e
+       ajudam a medir a eficácia das campanhas. Esses cookies não são obrigatórios e podem ser
+       recusados sem prejuízo da compra.',
+      'Você pode bloquear ou apagar cookies nas configurações do navegador. Ao bloqueá-los,
+       partes da loja podem deixar de funcionar — em especial o carrinho e a área do cliente.',
+      'Ao continuar navegando, você concorda com o uso de cookies conforme descrito nesta
+       política e na Política de Privacidade.'
+    ],
+    'links': [['Política de Privacidade', '/institucional/politica-de-privacidade'], ['Mapa do Site', '/institucional/mapa-do-site'], ['Voltar para a home', '/']]
+  },
+  'mapa-do-site': {
+    'titulo': 'Mapa do Site',
+    'resumo': 'Todas as áreas do Friboi Online em um só lugar.',
+    'paragrafos': [
+      'Use este mapa para chegar rápido a qualquer área da loja. As categorias levam à
+       listagem completa de produtos de cada tipo de proteína ou vegetal; a busca serve para
+       quando você já sabe o nome, o código ou a marca do produto.',
+      'Na área do cliente ficam os dados cadastrais e o histórico de pedidos. As páginas
+       institucionais reúnem informações sobre entrega, pagamento, privacidade e atendimento.'
+    ],
+    'links': [['Bovinos', '/categoria/bovinos'], ['Aves', '/categoria/aves'], ['Suínos', '/categoria/suinos'], ['Pescados', '/categoria/pescados'], ['Batatas e Vegetais', '/categoria/batatas-e-vegetais'], ['Promoções', '/promocoes']]
+  },
+  'faq': {
+    'titulo': 'Perguntas Frequentes (FAQ)',
+    'resumo': 'As dúvidas mais comuns de quem compra no atacado.',
+    'paragrafos': [
+      'Quem pode comprar? O Friboi Online atende estabelecimentos comerciais com CNPJ ativo:
+       restaurantes, churrascarias, açougues, hotéis, padarias, cozinhas industriais e
+       revendedores de alimentos.',
+      'Qual é o pedido mínimo? O pedido mínimo é o de uma caixa fechada por produto. Cada
+       ficha informa a faixa de peso e a quantidade de peças da caixa, para você programar o
+       consumo do seu estabelecimento.',
+      'Como é cobrado o preço? O preço é por quilo. Como o peso da caixa varia dentro da faixa
+       informada, o valor final é calculado sobre o peso real do produto separado na
+       expedição — a diferença aparece na nota fiscal.',
+      'Quais são as formas de pagamento? Aceitamos Pix, boleto bancário e cartão de crédito,
+       com opção de parcelamento para clientes aptos. O pagamento é sempre no ambiente da
+       loja ou pelo documento emitido por ela.',
+      'Como funciona a entrega? As entregas são feitas por frota refrigerada, com frete
+       gratuito na área de cobertura das unidades participantes. O prazo aparece no checkout,
+       conforme o CEP do estabelecimento.',
+      'Preciso de ajuda com um pedido? Fale com a equipe comercial da unidade responsável
+       informando o número do pedido e o CNPJ da empresa. O atendimento acontece em dias
+       úteis, das 8h às 18h.'
+    ],
+    'links': [['Entregas', '/institucional/entregas'], ['Unidades de Atendimento', '/institucional/unidades'], ['Segunda via de Boleto', '/institucional/segunda-via-boleto']]
+  },
+  'marcas': {
+    'titulo': 'Nossas Marcas',
+    'resumo': 'Friboi, Maturatta, Do Chef, Black Friboi e 1953: cinco linhas para o food service.',
+    'paragrafos': [
+      'O portfólio do Friboi Online reúne cinco marcas que cobrem do churrasco de domingo ao
+       prato assinado de um restaurante. Cada linha tem origem, classificação e padrão de corte
+       próprios, o que permite montar um cardápio inteiro com um fornecedor só.',
+      'Friboi é a linha completa de cortes bovinos; Maturatta traz cortes de sabor marcante para
+       churrascarias e açougues; Do Chef é a linha de porcionados e produtos prontos para
+       preparo, feita para reduzir o tempo de mise en place; Black Friboi é a seleção premium; e
+       1953 homenageia o churrasco clássico brasileiro.',
+      'Todas as linhas chegam em caixa fechada com preço por quilo, faixa de peso e quantidade de
+       peças informadas na ficha do produto — assim você programa o consumo do estabelecimento
+       sem surpresa no recebimento.'
+    ],
+    'cta': {'label': 'Ver todas as marcas no catálogo', 'url': '/busca?q=friboi'},
+    'links': [['Friboi', '/institucional/marca-friboi'], ['Maturatta', '/institucional/marca-maturatta'], ['Do Chef', '/institucional/marca-do-chef'], ['Black Friboi', '/institucional/marca-black-friboi'], ['1953', '/institucional/marca-1953']]
+  },
+  'marca-friboi': {
+    'titulo': 'Friboi',
+    'resumo': 'A marca mais lembrada do churrasco brasileiro, agora no atacado.',
+    'paragrafos': [
+      'Friboi é a marca principal do portfólio: cortes bovinos congelados e resfriados,
+       embalados com identificação de lote e rastreabilidade da origem ao ponto de venda.',
+      'É a linha mais completa para o food service — do acém e do cupim ao contra filé, da
+       picanha ao coxão mole — em caixas fechadas com preço por quilo e padrão de corte
+       consistente.'
+    ],
+    'cta': {'label': 'Ver produtos Friboi', 'url': '/busca?q=friboi'},
+    'links': [['Do Chef', '/institucional/marca-do-chef'], ['Maturatta', '/institucional/marca-maturatta'], ['Black Friboi', '/institucional/marca-black-friboi'], ['1953', '/institucional/marca-1953']]
+  },
+  'marca-maturatta': {
+    'titulo': 'Maturatta',
+    'resumo': 'Cortes de sabor marcante para churrascarias e açougues.',
+    'paragrafos': [
+      'Maturatta reúne cortes selecionados de bovinos, com foco em sabor e maciez para
+       churrascarias e açougues que querem oferecer uma experiência premium ao cliente.',
+      'A linha é pensada para operações que trabalham com cortes nobres e precisam de
+       regularidade de suprimento ao longo do ano.'
+    ],
+    'cta': {'label': 'Ver produtos Maturatta', 'url': '/busca?q=maturatta'},
+    'links': [['Friboi', '/institucional/marca-friboi'], ['Black Friboi', '/institucional/marca-black-friboi'], ['1953', '/institucional/marca-1953']]
+  },
+  'marca-do-chef': {
+    'titulo': 'Do Chef',
+    'resumo': 'Praticidade e rendimento para a cozinha profissional.',
+    'paragrafos': [
+      'Do Chef é a linha de cortes porcionados e produtos prontos para preparo: batatas,
+       cortes fracionados e peixes elaborados para reduzir o tempo de mise en place.',
+      'Feita para a rotina de cozinha profissional, prioriza rendimento, padronização de
+       porção e estabilidade de custo por prato.'
+    ],
+    'cta': {'label': 'Ver produtos Do Chef', 'url': '/busca?q=chef'},
+    'links': [['Friboi', '/institucional/marca-friboi'], ['Maturatta', '/institucional/marca-maturatta'], ['Batatas e Vegetais', '/categoria/batatas-e-vegetais']]
+  },
+  'marca-black-friboi': {
+    'titulo': 'Black Friboi',
+    'resumo': 'A seleção premium Friboi.',
+    'paragrafos': [
+      'Black Friboi é a linha premium do portfólio: cortes especiais, com acabamento e
+       apresentação voltados para operações que trabalham com carne como protagonista do
+       cardápio.',
+      'Indicada para restaurantes, steak houses e boutiques de carne que precisam de constância
+       em cortes de alto valor agregado.'
+    ],
+    'cta': {'label': 'Ver produtos Black Friboi', 'url': '/busca?q=black'},
+    'links': [['Friboi', '/institucional/marca-friboi'], ['Maturatta', '/institucional/marca-maturatta'], ['1953', '/institucional/marca-1953']]
+  },
+  'marca-1953': {
+    'titulo': '1953',
+    'resumo': 'O clássico da churrascaria brasileira.',
+    'paragrafos': [
+      'A linha 1953 homenageia o ano de fundação e traz cortes clássicos de churrasco, com
+       sabor e suculência que remetem ao preparo tradicional.',
+      'É a escolha de churrascarias e restaurantes que servem o churrasco de sempre, com
+       fornecedor único e padrão repetível.'
+    ],
+    'cta': {'label': 'Ver produtos 1953', 'url': '/busca?q=1953'},
+    'links': [['Friboi', '/institucional/marca-friboi'], ['Black Friboi', '/institucional/marca-black-friboi'], ['Nossa História', '/institucional/nossa-historia']]
+  }
+} -%}
+
+{%- set _pag = _paginas.get(_slug) if _paginas.get(_slug) else {} -%}
+{#- título: contexto (titulo/titulo_pagina) > dicionário > slug capitalizado -#}
+{%- set _ctx_titulo = (titulo if titulo else (titulo_pagina if titulo_pagina else none)) -%}
+{%- set _titulo = _ctx_titulo if _ctx_titulo else (_pag.get('titulo') if _pag.get('titulo') else _slug|replace('-', ' ')|capitalize) -%}
+{%- set _resumo = _pag.get('resumo') if _pag.get('resumo') else 'Informações institucionais do Friboi Online.' -%}
+{#- parágrafos: dicionário (curado) > paragrafos do backend > texto genérico -#}
+{%- set _paragrafos = _pag.get('paragrafos') if _pag.get('paragrafos') else (paragrafos if paragrafos else [
+  'Esta é uma área institucional do Friboi Online. Reunimos aqui as informações de atendimento,
+   políticas e conteúdo sobre a marca para clientes do atacado.',
+  'Se você não encontrou o que procurava, fale com a nossa equipe comercial pelo canal de
+   atendimento da sua unidade: informamos prazos, condições e disponibilidade de produto.',
+  'Para comprar, navegue pelas categorias da loja ou use a busca no topo da página — o preço
+   de cada produto aparece na ficha, por quilo, com a faixa de peso da caixa.'
+]) -%}
+{#- conteúdo HTML opcional do backend, usado só quando não há parágrafos curados -#}
+{%- set _conteudo_html = conteudo if conteudo else none -%}
+
+{% block title %}{{ page_title if page_title else (_titulo ~ ' | ' ~ (store_name if store_name else 'Friboi Online')) }}{% endblock %}
+{% block meta_description %}{{ _resumo }}{% endblock %}
+
+{% block content %}
+<div class="inst-page">
+  <nav class="breadcrumb" aria-label="Você está aqui">
+    <a href="/">Início</a>
+    <span class="sep">›</span>
+    <span class="current">{{ _titulo }}</span>
+  </nav>
+
+  <article class="inst-body">
+    <h1 class="inst-title">{{ _titulo }}</h1>
+    <p class="inst-lead">{{ _resumo }}</p>
+
+    {% if _pag.get('paragrafos') %}
+      {% for par in _paragrafos %}
+        <p class="inst-para">{{ par|trim|replace('\n', ' ') }}</p>
+      {% endfor %}
+    {% elif _conteudo_html %}
+      <div class="rich-text inst-para">{{ _conteudo_html|safe }}</div>
+    {% else %}
+      {% for par in _paragrafos %}
+        <p class="inst-para">{{ par|trim|replace('\n', ' ') }}</p>
+      {% endfor %}
+    {% endif %}
+
+    {% if _pag.get('cta') %}
+      <p class="inst-cta-line">
+        <a class="btn-primary" href="{{ _pag.get('cta').url }}">{{ _pag.get('cta').label }}</a>
+      </p>
+    {% endif %}
+  </article>
+
+  <aside class="inst-related" aria-label="Veja também">
+    <h2>Veja também</h2>
+    <ul>
+      {% for label, url in (_pag.get('links') if _pag.get('links') else [['Falar com a gente', '/institucional/faq'], ['Entregas', '/institucional/entregas'], ['Voltar para a home', '/']]) %}
+        <li><a href="{{ url }}">{{ label }}</a></li>
+      {% endfor %}
+    </ul>
+  </aside>
+</div>
+{% endblock %}

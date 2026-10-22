@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import logging
 import math
+import os
 import re
 import uuid
 from contextlib import asynccontextmanager
@@ -1187,6 +1188,358 @@ def page_404(request: Request, db: Annotated[Session, Depends(get_db)]):
         status_code=404,
         page_title=f"Página não encontrada | {STORE_NAME}",
     )
+
+
+# ===========================================================================
+# PÁGINAS INSTITUCIONAIS (/institucional/{slug}) — links do rodapé
+# ===========================================================================
+PAGINAS_INSTITUCIONAIS: dict[str, dict] = {
+    "login-cadastro": {
+        "titulo": "Login ou Cadastre-se",
+        "html": (
+            "<p>Para comprar no Friboi Online você precisa ter uma conta. O cadastro é gratuito, "
+            "leva menos de dois minutos e libera a tabela de preços, o histórico de pedidos e as "
+            "condições da sua região.</p>"
+            "<p>Com a conta ativa você acompanha pedidos, salva seus endereços de entrega e recebe "
+            "as ofertas da sua unidade de atendimento.</p>"
+            '<p><a href="/cadastro">Criar minha conta</a> &middot; <a href="/login">Já tenho conta</a></p>'
+        ),
+        "paragrafos": [
+            "Para comprar no Friboi Online você precisa ter uma conta. O cadastro é gratuito e leva menos de dois minutos.",
+            "Com a conta ativa você acompanha pedidos, salva endereços de entrega e recebe as ofertas da sua unidade.",
+        ],
+    },
+    "unidades": {
+        "titulo": "Unidades de Atendimento",
+        "html": (
+            "<p>O Friboi Online atende estabelecimentos comerciais em todo o Brasil por meio de "
+            "unidades regionais de atendimento. Cada unidade tem o seu próprio mix de produtos, "
+            "tabela de preços e calendário de entregas.</p>"
+            "<p>Ao se cadastrar, sua conta é vinculada à unidade que atende o CEP do seu negócio. "
+            "Se precisar trocar de unidade, fale com o nosso time pelo telefone ou WhatsApp do "
+            "atendimento da sua região.</p>"
+            "<p>Consulte as unidades e os horários na página de <a href=\"/unidades\">atendimento</a> "
+            "ou entre em contato pela <a href=\"/conta\">sua conta</a>.</p>"
+        ),
+        "paragrafos": [
+            "O Friboi Online atende estabelecimentos comerciais em todo o Brasil por meio de unidades regionais.",
+            "Cada unidade tem o seu próprio mix de produtos, tabela de preços e calendário de entregas.",
+        ],
+    },
+    "boleto": {
+        "titulo": "Seguindo via Boleto",
+        "html": (
+            "<p>Pedidos pagos por boleto são confirmados após a compensação bancária, que pode levar "
+            "até dois dias úteis. O boleto é enviado para o e-mail cadastrado no momento da compra "
+            "e também fica disponível em <a href=\"/conta\">Minha conta &rsaquo; Pedidos</a>.</p>"
+            "<p>O prazo de entrega começa a contar somente depois da confirmação do pagamento. "
+            "Boletos vencidos não são compensados: se precisar de uma segunda via, gere novamente "
+            "pelo detalhe do pedido.</p>"
+            "<p>Dúvidas sobre o seu boleto? Fale com o atendimento da sua unidade de atendimento.</p>"
+        ),
+        "paragrafos": [
+            "Pedidos pagos por boleto são confirmados após a compensação bancária, que pode levar até dois dias úteis.",
+            "O prazo de entrega começa a contar somente depois da confirmação do pagamento.",
+        ],
+    },
+    "exclusao-conta": {
+        "titulo": "Exclusão e Cancelamento de Conta",
+        "html": (
+            "<p>Você pode solicitar a exclusão ou o cancelamento da sua conta a qualquer momento. "
+            "Pedidos em andamento precisam ser concluídos ou cancelados antes da exclusão, para que "
+            "não fiquem pendências de entrega ou cobrança.</p>"
+            "<p>Para solicitar, envie um e-mail para o atendimento informando o nome do "
+            "estabelecimento e o e-mail cadastrado, ou use a opção de atendimento em "
+            "<a href=\"/conta\">Minha conta</a>. A solicitação é processada em até cinco dias úteis.</p>"
+            "<p>Dados fiscais de pedidos já concluídos são mantidos pelo prazo legal exigido.</p>"
+        ),
+        "paragrafos": [
+            "Você pode solicitar a exclusão ou o cancelamento da sua conta a qualquer momento.",
+            "Pedidos em andamento precisam ser concluídos antes da exclusão para evitar pendências.",
+        ],
+    },
+    "entregas": {
+        "titulo": "Entregas",
+        "html": (
+            "<p>Cada unidade de atendimento define a sua região de entrega, os dias de "
+            "carregamento e o valor do frete. O prazo é informado no <a href=\"/checkout\">checkout</a> "
+            "antes de você concluir o pedido.</p>"
+            "<p>As carnes são transportadas em temperatura controlada. No recebimento, confira a "
+            "embalagem e a nota fiscal com o motorista; qualquer divergência deve ser registrada na "
+            "hora da entrega.</p>"
+            "<p>Para reagendar uma entrega, fale com o atendimento da sua unidade com pelo menos um "
+            "dia útil de antecedência.</p>"
+        ),
+        "paragrafos": [
+            "Cada unidade define a região de entrega, os dias de carregamento e o valor do frete.",
+            "O prazo de entrega é informado no checkout antes de concluir o pedido.",
+        ],
+    },
+    "marcas": {
+        "titulo": "Nossas Marcas",
+        "html": (
+            "<p>O Friboi Online reúne as principais marcas de carne e vegetais para o seu negócio: "
+            "Friboi, Friboi Chef, Maturatta, Black Friboi, 1953 e Seara, além da linha de Pescados.</p>"
+            "<p>Cada marca tem o seu posicionamento: do corte tradicional do dia a dia às peças "
+            "premium para churrasco e à praticidade dos congelados.</p>"
+            '<ul class="brand-list">'
+            '<li><a href="/busca?q=friboi">Friboi</a></li>'
+            '<li><a href="/busca?q=chef">Do Chef</a></li>'
+            '<li><a href="/busca?q=maturatta">Maturatta</a></li>'
+            '<li><a href="/busca?q=black">Black Friboi</a></li>'
+            '<li><a href="/busca?q=1953">1953</a></li>'
+            '</ul>'
+        ),
+        "paragrafos": [
+            "O Friboi Online reúne as principais marcas de carne para o seu negócio.",
+            "Do corte tradicional às peças premium, cada marca tem o seu posicionamento.",
+        ],
+    },
+    "nossa-historia": {
+        "titulo": "Nossa História",
+        "html": (
+            "<p>O Friboi Online nasceu para simplificar a compra de carne no atacado: a mesma "
+            "qualidade das grandes marcas da JBS, com a praticidade de comprar de onde você estiver.</p>"
+            "<p>A plataforma reúne o portfólio das unidades regionais em um só lugar, com tabela de "
+            "preços para o seu negócio, pedido em poucos cliques e logística refrigerada até a "
+            "porta do seu estabelecimento.</p>"
+            "<p>Somos a loja de quem vive de carne: açougues, restaurantes, hamburguerias, "
+            "rotisseries, cozinhas industriais e distribuidores.</p>"
+        ),
+        "paragrafos": [
+            "O Friboi Online simplifica a compra de carne no atacado, com a qualidade das marcas da JBS.",
+            "Reunimos o portfólio das unidades regionais com preço para o seu negócio e entrega refrigerada.",
+        ],
+    },
+    "privacidade": {
+        "titulo": "Política de Privacidade",
+        "html": (
+            "<p>Coletamos apenas os dados necessários para atender o seu negócio: identificação, "
+            "contato, endereço de entrega e histórico de pedidos. Esses dados são usados para "
+            "processar compras, emitir nota fiscal e melhorar a sua experiência no site.</p>"
+            "<p>Não vendemos seus dados. Eles são compartilhados somente com quem é necessário para "
+            "a entrega e o pagamento, sempre de acordo com a Lei Geral de Proteção de Dados "
+            "(LGPD &mdash; Lei 13.709/2018).</p>"
+            "<p>Você pode solicitar acesso, correção ou exclusão dos seus dados pelo atendimento. "
+            "Cookies e tecnologias semelhantes são tratados na <a href=\"/institucional/politica-de-cookies\">Política de Cookies</a>.</p>"
+        ),
+        "paragrafos": [
+            "Coletamos apenas os dados necessários para atender o seu negócio: identificação, contato, endereço e histórico de pedidos.",
+            "Não vendemos seus dados. O compartilhamento ocorre só com quem é necessário para entrega e pagamento, conforme a LGPD.",
+        ],
+    },
+    "cookies": {
+        "titulo": "Política de Cookies",
+        "html": (
+            "<p>Usamos cookies para manter a sua sessão, guardar o carrinho entre uma visita e outra "
+            "e entender quais páginas são mais úteis. Os cookies essenciais são necessários para o "
+            "site funcionar e não podem ser desativados.</p>"
+            "<p>Não usamos cookies para vender informação a terceiros. Você pode bloquear ou apagar "
+            "cookies nas configurações do navegador &mdash; ao fazer isso, o carrinho e o login "
+            "podem deixar de funcionar corretamente.</p>"
+            "<p>Dúvidas sobre cookies e dados pessoais estão na <a href=\"/institucional/politica-de-privacidade\">Política de Privacidade</a>.</p>"
+        ),
+        "paragrafos": [
+            "Usamos cookies para manter a sessão, guardar o carrinho e entender quais páginas são mais úteis.",
+            "Os cookies essenciais não podem ser desativados; sem eles o carrinho e o login não funcionam.",
+        ],
+    },
+    "mapa-do-site": {"titulo": "Mapa do Site", "html": "", "paragrafos": []},
+    "faq": {
+        "titulo": "FAQ",
+        "html": (
+            "<h3>Preciso ter CNPJ para comprar?</h3>"
+            "<p>Sim. O Friboi Online atende exclusivamente estabelecimentos comerciais, com pedido "
+            "mínimo e condições definidos pela unidade de atendimento da sua região.</p>"
+            "<h3>Como vejo o preço dos produtos?</h3>"
+            "<p>A tabela de preços aparece depois do login, de acordo com a unidade que atende o seu "
+            "CEP. Antes disso o site mostra o valor de referência.</p>"
+            "<h3>Quais são as formas de pagamento?</h3>"
+            "<p>Pix, boleto bancário e cartão de crédito, conforme as condições da sua unidade.</p>"
+            "<h3>Como acompanho meu pedido?</h3>"
+            "<p>Em <a href=\"/conta\">Minha conta &rsaquo; Pedidos</a> você vê o status, os itens e os "
+            "dados de entrega de cada pedido.</p>"
+            "<h3>Posso trocar ou devolver um produto?</h3>"
+            "<p>Sim. Registre a divergência no momento da entrega e fale com o atendimento em até "
+            "72 horas para avaliarmos a troca ou o estorno.</p>"
+        ),
+        "paragrafos": [
+            "O Friboi Online atende exclusivamente estabelecimentos comerciais (CNPJ).",
+            "A tabela de preços aparece depois do login, conforme a unidade que atende o seu CEP.",
+            "Formas de pagamento: Pix, boleto e cartão de crédito.",
+        ],
+    },
+    # Marca por marca (links do rodapé: Nossas Marcas)
+    "marca-friboi": {
+        "titulo": "Friboi",
+        "html": (
+            "<p>A marca Friboi é sinônimo de carne bovina de qualidade para o dia a dia do seu "
+            "negócio: cortes dianteiros, traseiros, costelas e miúdos, com padrão de corte constante.</p>"
+            '<p><a href="/busca?q=friboi">Ver produtos Friboi</a></p>'
+        ),
+        "paragrafos": ["Carne bovina de qualidade para o dia a dia do seu negócio."],
+    },
+    "marca-maturatta": {
+        "titulo": "Maturatta",
+        "html": (
+            "<p>Maturatta é a linha de carnes maturadas, com mais maciez e sabor para quem quer "
+            "elevar o nível do cardápio.</p>"
+            '<p><a href="/busca?q=maturatta">Ver produtos Maturatta</a></p>'
+        ),
+        "paragrafos": ["Carnes maturadas, com mais maciez e sabor."],
+    },
+    "marca-do-chef": {
+        "titulo": "Do Chef",
+        "html": (
+            "<p>Do Chef é a linha pensada para a rotina de cozinha profissional: porções práticas, "
+            "congelados de qualidade e cortes prontos para o preparo.</p>"
+            '<p><a href="/busca?q=chef">Ver produtos Do Chef</a></p>'
+        ),
+        "paragrafos": ["Porções práticas e congelados de qualidade para a cozinha profissional."],
+    },
+    "marca-black-friboi": {
+        "titulo": "Black Friboi",
+        "html": (
+            "<p>Black Friboi é a seleção premium: cortes nobres, maturação controlada e "
+            "apresentação especial para os pratos mais exigentes.</p>"
+            '<p><a href="/busca?q=black">Ver produtos Black Friboi</a></p>'
+        ),
+        "paragrafos": ["Seleção premium de cortes nobres com maturação controlada."],
+    },
+    "marca-1953": {
+        "titulo": "1953",
+        "html": (
+            "<p>A linha 1953 celebra a tradição do churrasco brasileiro, com cortes selecionados "
+            "e porcionados para o seu negócio.</p>"
+            '<p><a href="/busca?q=1953">Ver produtos 1953</a></p>'
+        ),
+        "paragrafos": ["Cortes selecionados e porcionados para o churrasco."],
+    },
+}
+
+# Slug canônico -> slug que o template institucional.html (T4) conhece, para que
+# páginas acessadas pelo slug canônico também renderizem o texto completo.
+INSTITUCIONAL_TEMPLATE_SLUG: dict[str, str] = {
+    "login-cadastro": "login-ou-cadastre-se",
+    "boleto": "segunda-via-boleto",
+    "exclusao-conta": "exclusao-cancelamento-conta",
+    "privacidade": "politica-de-privacidade",
+    "cookies": "politica-de-cookies",
+}
+
+# Slugs alternativos (links antigos / variações) -> slug canônico
+INSTITUCIONAL_ALIASES: dict[str, str] = {
+    "login-ou-cadastre-se": "login-cadastro",
+    "segunda-via-boleto": "boleto",
+    "exclusao-cancelamento-conta": "exclusao-conta",
+    "politica-de-privacidade": "privacidade",
+    "politica-de-cookies": "cookies",
+    "quemsomos": "nossa-historia",
+    "quem-somos": "nossa-historia",
+}
+
+
+def _mapa_do_site(db: Session) -> tuple[str, list[str]]:
+    """Conteúdo dinâmico do Mapa do Site (categorias com produtos + páginas)."""
+    from xml.sax.saxutils import escape as _esc
+
+    cats = categories_payload(db)
+    roots = [c for c in cats if not c["parent_id"] and c["count"] > 0]
+    links = "".join(
+        f'<li><a href="/categoria/{_esc(c["slug"])}">{_esc(c["name"])}</a> '
+        f'({c["count"]} produtos)</li>'
+        for c in roots
+    )
+    html = (
+        "<p>Páginas principais:</p><ul>"
+        '<li><a href="/">Home</a></li>'
+        '<li><a href="/promocoes">Promoções</a></li>'
+        '<li><a href="/busca">Busca</a></li>'
+        '<li><a href="/carrinho">Carrinho</a></li>'
+        '<li><a href="/conta">Minha conta</a></li>'
+        "</ul>"
+        f"<p>Categorias:</p><ul>{links}</ul>"
+    )
+    paragrafos = ["Páginas principais da loja e todas as categorias com produtos disponíveis."]
+    return html, paragrafos
+
+
+@app.get("/institucional/{slug}", response_class=HTMLResponse)
+def page_institucional(slug: str, request: Request, db: Annotated[Session, Depends(get_db)]):
+    """Páginas institucionais dos links do rodapé. Slug desconhecido -> 404."""
+    canonical = INSTITUCIONAL_ALIASES.get(slug, slug)
+    pagina = PAGINAS_INSTITUCIONAIS.get(canonical)
+    if pagina is None:
+        raise HTTPException(status_code=404, detail="Página não encontrada")
+    titulo = pagina["titulo"]
+    conteudo = pagina["html"]
+    paragrafos = list(pagina.get("paragrafos") or [])
+    if canonical == "mapa-do-site":
+        conteudo, paragrafos = _mapa_do_site(db)
+    # `slug` é o que o template usa para escolher o texto; para os slugs canônicos
+    # mandamos o equivalente que o template conhece (senão ele cairia no texto genérico).
+    template_slug = INSTITUCIONAL_TEMPLATE_SLUG.get(canonical, canonical)
+    return render(
+        request,
+        "institucional.html",
+        db=db,
+        user=user_or_none(request, db),
+        page_title=f"{titulo} | {STORE_NAME}",
+        slug=template_slug,
+        slug_solicitado=slug,
+        slug_canonico=canonical,
+        titulo=titulo,
+        titulo_pagina=titulo,
+        conteudo=conteudo,
+        paragrafos=paragrafos,
+    )
+
+
+# ===========================================================================
+# SEO de cortesia: sitemap.xml + robots.txt
+# ===========================================================================
+def site_base_url(request: Request) -> str:
+    """URL base absoluta do site (respeita SITE_URL em produção/CDN)."""
+    base = (os.environ.get("SITE_URL") or "").strip() or str(request.base_url)
+    return base.rstrip("/") + "/"
+
+
+@app.get("/sitemap.xml", response_class=Response, include_in_schema=False)
+def sitemap_xml(request: Request, db: Annotated[Session, Depends(get_db)]):
+    from xml.sax.saxutils import escape as _esc
+
+    base = site_base_url(request)
+    urls = [base]
+    for cat in db.scalars(select(Category).order_by(Category.sort, Category.name)):
+        urls.append(f"{base}categoria/{cat.slug}")
+    for product in db.scalars(
+        select(Product).where(Product.active.is_(True)).order_by(Product.id)
+    ):
+        urls.append(f"{base}produto/{product.slug}")
+
+    body = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "".join(f"  <url><loc>{_esc(url)}</loc></url>\n" for url in urls)
+        + "</urlset>\n"
+    )
+    return Response(content=body, media_type="application/xml")
+
+
+@app.get("/robots.txt", response_class=PlainTextResponse, include_in_schema=False)
+def robots_txt(request: Request):
+    base = site_base_url(request)
+    body = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /api/\n"
+        "Disallow: /carrinho\n"
+        "Disallow: /checkout\n"
+        "Disallow: /conta\n"
+        "\n"
+        f"Sitemap: {base}sitemap.xml\n"
+    )
+    return PlainTextResponse(content=body)
 
 
 # ===========================================================================

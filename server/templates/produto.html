@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import product_card, breadcrumb as bc, brl with context %}
+{% from "_macros.html" import product_card, breadcrumb as bc, brl, preco, preco_br with context %}
 
 {% block title %}{{ page_title if page_title else (product.name if product else 'Produto') }}{% endblock %}
 
@@ -18,39 +18,26 @@
 {%- set max_qty = p.max_qty|int(1) if p.max_qty else 1 -%}
 {%- set _imgs = images if images else (p.images if p.images else ([p.image_url] if p.image_url else [])) -%}
 {%- set _crumbs = breadcrumb if breadcrumb else [
-  {'label': 'Home', 'url': '/'},
+  {'label': 'Início', 'url': '/'},
   {'label': p.name, 'url': '/produto/' ~ p.slug}
 ] -%}
+{%- set _caixa = '' -%}
+{%- if p.weight_min and p.weight_max and (p.weight_min|float) != (p.weight_max|float) -%}
+  {%- set _caixa = 'Caixa: ' ~ ((p.weight_min|float)|round(0,'floor')|int) ~ ' kg a ' ~ ((p.weight_max|float)|round(0,'floor')|int) ~ ' kg' -%}
+{%- elif p.weight_max -%}
+  {%- set _caixa = 'Caixa: ' ~ ((p.weight_max|float)|round(0,'floor')|int) ~ ' kg' -%}
+{%- endif -%}
+{%- if _caixa and max_qty -%}{%- set _caixa = _caixa ~ ', ' ~ max_qty ~ ' peças por caixa' -%}{%- endif -%}
 
 <div class="pdp">
   {{ bc(_crumbs) }}
 
   <div class="pdp-top">
-    {# ------------------------------ GALERIA ------------------------------ #}
-    <div class="pdp-gallery">
-      <div class="main-image">
-        {% if _imgs %}
-          <img src="{{ _imgs[0] }}" alt="{{ p.name }}" id="pdp-main-image" width="380" height="380">
-        {% else %}
-          <span style="font-size:12px;color:#6c757d">Sem imagem</span>
-        {% endif %}
-      </div>
-      {% if _imgs|length > 1 %}
-        <div class="thumbs">
-          {% for img in _imgs %}
-            <button type="button" class="{% if loop.first %}is-active{% endif %}" data-thumb="{{ img }}" aria-label="Imagem {{ loop.index }}">
-              <img src="{{ img }}" alt="{{ p.name }} — imagem {{ loop.index }}">
-            </button>
-          {% endfor %}
-        </div>
-      {% endif %}
-    </div>
-
-    {# ------------------------------ INFO ------------------------------ #}
+    {# --------------------------- coluna de texto --------------------------- #}
     <div class="pdp-info">
       {% if marca %}<p class="brand-line">{{ marca }}</p>{% endif %}
       <h1 class="pdp-title">{{ p.name }}</h1>
-      <p class="pdp-code">CÓD. <strong>{{ p.sku if p.sku else p.id }}</strong>{% if p.ean %} &nbsp;·&nbsp; EAN {{ p.ean }}{% endif %}</p>
+      <p class="pdp-code">Cód.: <strong>{{ p.sku if p.sku else p.id }}</strong>{% if p.ean %} &nbsp;·&nbsp; EAN {{ p.ean }}{% endif %}</p>
 
       <div class="pdp-badges">
         <span class="badge temp">{{ temp|capitalize if temp else 'Congelado' }}</span>
@@ -62,34 +49,26 @@
         {% endif %}
       </div>
 
+      {% if _caixa %}<p class="pdp-caixa-line">{{ _caixa }}</p>{% endif %}
+
       <div class="pdp-price-box">
         {% if has_sale %}
-          <div class="price-old-line">De <s>R$ {{ brl(p.price) }}</s> por</div>
+          <div class="price-old-line">De <s>{{ preco(p.price, true) }}</s> por</div>
         {% endif %}
         <div class="price-main">
-          <span class="value">R$ {{ brl(effective) }}</span>
+          <span class="value">{{ preco(effective, true) }}</span>
           <span class="unit">/ {{ (p.unit or 'KG')|lower }}</span>
         </div>
         {% if has_sale %}
           <p class="price-savings">
-            Economia de R$ {{ brl((p.price|float) - (sale|float)) }}
+            Economia de {{ preco((p.price|float) - (sale|float), true) }}
             {%- if p.discount_percent %} ({{ p.discount_percent }}% off){% endif %}
           </p>
         {% endif %}
       </div>
 
       <div class="pdp-specs">
-        {% if p.weight_min or p.weight_max %}
-          <div class="info-item">
-            Caixa:
-            {% if p.weight_min and p.weight_max and (p.weight_min|float) != (p.weight_max|float) %}
-              {{ (p.weight_min|float)|round(0,'floor')|int }}kg a {{ (p.weight_max|float)|round(0,'floor')|int }}kg
-            {% else %}
-              {{ ((p.weight_max or p.weight_min)|float)|round(0,'floor')|int }}kg
-            {% endif %}
-          </div>
-        {% endif %}
-        {% if p.weight_avg %}<div class="info-item">Peso médio: {{ ('%.2f'|format(p.weight_avg|float))|replace('.', ',') }}kg</div>{% endif %}
+        {% if p.weight_avg %}<div class="info-item">Peso médio: {{ preco_br(p.weight_avg) }}kg</div>{% endif %}
         <div class="info-item">Unidade: {{ p.unit or 'KG' }}</div>
         {% if attrs.get('x_LINHA') %}<div class="info-item">Linha: {{ attrs.get('x_LINHA') }}</div>{% endif %}
         {% if attrs.get('x_recomendadoPara') %}<div class="info-item">Recomendado para: {{ attrs.get('x_recomendadoPara') }}</div>{% endif %}
@@ -109,65 +88,122 @@
         </div>
 
         <button class="btn-add-cart" type="submit" {% if not in_stock %}disabled{% endif %}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2A2 2 0 0 0 9.6 17h8.9a2 2 0 0 0 2-1.6L22 7H6"/></svg>
           {% if in_stock %}Adicionar ao carrinho{% else %}Produto indisponível{% endif %}
         </button>
       </form>
 
       <p class="add-feedback" data-add-feedback role="status" aria-live="polite"></p>
     </div>
+
+    {# ------------------------------- galeria ------------------------------- #}
+    <div class="pdp-gallery">
+      <div class="main-image">
+        {% if _imgs %}
+          <img src="{{ _imgs[0] }}" alt="{{ p.name }}" id="pdp-main-image" width="560" height="560">
+        {% else %}
+          <span style="font-size:12px;color:#6c757d">Produto sem foto</span>
+        {% endif %}
+      </div>
+      {% if _imgs|length > 1 %}
+        <div class="thumbs">
+          {% for img in _imgs %}
+            <button type="button" class="{% if loop.first %}is-active{% endif %}" data-thumb="{{ img }}" aria-label="Imagem {{ loop.index }}">
+              <img src="{{ img }}" alt="{{ p.name }} — imagem {{ loop.index }}">
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
   </div>
 
-  {# ------------------------------ ABAS ------------------------------ #}
-  <section class="pdp-tabs" data-tabs>
-    <div class="tabs-nav" role="tablist">
-      <button type="button" class="is-active" role="tab" aria-selected="true" data-tab="descricao">Descrição</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="nutricao">Informação Nutricional</button>
-      <button type="button" role="tab" aria-selected="false" data-tab="informacoes">Informações</button>
+  {# ------------------------------ acordeões ------------------------------ #}
+  <section class="accordion" aria-label="Detalhes do produto">
+    <div class="accordion-item is-open">
+      <button class="accordion-head" type="button" data-acc-toggle aria-expanded="true">
+        <h2>Descrição do produto</h2>
+        <span class="acc-arrow" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M5 8l5 5 5-5z"/></svg></span>
+      </button>
+      <div class="accordion-body">
+        {% if p.description_html %}
+          {%- set _desc = p.description_html|string -%}
+          {%- if '<' in _desc -%}
+            <div class="rich-text">{{ _desc|safe }}</div>
+          {%- else -%}
+            <div class="rich-text">
+              {%- for linha in _desc.split('\n') if linha|trim -%}
+                <p>{{ linha|trim }}</p>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        {% else %}
+          <div class="rich-text">
+            <p>{{ p.name }}{% if marca %} — linha {{ marca }}{% endif %}. Produto fornecido em embalagem fechada, mantido sob temperatura controlada. Ideal para o food service.</p>
+          </div>
+        {% endif %}
+      </div>
     </div>
 
-    <div class="tab-panel is-active" data-panel="descricao" role="tabpanel">
-      {% if p.description_html %}
-        <div class="rich-text">{{ p.description_html|safe }}</div>
-      {% else %}
-        <p>{{ p.name }}{% if marca %} — linha {{ marca }}{% endif %}. Produto fornecido em embalagem fechada,
-           mantido sob temperatura controlada. Ideal para o food service.</p>
-      {% endif %}
+    <div class="accordion-item">
+      <button class="accordion-head" type="button" data-acc-toggle aria-expanded="false">
+        <h2>Informação Nutricional</h2>
+        <span class="acc-arrow" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M5 8l5 5 5-5z"/></svg></span>
+      </button>
+      <div class="accordion-body">
+        {% if p.nutrition %}
+          <table class="nutrition-table">
+            <tbody>
+              {% for linha in p.nutrition %}
+                {%- set partes = linha|string -%}
+                {% if ':' in partes %}
+                  {%- set nome = partes.split(':', 1)[0] -%}
+                  {%- set valor = partes.split(':', 1)[1] -%}
+                  <tr><td>{{ nome }}</td><td>{{ valor|trim }}</td></tr>
+                {% else %}
+                  <tr><td colspan="2">{{ partes }}</td></tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p>Informação nutricional não disponível para este produto. Consulte o rótulo da embalagem.</p>
+        {% endif %}
+      </div>
     </div>
 
-    <div class="tab-panel" data-panel="nutricao" role="tabpanel">
-      {% if p.nutrition %}
-        <h3>Informação nutricional por porção</h3>
-        <ul>
-          {% for linha in p.nutrition %}
-            <li>{{ linha }}</li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p>Informação nutricional não disponível para este produto. Consulte o rótulo da embalagem.</p>
-      {% endif %}
+    <div class="accordion-item">
+      <button class="accordion-head" type="button" data-acc-toggle aria-expanded="false">
+        <h2>Entenda peso e preço final</h2>
+        <span class="acc-arrow" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M5 8l5 5 5-5z"/></svg></span>
+      </button>
+      <div class="accordion-body">
+        {% if _caixa %}<p>{{ _caixa }}.</p>{% endif %}
+        <p>
+          O peso final da caixa pode variar dentro da faixa informada. O valor cobrado é calculado
+          sobre o peso real do produto separado no momento da expedição, com preço por
+          {{ (p.unit or 'KG')|lower }}.
+        </p>
+        <p>
+          Código: {{ p.sku if p.sku else p.id }}{% if p.ean %} · EAN {{ p.ean }}{% endif %}
+          {% if p.weight_avg %} · Peso médio: {{ preco_br(p.weight_avg) }} kg{% endif %}
+        </p>
+      </div>
     </div>
 
-    <div class="tab-panel" data-panel="informacoes" role="tabpanel">
-      <h3>Informações do produto</h3>
-      <table>
-        <tbody>
-          <tr><th>Código (SKU)</th><td>{{ p.sku if p.sku else p.id }}</td></tr>
-          {% if p.ean %}<tr><th>EAN</th><td>{{ p.ean }}</td></tr>{% endif %}
-          {% if marca %}<tr><th>Marca</th><td>{{ marca }}</td></tr>{% endif %}
-          <tr><th>Unidade de medida</th><td>{{ p.unit or 'KG' }}</td></tr>
-          {% if p.weight_min %}<tr><th>Peso mínimo</th><td>{{ (p.weight_min|float)|round(0,'floor')|int }} kg</td></tr>{% endif %}
-          {% if p.weight_avg %}<tr><th>Peso médio</th><td>{{ ('%.2f'|format(p.weight_avg|float))|replace('.', ',') }} kg</td></tr>{% endif %}
-          {% if p.weight_max %}<tr><th>Peso máximo</th><td>{{ (p.weight_max|float)|round(0,'floor')|int }} kg</td></tr>{% endif %}
-          <tr><th>Temperatura</th><td>{{ temp|capitalize if temp else 'Congelado' }}</td></tr>
-          <tr><th>Estoque</th><td>{{ p.stock if p.stock else 'Indisponível' }}</td></tr>
-          {% if p.video_url %}<tr><th>Vídeo</th><td><a href="{{ p.video_url }}" target="_blank" rel="noopener">Assistir</a></td></tr>{% endif %}
-        </tbody>
-      </table>
+    <div class="accordion-item">
+      <button class="accordion-head" type="button" data-acc-toggle aria-expanded="false">
+        <h2>Embalagem e armazenamento</h2>
+        <span class="acc-arrow" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M5 8l5 5 5-5z"/></svg></span>
+      </button>
+      <div class="accordion-body">
+        <p>Temperatura: {{ temp|capitalize if temp else 'Congelado' }}.</p>
+        <p>Mantenha o produto na embalagem original, sob temperatura controlada, até o momento do preparo.</p>
+        <p>Estoque: {{ p.stock if p.stock else 'Indisponível' }}.</p>
+        {% if p.video_url %}<p><a href="{{ p.video_url }}" target="_blank" rel="noopener">Assistir ao vídeo do produto</a></p>{% endif %}
+      </div>
     </div>
   </section>
 
-  {# ------------------------------ RELACIONADOS ------------------------------ #}
+  {# ------------------------------ relacionados ------------------------------ #}
   {%- set _rel = relacionados if relacionados else (related if related else []) -%}
   {% if _rel %}
     <section class="related" aria-label="Produtos relacionados">

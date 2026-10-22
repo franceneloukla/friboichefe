@@ -3,12 +3,24 @@
    Qualquer template que precise de um card usa product_card(p, ...)
    ========================================================================== #}
 
-{% macro brl(v) -%}
-{# Formata número no padrão brasileiro: 1234.5 -> 1.234,50 #}
-{%- if v is none or v == '' -%}0,00
-{%- else -%}
-{{ ('%.2f'|format(v|float))|replace(',', 'X')|replace('.', ',')|replace('X', '.') }}
+{% macro preco_br(v) -%}
+{#- Formata número no padrão brasileiro: 9999.0 -> 9.999,00 (sem o R$) -#}
+{%- if v is none or v == '' -%}0,00{%- else -%}
+{%- set s = "{:,.2f}".format(v|float) -%}
+{{ s|replace(",", "@")|replace(".", ",")|replace("@", ".") }}
 {%- endif -%}
+{%- endmacro %}
+
+
+{% macro preco(v, espaco=False) -%}
+{#- Valor completo: R$9.999,00 (card) ou R$ 9.999,00 (PDP) -#}
+R${{ " " if espaco else "" }}{{ preco_br(v) }}
+{%- endmacro %}
+
+
+{#- alias histórico: brl() devolve só o número -#}
+{% macro brl(v) -%}
+{{ preco_br(v) }}
 {%- endmacro %}
 
 
@@ -39,8 +51,8 @@ Caixa: sob consulta
 {%- set q = attrs.get('x_iQtdeMinimaPeca') or attrs.get('x_iQtdMinimaPeca') or attrs.get('pecas') -%}
 {%- if q -%}
 Peças: {{ q }}
-{%- else -%}
-Unidade: {{ p.unit or 'KG' }}
+{%- elif p.max_qty -%}
+Peças: {{ p.max_qty }}
 {%- endif -%}
 {%- endmacro %}
 
@@ -82,19 +94,23 @@ Unidade: {{ p.unit or 'KG' }}
 
     <div class="product-info-grid">
       <div class="info-item">{{ caixa_label(p) }}</div>
-      <div class="info-item">{{ pecas_label(p) }}</div>
+      {%- set _pecas = pecas_label(p)|trim %}
+      {%- if _pecas %}
+      <div class="info-item">{{ _pecas }}</div>
+      {%- endif %}
+      <div class="info-item unidade">Unidade: {{ p.unit or 'KG' }}</div>
     </div>
 
     <div class="product-pricing">
       {% if sale and (sale|float) < (price|float) %}
         <div class="price-old-wrapper">
           <span class="price-label">De</span>
-          <span class="price-old">R$ {{ brl(price) }}</span>
+          <span class="price-old">{{ preco(price) }}</span>
         </div>
       {% endif %}
       <div class="price-now-wrapper">
         <span class="price-label">Por</span>
-        <span class="price-now">R$ {{ brl(effective) }}</span>
+        <span class="price-now">{{ preco(effective) }}</span>
         <span class="price-unit">/{{ (p.unit or 'KG')|lower }}</span>
       </div>
     </div>

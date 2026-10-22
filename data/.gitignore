@@ -1,0 +1,5 @@
+# cache/checkpoint do scraper (nao versionar)
+_raw/
+_checkpoint.json
+_checkpoint_images.json
+*.log

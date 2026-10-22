@@ -464,11 +464,7 @@
       }
       function maxScroll() { return Math.max(0, track.scrollWidth - track.clientWidth); }
 
-      function update() {
-        var x = track.parentNode.scrollLeft || 0;
-        prev.disabled = x <= 2;
-        next.disabled = x >= maxScroll() - 2;
-      }
+      function update() { /* setas sempre ativas, com volta (como no original) */ }
 
       // rolagem horizontal nativa dentro do wrapper (overflow:hidden nunca rola,
       // então o wrapper é scrollável via JS)
@@ -478,9 +474,33 @@
       wrap.style.scrollbarWidth = 'none';
       wrap.addEventListener('scroll', update);
 
-      prev.addEventListener('click', function () { wrap.scrollLeft -= step(); });
-      next.addEventListener('click', function () { wrap.scrollLeft += step(); });
+      prev.addEventListener('click', function () {
+        if (wrap.scrollLeft <= 2) {
+          wrap.scrollLeft = maxScroll();
+        } else {
+          wrap.scrollLeft -= step();
+        }
+      });
+      next.addEventListener('click', function () {
+        if (wrap.scrollLeft >= maxScroll() - 2) {
+          wrap.scrollLeft = 0;
+        } else {
+          wrap.scrollLeft += step();
+        }
+      });
       update();
+    });
+  }
+
+  /* ------------------------------------------------------------- acordeões */
+  function initAccordions() {
+    $$('[data-acc-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.closest('.accordion-item');
+        if (!item) return;
+        var open = item.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
     });
   }
 
@@ -563,6 +583,17 @@
     });
   }
 
+  /* -------------------------------------------------- header que colapsa */
+  function initHeaderCollapse() {
+    var header = document.querySelector('.site-header');
+    if (!header) return;
+    var onScroll = function () {
+      header.classList.toggle('no-top', window.scrollY > 200);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
   /* ------------------------------------------------------------ menu mobile */
   function initMobileMenu() {
     var toggle = $('[data-menu-toggle]');
@@ -579,7 +610,9 @@
     markMissingImages();
     initHero();
     initCarousels();
+    initAccordions();
     initTabs();
+    initHeaderCollapse();
     initGallery();
     initFilters();
     initMobileMenu();

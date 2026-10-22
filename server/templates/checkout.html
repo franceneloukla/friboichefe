@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import brl with context %}
+{% from "_macros.html" import brl, preco, preco_br with context %}
 
 {% block title %}{{ page_title if page_title else 'Finalizar compra | Friboi Online' }}{% endblock %}
 
@@ -128,7 +128,7 @@
       {% for it in _itens %}
         <div class="summary-line">
           <span>{{ it.qty }}x {{ it.name }}</span>
-          <span>R$ {{ brl(it.subtotal) }}</span>
+          <span>{{ preco(it.subtotal, true) }}</span>
         </div>
       {% endfor %}
       <div class="summary-line">
@@ -137,7 +137,7 @@
       </div>
       <div class="summary-line total">
         <span>Total</span>
-        <span>R$ {{ brl(_subtotal) }}</span>
+        <span>{{ preco(_subtotal, true) }}</span>
       </div>
       <button class="btn-primary" type="button" data-checkout-submit {% if _precisa_login %}disabled{% endif %}>
         {% if _precisa_login %}Entre para finalizar{% else %}Confirmar pedido{% endif %}

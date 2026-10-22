@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import product_card, pagination, breadcrumb as bc with context %}
+{% from "_macros.html" import preco, preco_br with context %}
 
 {% block title %}{{ page_title if page_title else titulo if titulo else 'Catálogo' }}{% endblock %}
 
@@ -7,6 +7,7 @@
 {%- set _itens = items if items else (products if products else []) -%}
 {%- set _total = total if total is defined and total is not none else _itens|length -%}
 {%- set _page = page|int(1) if page is defined else 1 -%}
+{%- set _limit = limit|int(12) if limit is defined and limit else 12 -%}
 {%- set _pages = pages|int(1) if pages is defined else 1 -%}
 {%- set _sort = sort if sort else 'relevance' -%}
 {%- set _on_sale = on_sale if on_sale is defined else false -%}
@@ -15,86 +16,182 @@
 {%- set _base = base_url if base_url else '/busca' -%}
 {%- set _cat = categoria if categoria else (category if category is defined else none) -%}
 {%- set _titulo = titulo if titulo else (_cat.name if _cat else 'Catálogo') -%}
+{%- set _ini = (_page - 1) * _limit + 1 -%}
+{%- set _fim = [(_page * _limit), _total]|min -%}
+{%- set _cats = categories if categories else [] -%}
 
-{%- set _crumbs = [{'label': 'Home', 'url': '/'}] -%}
-{%- if _cat -%}
-  {%- set _ = _crumbs.append({'label': _cat.name, 'url': '/categoria/' ~ _cat.slug}) -%}
-{%- elif _q -%}
-  {%- set _ = _crumbs.append({'label': 'Busca', 'url': '/busca?q=' ~ (_q|urlencode)}) -%}
-{%- else -%}
-  {%- set _ = _crumbs.append({'label': _titulo, 'url': _base}) -%}
-{%- endif -%}
+{# ---------------------------- banner da categoria ---------------------------- #}
+<section class="cat-banner">
+  <span class="cat-banner-mark" aria-hidden="true">Friboi online</span>
+  <span class="cat-banner-name">{{ _titulo }}</span>
+</section>
 
-<div class="page-head">
-  {{ bc(_crumbs) }}
-  <h1 class="page-title">{{ _titulo }}</h1>
-  {% if _q %}<p class="page-subtitle">Resultados para “{{ _q }}”</p>{% endif %}
-</div>
+<nav class="page-head">
+  <div class="breadcrumb" aria-label="Você está aqui">
+    <a href="/">Início</a>
+    <span class="sep">›</span>
+    {% if _cat %}
+      <a href="/categoria/{{ _cat.slug }}">{{ _cat.name }}</a>
+    {% elif _q %}
+      <a href="/busca?q={{ _q|urlencode }}">Busca</a>
+      <span class="sep">›</span>
+      <span class="current">“{{ _q }}”</span>
+    {% else %}
+      <span class="current">{{ _titulo }}</span>
+    {% endif %}
+  </div>
+</nav>
 
 <div class="catalog-layout">
-  {# ---------------------------- FILTROS ---------------------------- #}
-  <aside class="filters" aria-label="Filtros de produtos">
-    <h2>Filtrar</h2>
+  {# ------------------------------ refinamento ------------------------------ #}
+  <aside class="filters" aria-label="Refinar por">
+    <h2>Refinar por</h2>
+
     <form method="get" action="{{ _base }}" data-filters-form>
       {% if _q %}<input type="hidden" name="q" value="{{ _q }}">{% endif %}
 
       <div class="filter-group">
-        <label for="sort">Ordenar por</label>
-        <select id="sort" name="sort">
-          <option value="relevance" {% if _sort == 'relevance' %}selected{% endif %}>Relevância</option>
-          <option value="price_asc" {% if _sort == 'price_asc' %}selected{% endif %}>Menor preço</option>
-          <option value="price_desc" {% if _sort == 'price_desc' %}selected{% endif %}>Maior preço</option>
-          <option value="name" {% if _sort == 'name' %}selected{% endif %}>Nome (A-Z)</option>
-          <option value="newest" {% if _sort == 'newest' %}selected{% endif %}>Novidades</option>
-        </select>
+        <span class="group-title">Disponibilidade</span>
+        <div class="group-body">
+          <label>
+            <input type="checkbox" name="on_sale" value="1" {% if _on_sale %}checked{% endif %}>
+            Só promoções
+          </label>
+          <label>
+            <input type="checkbox" name="in_stock" value="1" {% if _in_stock %}checked{% endif %}>
+            Só em estoque
+          </label>
+        </div>
       </div>
 
       <div class="filter-group">
-        <label>
-          <input type="checkbox" name="on_sale" value="1" {% if _on_sale %}checked{% endif %}>
-          Só promoções
-        </label>
-        <label>
-          <input type="checkbox" name="in_stock" value="1" {% if _in_stock %}checked{% endif %}>
-          Só em estoque
-        </label>
+        <span class="group-title">Ordenar por</span>
+        <div class="group-body">
+          <select id="sort" name="sort" data-auto-submit aria-label="Ordenar por">
+            <option value="relevance" {% if _sort == 'relevance' %}selected{% endif %}>Relevância</option>
+            <option value="price_asc" {% if _sort == 'price_asc' %}selected{% endif %}>Menor preço</option>
+            <option value="price_desc" {% if _sort == 'price_desc' %}selected{% endif %}>Maior preço</option>
+            <option value="name" {% if _sort == 'name' %}selected{% endif %}>Nome (A-Z)</option>
+            <option value="newest" {% if _sort == 'newest' %}selected{% endif %}>Novidades</option>
+          </select>
+          <button class="apply-btn" type="submit">Aplicar</button>
+          <a class="clear-link" href="{{ _base }}{% if _q %}?q={{ _q|urlencode }}{% endif %}">Limpar filtros</a>
+        </div>
       </div>
 
-      <button class="apply-btn" type="submit">Aplicar filtros</button>
-      <a class="clear-link" href="{{ _base }}{% if _q %}?q={{ _q|urlencode }}{% endif %}">Limpar filtros</a>
+      {# facetas de categoria (vindas de `categories`) #}
+      {%- set _top = _cats|selectattr('parent_id', 'none')|list -%}
+      {%- set _com_produto = [] -%}
+      {%- for c in _top -%}
+        {%- set sl = c.slug -%}
+        {%- set lixo = ('ofertas' in sl) or ('nao-utilizadas' in sl) or ('combos' in sl)
+                    or ('chatbot' in sl) or ('inativos' in sl) or ('sub-categorias' in sl)
+                    or ('componentes-de-ofertas' in sl) or sl in ['marcas-marcas', 'marcas'] -%}
+        {%- if not lixo and c.count and c.count > 0 -%}
+          {%- set _ = _com_produto.append(c) -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {% if _com_produto %}
+        <div class="filter-group">
+          <span class="group-title">Categorias</span>
+          <div class="group-body">
+            {% for c in _com_produto[:14] %}
+              <a class="facet-link {% if _cat and _cat.id == c.id %}is-active{% endif %}" href="/categoria/{{ c.slug }}">
+                <span>{{ c.name }}</span>
+                <span class="count">({{ c.count }})</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
     </form>
   </aside>
 
-  {# ---------------------------- RESULTADOS ---------------------------- #}
+  {# -------------------------------- produtos -------------------------------- #}
   <section class="catalog-results">
-    <div class="catalog-toolbar">
-      <p class="catalog-count">
-        <strong>{{ _total }}</strong> {{ 'produto' if _total == 1 else 'produtos' }}
-        {%- if _total %} · página {{ _page }} de {{ _pages }}{% endif %}
+    <h1 class="catalog-title">{{ _titulo }}</h1>
+
+    <div class="lp-controls">
+      <p class="lp-count">
+        {% if _total %}Resultados: <strong>{{ _ini }} - {{ _fim }}</strong> (de {{ _total }}){% else %}Nenhum produto{% endif %}
       </p>
-      <form class="catalog-sort" method="get" action="{{ _base }}" data-sort-form>
-        {% if _q %}<input type="hidden" name="q" value="{{ _q }}">{% endif %}
-        {% if _on_sale %}<input type="hidden" name="on_sale" value="1">{% endif %}
-        {% if _in_stock %}<input type="hidden" name="in_stock" value="1">{% endif %}
-        <label for="sort-top">Ordenar:</label>
-        <select id="sort-top" name="sort" data-auto-submit>
-          <option value="relevance" {% if _sort == 'relevance' %}selected{% endif %}>Relevância</option>
-          <option value="price_asc" {% if _sort == 'price_asc' %}selected{% endif %}>Menor preço</option>
-          <option value="price_desc" {% if _sort == 'price_desc' %}selected{% endif %}>Maior preço</option>
-          <option value="name" {% if _sort == 'name' %}selected{% endif %}>Nome (A-Z)</option>
-          <option value="newest" {% if _sort == 'newest' %}selected{% endif %}>Novidades</option>
-        </select>
-      </form>
+      {%- set _p0 = _page -%}
+      <nav class="lp-pager" aria-label="Paginação">
+        <span class="{{ 'is-disabled' if _page <= 1 else '' }}">
+          {% if _page > 1 %}<a href="{{ _base }}?{{ 'q=' ~ (_q|urlencode) ~ '&' if _q else '' }}page=1&sort={{ _sort }}{{ '&on_sale=1' if _on_sale else '' }}{{ '&in_stock=1' if _in_stock else '' }}">«</a>{% else %}«{% endif %}
+        </span>
+        <span class="{{ 'is-disabled' if _page <= 1 else '' }}">
+          {% if _page > 1 %}<a href="{{ _base }}?{{ 'q=' ~ (_q|urlencode) ~ '&' if _q else '' }}page={{ _page - 1 }}&sort={{ _sort }}{{ '&on_sale=1' if _on_sale else '' }}{{ '&in_stock=1' if _in_stock else '' }}">‹</a>{% else %}‹{% endif %}
+        </span>
+        {%- set _s = [1, _page - 2]|max -%}
+        {%- set _e = [_pages, _s + 4]|min -%}
+        {%- set _s = [1, _e - 4]|max -%}
+        {% for n in range(_s, _e + 1) %}
+          {% if n == _page %}
+            <span class="is-current" aria-current="page">{{ n }}</span>
+          {% else %}
+            <a href="{{ _base }}?{{ 'q=' ~ (_q|urlencode) ~ '&' if _q else '' }}page={{ n }}&sort={{ _sort }}{{ '&on_sale=1' if _on_sale else '' }}{{ '&in_stock=1' if _in_stock else '' }}">{{ n }}</a>
+          {% endif %}
+        {% endfor %}
+        <span class="{{ 'is-disabled' if _page >= _pages else '' }}">
+          {% if _page < _pages %}<a href="{{ _base }}?{{ 'q=' ~ (_q|urlencode) ~ '&' if _q else '' }}page={{ _page + 1 }}&sort={{ _sort }}{{ '&on_sale=1' if _on_sale else '' }}{{ '&in_stock=1' if _in_stock else '' }}">›</a>{% else %}›{% endif %}
+        </span>
+        <span class="{{ 'is-disabled' if _page >= _pages else '' }}">
+          {% if _page < _pages %}<a href="{{ _base }}?{{ 'q=' ~ (_q|urlencode) ~ '&' if _q else '' }}page={{ _pages }}&sort={{ _sort }}{{ '&on_sale=1' if _on_sale else '' }}{{ '&in_stock=1' if _in_stock else '' }}">»</a>{% else %}»{% endif %}
+        </span>
+      </nav>
     </div>
 
     {% if _itens %}
-      <div class="products-grid">
+      <div class="listing-grid">
         {% for p in _itens %}
-          {{ product_card(p, 'grid') }}
+          {%- set attrs = p.attrs if p.attrs else {} -%}
+          {%- set temp = (attrs.get('x_TEMPERATURA') or 'Congelado')|string|trim -%}
+          {%- set sale = p.sale_price if p.sale_price else none -%}
+          {%- set has_sale = sale and (sale|float) < (p.price|float) -%}
+          {%- set effective = sale if has_sale else p.price -%}
+          {%- set caixa = '' -%}
+          {%- if p.weight_min and p.weight_max and (p.weight_min|float) != (p.weight_max|float) -%}
+            {%- set caixa = 'Caixa: ' ~ ((p.weight_min|float)|round(0,'floor')|int) ~ 'kg a ' ~ ((p.weight_max|float)|round(0,'floor')|int) ~ 'kg' -%}
+          {%- elif p.weight_max -%}
+            {%- set caixa = 'Caixa: ' ~ ((p.weight_max|float)|round(0,'floor')|int) ~ 'kg' -%}
+          {%- endif -%}
+          {%- set pecas = p.max_qty|int(0) if p.max_qty else 0 -%}
+          <article class="listing-card" data-product-id="{{ p.id }}">
+            <span class="lc-tag temperatura">{{ temp|capitalize if temp else 'Congelado' }}</span>
+            <a class="lc-img" href="/produto/{{ p.slug }}" aria-label="{{ p.name }}">
+              {% if p.image_url %}
+                <img src="{{ p.image_url }}" alt="{{ p.name }}" loading="lazy" width="200" height="200">
+              {% else %}
+                <span style="font-size:11px;color:#6c757d">Produto sem foto</span>
+              {% endif %}
+            </a>
+            <div class="lc-body">
+              <p class="lc-code">Cód.: <span>{{ p.sku if p.sku else p.id }}</span></p>
+              <h2 class="lc-title"><a href="/produto/{{ p.slug }}" title="{{ p.name }}">{{ p.name }}</a></h2>
+              <p class="lc-meta">
+                {{ caixa }}{% if caixa and pecas %}, {% endif %}{% if pecas %}{{ pecas }} peças por caixa{% endif %}
+              </p>
+              <p class="lc-price">
+                {% if has_sale %}<s>{{ preco(p.price) }}</s> {% endif %}
+                {{ preco(effective) }} <span class="unit">/ {{ (p.unit or 'KG')|lower }}</span>
+              </p>
+            </div>
+            <a class="lc-btn" href="/produto/{{ p.slug }}">Ver Produto</a>
+          </article>
         {% endfor %}
       </div>
 
-      {{ pagination(_page, _pages, _base, {'q': _q, 'sort': _sort, 'on_sale': ('1' if _on_sale else ''), 'in_stock': ('1' if _in_stock else '')}) }}
+      <div class="lp-footer-pager">
+        <nav class="lp-pager" aria-label="Paginação">
+          {% if _page > 1 %}<a href="{{ _base }}?page={{ _page - 1 }}&sort={{ _sort }}">‹</a>{% else %}<span class="is-disabled">‹</span>{% endif %}
+          {% for n in range(_s, _e + 1) %}
+            {% if n == _page %}<span class="is-current">{{ n }}</span>
+            {% else %}<a href="{{ _base }}?page={{ n }}&sort={{ _sort }}">{{ n }}</a>{% endif %}
+          {% endfor %}
+          {% if _page < _pages %}<a href="{{ _base }}?page={{ _page + 1 }}&sort={{ _sort }}">›</a>{% else %}<span class="is-disabled">›</span>{% endif %}
+        </nav>
+      </div>
     {% else %}
       <div class="empty-state">
         <h2>Nenhum produto encontrado</h2>

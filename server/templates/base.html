@@ -13,19 +13,33 @@
 
 {%- set _cats = categories if categories else [] -%}
 {%- set _nav = nav_categories if nav_categories else _cats|selectattr('parent_id', 'none')|list -%}
-{%- set _nav_links = [] -%}
-{%- for c in _nav -%}
-  {%- if c.id not in ['MARCAS'] and c.slug not in ['marcas', 'marcas-friboi', 'promocoes', 'promocao-oferta'] -%}
-    {%- set _ = _nav_links.append(c) -%}
+{#-
+   O catálogo do banco tem 471 categorias (inclui nós operacionais como CHATBOT,
+   INATIVOS, OFERTAS_<unidade>). A navegação replica EXATAMENTE a do site
+   original: 9 categorias principais + Promoções + Marcas, nesta ordem.
+-#}
+{%- set _mapa_nav = [
+  ('Bovinos', ['bovinos']),
+  ('Bovinos Importados', ['bovinos-importados']),
+  ('Aves', ['aves']),
+  ('Suínos', ['suinos']),
+  ('Pescados', ['pescados']),
+  ('Batatas e Vegetais', ['batatas-e-vegetais']),
+  ('Cordeiros', ['cordeiros']),
+  ('Charques', ['charques', 'charque']),
+  ('Outros', ['outros', 'outros-outros-produtos'])
+] -%}
+{%- set _nav_items = [] -%}
+{%- for nome, slugs in _mapa_nav -%}
+  {%- set cat = (_nav|selectattr('slug', 'in', slugs)|list|first) or (_cats|selectattr('slug', 'in', slugs)|list|first) -%}
+  {%- if cat -%}
+    {%- set _ = _nav_items.append({'id': cat.id, 'name': nome, 'slug': cat.slug, 'url': '/categoria/' ~ cat.slug}) -%}
   {%- endif -%}
 {%- endfor -%}
+{%- set _marca_cat = (_cats|selectattr('slug', 'in', ['marcas', 'marcas-marcas'])|list|first) -%}
 {%- set _cart = cart if cart else {} -%}
 {%- set _count = cart_count if cart_count is defined and cart_count is not none else (_cart.get('count', 0) if _cart else 0) -%}
 {%- set _path = current_path if current_path else '' -%}
-{%- set _marcas = [] -%}
-{%- for c in _cats -%}
-  {%- if (c.slug in ['marcas', 'marcas-friboi']) or (c.id in ['MARCAS']) -%}{%- set _ = _marcas.append(c) -%}{%- endif -%}
-{%- endfor -%}
 
 {# ==========================================================================
    HEADER
@@ -33,7 +47,7 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href="/" aria-label="Friboi Online — página inicial">
-      <img class="logo-img" src="/assets/img/ui/logos/logo-friboi-online.png" alt="Friboi Online" width="89" height="57">
+      <img class="logo-img" src="/assets/img/ui/logos/logo-friboi-online.png" alt="Friboi Online" width="129" height="82">
       <span class="logo-text">Friboi<small>online</small></span>
     </a>
 
@@ -77,16 +91,16 @@
   <nav class="main-nav" aria-label="Categorias">
     <div class="nav-inner">
       <ul>
-        {% for c in _nav_links %}
-          {%- set kids = _cats|selectattr('parent_id', 'equalto', c.id)|list -%}
-          {%- set url = '/categoria/' ~ c.slug -%}
+        {% for it in _nav_items %}
+          {%- set kids = _cats|selectattr('parent_id', 'equalto', it.id)|list -%}
           <li class="{% if kids %}has-kids{% endif %}">
-            <a href="{{ url }}" class="{% if _path == url %}is-active{% endif %}">{{ c.name }}</a>
+            <a href="{{ it.url }}" class="{% if _path == it.url %}is-active{% endif %}">{{ it.name }}</a>
             {% if kids %}
               <ul class="submenu">
-                {% for k in kids|sort(attribute='name') %}
+                {% for k in kids[:12]|sort(attribute='name') %}
                   <li><a href="/categoria/{{ k.slug }}">{{ k.name }}</a></li>
                 {% endfor %}
+                <li><a class="submenu-all" href="{{ it.url }}">Ver todos</a></li>
               </ul>
             {% endif %}
           </li>
@@ -95,8 +109,8 @@
           <a href="/promocoes" class="{% if _path == '/promocoes' %}is-active{% endif %}">Promoções</a>
         </li>
         <li>
-          {% if _marcas %}
-            <a href="/categoria/{{ _marcas[0].slug }}" class="{% if _path == '/categoria/' ~ _marcas[0].slug %}is-active{% endif %}">Marcas</a>
+          {% if _marca_cat %}
+            <a href="/categoria/{{ _marca_cat.slug }}" class="{% if _path == '/categoria/' ~ _marca_cat.slug %}is-active{% endif %}">Marcas</a>
           {% else %}
             <a href="/busca?q=friboi">Marcas</a>
           {% endif %}
@@ -107,8 +121,8 @@
 
   {# nav mobile (drawer) #}
   <div class="mobile-nav" data-mobile-nav>
-    {% for c in _nav_links %}
-      <a href="/categoria/{{ c.slug }}">{{ c.name }}</a>
+    {% for it in _nav_items %}
+      <a href="{{ it.url }}">{{ it.name }}</a>
     {% endfor %}
     <a href="/promocoes">Promoções</a>
     <a href="/carrinho">Meu carrinho ({{ _count }})</a>
@@ -148,33 +162,33 @@
       <div class="footer-column">
         <h3>Acesso Rápido</h3>
         <nav class="footer-content" aria-label="Acesso rápido">
-          <a class="footer-link" href="{{ '/conta' if user else '/login' }}">Login ou Cadastre-se</a>
-          <a class="footer-link" href="/unidades">Unidades de Atendimento</a>
-          <a class="footer-link" href="/boleto">Segunda via Boleto</a>
-          <a class="footer-link" href="/exclusao-conta">Exclusão/Cancelamento de Conta</a>
-          <a class="footer-link" href="/entregas">Entregas</a>
+          <a class="footer-link" href="/institucional/login-ou-cadastre-se">Login ou Cadastre-se</a>
+          <a class="footer-link" href="/institucional/unidades">Unidades de Atendimento</a>
+          <a class="footer-link" href="/institucional/segunda-via-boleto">Segunda via Boleto</a>
+          <a class="footer-link" href="/institucional/exclusao-cancelamento-conta">Exclusão/Cancelamento de Conta</a>
+          <a class="footer-link" href="/institucional/entregas">Entregas</a>
         </nav>
       </div>
 
       <div class="footer-column">
         <h3>Nossas Marcas</h3>
         <nav class="footer-content" aria-label="Nossas marcas">
-          <a class="footer-link" href="/busca?q=friboi">Friboi</a>
-          <a class="footer-link" href="/busca?q=maturatta">Maturatta</a>
-          <a class="footer-link" href="/busca?q=chef">Do Chef</a>
-          <a class="footer-link" href="/busca?q=black">Black Friboi</a>
-          <a class="footer-link" href="/busca?q=1953">1953</a>
+          <a class="footer-link" href="/institucional/marca-friboi">Friboi</a>
+          <a class="footer-link" href="/institucional/marca-maturatta">Maturatta</a>
+          <a class="footer-link" href="/institucional/marca-do-chef">Do Chef</a>
+          <a class="footer-link" href="/institucional/marca-black-friboi">Black Friboi</a>
+          <a class="footer-link" href="/institucional/marca-1953">1953</a>
         </nav>
       </div>
 
       <div class="footer-column">
         <h3>A Friboi</h3>
         <nav class="footer-content" aria-label="A Friboi">
-          <a class="footer-link" href="/quemsomos">Nossa História</a>
-          <a class="footer-link" href="/politica-de-privacidade">Política de Privacidade</a>
-          <a class="footer-link" href="/politica-de-cookies">Política de Cookies</a>
-          <a class="footer-link" href="/mapa-do-site">Mapa do Site</a>
-          <a class="footer-link" href="/faq">FAQ</a>
+          <a class="footer-link" href="/institucional/nossa-historia">Nossa História</a>
+          <a class="footer-link" href="/institucional/politica-de-privacidade">Política de Privacidade</a>
+          <a class="footer-link" href="/institucional/politica-de-cookies">Política de Cookies</a>
+          <a class="footer-link" href="/institucional/mapa-do-site">Mapa do Site</a>
+          <a class="footer-link" href="/institucional/faq">FAQ</a>
         </nav>
       </div>
 

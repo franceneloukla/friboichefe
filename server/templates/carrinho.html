@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import brl with context %}
+{% from "_macros.html" import brl, preco, preco_br with context %}
 
 {% block title %}{{ page_title if page_title else 'Carrinho | Friboi Online' }}{% endblock %}
 
@@ -31,7 +31,7 @@
 
           <div class="item-name-block">
             <p class="item-name"><a href="/produto/{{ it.slug }}">{{ it.name }}</a></p>
-            <p class="item-meta">CÓD. {{ it.sku if it.sku else it.product_id }} · R$ {{ brl(it.price) }} / {{ (it.unit or 'KG')|lower }}</p>
+            <p class="item-meta">CÓD. {{ it.sku if it.sku else it.product_id }} · {{ preco(it.price, true) }} / {{ (it.unit or 'KG')|lower }}</p>
           </div>
 
           <div class="item-qty">
@@ -43,7 +43,7 @@
             </div>
           </div>
 
-          <div class="item-subtotal" data-cart-subtotal>R$ {{ brl(it.subtotal) }}</div>
+          <div class="item-subtotal" data-cart-subtotal>{{ preco(it.subtotal, true) }}</div>
 
           <button class="remove" type="button" data-cart-remove aria-label="Remover {{ it.name }}">
             <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
@@ -56,7 +56,7 @@
       <h2>Resumo do pedido</h2>
       <div class="summary-line">
         <span>Subtotal ({{ _cart.get('count', 0) }} {{ 'item' if _cart.get('count', 0) == 1 else 'itens' }})</span>
-        <span data-cart-subtotal-total>R$ {{ brl(_subtotal) }}</span>
+        <span data-cart-subtotal-total>{{ preco(_subtotal, true) }}</span>
       </div>
       <div class="summary-line">
         <span>Frete</span>
@@ -64,7 +64,7 @@
       </div>
       <div class="summary-line total">
         <span>Total</span>
-        <span data-cart-total>R$ {{ brl(_subtotal) }}</span>
+        <span data-cart-total>{{ preco(_subtotal, true) }}</span>
       </div>
       <a class="btn-primary" href="/checkout">Finalizar compra</a>
       <a class="continue" href="/">Continuar comprando</a>

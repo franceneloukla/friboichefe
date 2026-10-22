@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import brl with context %}
+{% from "_macros.html" import brl, preco, preco_br with context %}
 
 {% block title %}{{ page_title if page_title else 'Minha conta | Friboi Online' }}{% endblock %}
 
@@ -54,7 +54,7 @@
                     {%- set _it = o.get('items', []) -%}
                     {{ _it|length }} {{ 'item' if _it|length == 1 else 'itens' }}
                   </td>
-                  <td class="strong">R$ {{ brl(o.get('total', 0)) }}</td>
+                  <td class="strong">{{ preco(o.get('total', 0), true) }}</td>
                   <td><span class="status-pill {{ (o.get('status') or 'pendente')|lower }}">{{ o.get('status') or 'pendente' }}</span></td>
                 </tr>
               {% endfor %}

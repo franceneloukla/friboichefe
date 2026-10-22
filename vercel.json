@@ -2,14 +2,14 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "python3 scripts/build_vercel.py",
   "outputDirectory": "public",
-  "installCommand": "pip install -r requirements.txt",
   "functions": {
     "api/index.py": {
       "maxDuration": 60,
       "memory": 1024,
       "includeFiles": [
         "server/**",
-        "data/catalog.json"
+        "data/catalog.json",
+        "data/seed.db"
       ]
     }
   },

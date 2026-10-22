@@ -8,9 +8,10 @@ Resolução do engine, em ordem:
 2. Sem ``DATABASE_URL``: SQLite em ``data/store.db`` (default local), com
    ``check_same_thread=False`` e ``PRAGMA foreign_keys=ON`` em toda conexão.
 
-``init_db(seed_if_empty=True)`` cria as tabelas e, se a tabela ``products`` estiver vazia
-E existir um catálogo (``CATALOG_PATH`` ou ``data/catalog.json``), roda o seed sozinho —
-é isso que faz o primeiro cold start no Vercel funcionar.
+``init_db(seed_if_empty=True)`` cria as tabelas e, se a tabela ``products`` estiver vazia,
+primeiro COPIA o banco pré-montado ``data/seed.db`` (se existir) e, só se ele não existir
+ou falhar, roda o seed a partir do catálogo (``CATALOG_PATH``/``data/catalog.json``).
+A cópia é atômica (``.tmp`` + ``os.replace``) e nunca derruba o boot.
 
 Todos os caminhos saem de ``Path(__file__).resolve().parent.parent`` (raiz do projeto):
 nunca de cwd, nunca de caminho absoluto de máquina.
@@ -20,6 +21,8 @@ from __future__ import annotations
 
 import logging
 import os
+import shutil
+import sqlite3
 import tempfile
 from collections.abc import Iterator
 from pathlib import Path
@@ -226,6 +229,92 @@ def _products_count(db: Session) -> int:
         return 0
 
 
+def seed_db_file() -> Path:
+    """Banco pré-montado (versionado no repo). Sobrescrevível por ``SEED_DB_PATH``."""
+    raw = (os.environ.get("SEED_DB_PATH") or "").strip()
+    return Path(raw).expanduser() if raw else (ROOT_DIR / "data" / "seed.db")
+
+
+def _sqlite_products_count(path: Path) -> int:
+    """Conta produtos direto no arquivo SQLite (0 se não existir ou não puder ler)."""
+    try:
+        if not path.is_file() or path.stat().st_size == 0:
+            return 0
+        con = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        try:
+            return int(con.execute("select count(*) from products").fetchone()[0])
+        finally:
+            con.close()
+    except (sqlite3.Error, OSError, ValueError):
+        return 0
+
+
+def _sqlite_quick_check(path: Path) -> bool:
+    """PRAGMA quick_check: garante que o arquivo copiado não está corrompido."""
+    try:
+        con = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        try:
+            return con.execute("PRAGMA quick_check").fetchone()[0] == "ok"
+        finally:
+            con.close()
+    except (sqlite3.Error, OSError, ValueError):
+        return False
+
+
+def install_seed_db(target: Path, seed_file: Path | None = None) -> bool:
+    """Copia ``data/seed.db`` para o banco alvo, se o alvo estiver vazio.
+
+    - alvo com produtos: não toca em nada (no local, ``data/store.db`` manda);
+    - origem precisa ter produtos e passar no ``PRAGMA quick_check`` (seed.db corrompido
+      ou vazio é ignorado e o seed normal roda);
+    - cópia segura: grava ``.<nome>.tmp-<pid>`` no MESMO diretório e faz ``os.replace``,
+      então o servidor nunca enxerga um banco pela metade;
+    - ``engine.dispose()`` antes do replace para soltar conexões do arquivo antigo;
+    - qualquer falha é logada e ignorada (cai no seed normal).
+
+    Retorna ``True`` apenas quando copiou o banco pré-montado.
+    """
+    if DATABASE_URL:  # Postgres: o arquivo SQLite não se aplica
+        return False
+    seed_file = seed_file or seed_db_file()
+    tmp: Path | None = None
+    try:
+        if not seed_file.is_file() or seed_file.stat().st_size == 0:
+            return False
+        if _sqlite_products_count(target) > 0:
+            return False
+        if _sqlite_products_count(seed_file) == 0:
+            logger.warning("Seed DB ignorado (vazio ou ilegível): %s", seed_file)
+            return False
+        if not _sqlite_quick_check(seed_file):
+            logger.warning("Seed DB ignorado (quick_check falhou): %s", seed_file)
+            return False
+        target.parent.mkdir(parents=True, exist_ok=True)
+        tmp = target.parent / f".{target.name}.tmp-{os.getpid()}"
+        shutil.copy2(seed_file, tmp)
+        engine.dispose()  # solta conexões que apontariam para o arquivo antigo
+        os.replace(tmp, target)
+        if not _sqlite_quick_check(target):  # cinto de segurança pós-cópia
+            logger.error("Seed DB copiado corrompido; removendo %s", target)
+            target.unlink(missing_ok=True)
+            return False
+        logger.info(
+            "Banco pré-montado instalado: %s -> %s (%d produtos)",
+            seed_file,
+            target,
+            _sqlite_products_count(target),
+        )
+        return True
+    except Exception:  # noqa: BLE001 - cold start nunca pode falhar por causa da cópia
+        logger.exception("Falha ao instalar o banco pré-montado %s (segue com o seed normal)", seed_file)
+        if tmp is not None:
+            try:
+                tmp.unlink()
+            except OSError:
+                pass
+        return False
+
+
 _auto_seed_running = False
 
 
@@ -240,6 +329,11 @@ def init_db(seed_if_empty: bool = True) -> None:
     global _auto_seed_running
     log_backend()
     _load_models()
+
+    # Caminho rápido do cold start: banco pronto em vez de parsear 1.567 produtos
+    if seed_if_empty and IS_SQLITE and not _auto_seed_running:
+        install_seed_db(DB_PATH)
+
     Base.metadata.create_all(bind=engine)
 
     if not seed_if_empty or _auto_seed_running:

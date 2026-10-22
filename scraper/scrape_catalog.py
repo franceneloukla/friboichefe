@@ -731,7 +731,15 @@ async def phase_images(args, products: list[dict]) -> dict:
     done_before, _ = count_done_images(products)
     log(f"imagens: {len(todo)} a baixar ({done_before} já no disco), workers={args.workers}")
     if not todo:
-        return {"downloaded": 0, "failed": 0}
+        return {
+            "downloaded": 0,
+            "failed": 0,
+            "failed_items": [],
+            "missing_origin": [],
+            "aborted": False,
+            "workers": args.workers,
+            "failed_ids": set(),
+        }
 
     queue: asyncio.Queue = asyncio.Queue()
     for job in todo:
@@ -911,12 +919,19 @@ def phase_finalize(products: list[dict], categories: list[dict], img_result: dic
 
     ckpt = read_json(CHECKPOINT, {}) or {}
     started_at = ckpt.get("started_at")
-    if started_at:
-        # tempo total da captura (começa no primeiro --phase catalog), não só desta invocação
+    if ckpt.get("elapsed_s") is not None:
+        # já congelado numa execução anterior: re-finalizar não infla o tempo
+        elapsed = ckpt["elapsed_s"]
+    elif started_at:
+        # tempo da captura: do primeiro --phase catalog até o fim do download das imagens
+        end_at = (read_json(IMG_CHECKPOINT, {}) or {}).get("updated_at") or now_iso()
         try:
-            elapsed = (datetime.now(timezone.utc) - datetime.fromisoformat(started_at)).total_seconds()
+            elapsed = (datetime.fromisoformat(end_at) - datetime.fromisoformat(started_at)).total_seconds()
         except ValueError:
-            pass
+            elapsed = None
+        if elapsed is not None:
+            ckpt["elapsed_s"] = round(elapsed, 1)
+            write_json(CHECKPOINT, ckpt, indent=1)
 
     prices = [prod.get("price") for prod in products]
     price_null = [prod["id"] for prod in products if prod.get("price") is None]
@@ -936,7 +951,7 @@ def phase_finalize(products: list[dict], categories: list[dict], img_result: dic
         "price_null": len(price_null),
         "price_null_ids": price_null,
         "price_distinct_values": sorted({value for value in prices if value is not None}),
-        "failed_downloads": len(img_result["failed_items"]) if img_result else 0,
+        "failed_downloads": len(img_result.get("failed_items") or []) if img_result else 0,
         "aborted": bool(img_result and img_result.get("aborted")),
     }
     write_json(STATS, stats, indent=1)
