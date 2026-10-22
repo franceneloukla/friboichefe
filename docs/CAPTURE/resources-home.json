@@ -1,0 +1,687 @@
+[
+ {
+  "n": "https://www.friboionline.com.br/css/style.css?bust=26.10",
+  "t": "link",
+  "sz": 24304
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v5831035920288673452/css/base.css?occsite=siteUS",
+  "t": "link",
+  "sz": 25927
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v9060054841667912603/css/common.css?occsite=siteUS",
+  "t": "link",
+  "sz": 416
+ },
+ {
+  "n": "https://www.googletagmanager.com/gtag/js?id=AW-16575935393",
+  "t": "script",
+  "sz": 0
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v4847802116576099056/storeJS/26.10/require.js?bust=26.10",
+  "t": "script",
+  "sz": 6868
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v8464339993746713764/storeJS/26.10/main.js?bust=26.10",
+  "t": "script",
+  "sz": 270045
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v319442250316353675/storeJS/26.10/store-libs.js?bust=26.10",
+  "t": "script",
+  "sz": 167777
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/registry",
+  "t": "xmlhttprequest",
+  "sz": 8197
+ },
+ {
+  "n": "https://www.googletagmanager.com/gtm.js?id=GTM-N32VLVP",
+  "t": "script",
+  "sz": 0
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/B_Institucional_17.10.jpg&height=250&width=1200&outputFormat=JPEG&quality=0.9",
+  "t": "link",
+  "sz": 47718
+ },
+ {
+  "n": "https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap",
+  "t": "link",
+  "sz": 2660
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/thirdparty/fonts/HelveticaNeueRegular.woff2",
+  "t": "css",
+  "sz": 16608
+ },
+ {
+  "n": "https://pagead2.googlesyndication.com/ccm/collect?rcb=11&frm=0&apvc=1&tid=AW-16575935393&en=page_view&dl=https%3A%2F%2Fwww.friboionline.com.br%2F&scrsrc=www.googletagmanager.com&rnd=356372883.1792627243&navt=n&npa=1&gtm=45be6ak1v9213924110za208zd9213924110xecxf1&gcs=G101&gcd=13p3t3p3p5l1&dma_cps=-&dma=0&tag_exp=115616986~115938466~115938468~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&tft=1792627243417&tfd=2097&tids=AW-16575935393&fmt=8",
+  "t": "fetch",
+  "sz": 0
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/registry?fields=tokenCookieEnabled",
+  "t": "xmlhttprequest",
+  "sz": 442
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v2997104872609540194/global/googleTagManager.min.js?bust=LTI5OTcxMDQ4NzI2MDk1NDAxOTQ=&bust=26.10",
+  "t": "script",
+  "sz": 425
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v7489322341828725196/global/oneTrust.min.js?bust=LTc0ODkzMjIzNDE4Mjg3MjUxOTY=&bust=26.10",
+  "t": "script",
+  "sz": 405
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v334752165425651476/global/productHider.min.js?bust=MzM0NzUyMTY1NDI1NjUxNDc2&bust=26.10",
+  "t": "script",
+  "sz": 535
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v4336050053054125443/global/webpush.min.js?bust=NDMzNjA1MDA1MzA1NDEyNTQ0Mw==&bust=26.10",
+  "t": "script",
+  "sz": 719
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/itemTypes/contactInfo?parent=contactInfo&includeBase=true",
+  "t": "xmlhttprequest",
+  "sz": 1304
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/publish",
+  "t": "xmlhttprequest",
+  "sz": 429
+ },
+ {
+  "n": "https://www.googletagmanager.com/gtag/js?id=G-ZBPWQTLZDK&cx=c&gtm=4e6ak1",
+  "t": "script",
+  "sz": 0
+ },
+ {
+  "n": "https://www.clarity.ms/tag/r5ljovij5t?ref=gtm2",
+  "t": "script",
+  "sz": 0
+ },
+ {
+  "n": "https://www.friboionline.com.br/js/oraclejet/js/libs/oj/v7.3.0/resources/nls/pt/ojtranslations.js?bust=26.10",
+  "t": "script",
+  "sz": 7489
+ },
+ {
+  "n": "https://api.pushio.com/webpush/sdk/wpIndex_min.js",
+  "t": "script",
+  "sz": 0
+ },
+ {
+  "n": "https://scripts.clarity.ms/0.8.72/clarity.js",
+  "t": "script",
+  "sz": 0
+ },
+ {
+  "n": "https://pagead2.googlesyndication.com/measurement/conversion?random=1792627244396&cv=11&tid=G-ZBPWQTLZDK&fst=1792627244396&fmt=8&en=session_start&gtm=45je6ak1v9123451147za20ozb831825214zd831825214xecxf1&gcs=G101&gcd=13p3t3p3p5l1&dma_cps=-&dma=0&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&u_w=1440&u_h=900&url=https%3A%2F%2Fwww.friboionline.com.br%2F&gacid=856478917.1792627244&hn=www.googleadservices.com&frm=0&npa=1&pscdl=denied&uaa=x86&uab=64&uafvl=Chromium%3B148.0.7778.96%7CHeadlessChrome%3B148.0.7778.96%7CNot%252FA)Brand%3B99.0.0.0&uamb=0&uam=&uap=Linux&uapv=&uaw=0&rcb=4",
+  "t": "fetch",
+  "sz": 0
+ },
+ {
+  "n": "https://www.google-analytics.com/g/collect?v=2&tid=G-ZBPWQTLZDK&gtm=45je6ak1v9123451147za20ozb831825214zd831825214xf1&_p=1792627242487&gcs=G101&gcd=13p3t3p3p5l1&npa=1&dma_cps=-&dma=0&_eu=EAAAAGAC&_prs=ok&are=1&cid=856478917.1792627244&frm=0&ir=1&pscdl=denied&rcb=4&sr=1440x900&uaa=x86&uab=64&uafvl=Chromium%3B148.0.7778.96%7CHeadlessChrome%3B148.0.7778.96%7CNot%252FA)Brand%3B99.0.0.0&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=pt-br&gaf=2&_s=1&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&sid=1792627244&sct=1&seg=0&dl=https%3A%2F%2Fwww.friboionline.com.br%2F&dt=&en=page_view&_fv=1&_nsi=1&_ss=2&tfd=3305",
+  "t": "fetch",
+  "sz": 0
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/pages/layout/home?ccvp=lg",
+  "t": "xmlhttprequest",
+  "sz": 28797
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/pages/home?dataOnly=false&cacheableDataOnly=true&productTypesRequired=true",
+  "t": "xmlhttprequest",
+  "sz": 22144
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/pages/home?dataOnly=false&currentDataOnly=true&productTypesRequired=true",
+  "t": "xmlhttprequest",
+  "sz": 1628
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/pages/css/home?occsite=siteUS",
+  "t": "xmlhttprequest",
+  "sz": 13478
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/merchant/eetagdata",
+  "t": "xmlhttprequest",
+  "sz": 455
+ },
+ {
+  "n": "https://c.clarity.ms/c.gif",
+  "t": "img",
+  "sz": 0
+ },
+ {
+  "n": "https://l.clarity.ms/collect",
+  "t": "xmlhttprequest",
+  "sz": 0
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/ccm/page",
+  "t": "xmlhttprequest",
+  "sz": 300
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/resources/ns.common?locale=pt-BR",
+  "t": "xmlhttprequest",
+  "sz": 10756
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/resources/ns.ccformats?locale=pt-BR",
+  "t": "xmlhttprequest",
+  "sz": 462
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/resources/ns.common?locale=pt",
+  "t": "xmlhttprequest",
+  "sz": 10704
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/resources/ns.ccformats?locale=pt",
+  "t": "xmlhttprequest",
+  "sz": 442
+ },
+ {
+  "n": "https://www.friboionline.com.br/shared/js/libs/moment/pt-br.js?bust=26.10",
+  "t": "script",
+  "sz": 1273
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/currencies",
+  "t": "xmlhttprequest",
+  "sz": 4415
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/sites/siteUS",
+  "t": "xmlhttprequest",
+  "sz": 15776
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/itemTypes/commerceItem?includeBase=false&parent=commerceItem",
+  "t": "xmlhttprequest",
+  "sz": 945
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v3432133222308266001/widget/module/notifications/js/ext/extendnotifications_v2.min.js?bust=26.10",
+  "t": "script",
+  "sz": 394
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v1254835275896826683/widget/v2/notifications/js/notifications-widget.min.js?bust=26.10",
+  "t": "script",
+  "sz": 820
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v3432133222308266001/widget/module/Bex_CustomHeader/js/ext/extendBex_CustomHeader_v1.min.js?bust=26.10",
+  "t": "script",
+  "sz": 394
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v3275678673981937817/widget/Bex_CustomHeader/js/Bex_CustomHeader.min.js?bust=26.10",
+  "t": "script",
+  "sz": 7178
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v6779606349954683974/widget/module/caasWidget/js/ext/extendcaasWidget_v3.min.js?bust=26.10",
+  "t": "script",
+  "sz": 470
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v9034955000773466406/widget/v3/caasWidget/js/caas-widget.min.js?bust=26.10",
+  "t": "script",
+  "sz": 1386
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v360303359816123235/widget/Bex_Banner/js/Bex_Banner.min.js?bust=26.10",
+  "t": "script",
+  "sz": 960
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v8380672591621754210/widget/recsCustom_v1/js/recsCustom.min.js?bust=26.10",
+  "t": "script",
+  "sz": 6704
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v3432133222308266001/widget/module/Bex_meusPedidos/js/ext/extendBex_meusPedidos_v1.min.js?bust=26.10",
+  "t": "script",
+  "sz": 394
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v8710051410708769326/widget/Bex_meusPedidos/js/Bex_meusPedidos.min.js?bust=26.10",
+  "t": "script",
+  "sz": 529
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v1458996642033931051/widget/recommendationsTracking/js/recsTracking.min.js?bust=26.10",
+  "t": "script",
+  "sz": 4670
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v3432133222308266001/widget/module/external-pricing/js/ext/extendexternal-pricing_v1.min.js?bust=26.10",
+  "t": "script",
+  "sz": 394
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v4393247176856198843/widget/external-pricing/js/external-pricing.min.js?bust=26.10",
+  "t": "script",
+  "sz": 1252
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v5938907563517740510/widget/googleSearchConsole_v1/js/googleSearchConsole.min.js?bust=26.10",
+  "t": "script",
+  "sz": 498
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v9168681650984043366/widget/Bex_navigateToHomeCustom/js/Bex_navigateToHomeCustom.min.js?bust=26.10",
+  "t": "script",
+  "sz": 1333
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v3432133222308266001/widget/module/ACN_external_pricing/js/ext/extendACN_external_pricing_v1.min.js?bust=26.10",
+  "t": "script",
+  "sz": 394
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v377120732786334646/widget/ACN_external_pricing/js/ACN_external_pricing.min.js?bust=26.10",
+  "t": "script",
+  "sz": 320
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v2161053864869090304/widget/OCS_GTM/js/GTM.min.js?bust=26.10",
+  "t": "script",
+  "sz": 4045
+ },
+ {
+  "n": "https://visit-prod-us.occa.ocs.oraclecloud.com/Visit/js/oracleunifiedvisit.js?bust=26.10",
+  "t": "script",
+  "sz": 0
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/collections/rootCategory?catalogId=cloudCatalog&maxLevel=1000&expand=childCategories&fields=childCategories(items)",
+  "t": "xmlhttprequest",
+  "sz": 30048
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/Favicon-friboionline.png",
+  "t": "img",
+  "sz": 3451
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/u7020.png&width=28&height=28",
+  "t": "img",
+  "sz": 22614
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/icone-buscar.png",
+  "t": "img",
+  "sz": 593
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/do-utilizador.png",
+  "t": "img",
+  "sz": 4666
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/quit.png",
+  "t": "img",
+  "sz": 2067
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/compras.png",
+  "t": "img",
+  "sz": 4028
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/bag_act.png",
+  "t": "img",
+  "sz": 623
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/user.png",
+  "t": "img",
+  "sz": 504
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/bag.png",
+  "t": "img",
+  "sz": 490
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/murataLogo.png",
+  "t": "img",
+  "sz": 4115
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/Logo_Do_Chef.png",
+  "t": "img",
+  "sz": 2891
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/logo-friboi-1953-184x138.jpg",
+  "t": "img",
+  "sz": 2191
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/logo-friboi-black-184x138.jpg",
+  "t": "img",
+  "sz": 3412
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/logo-friboionline-completo-v2.png&height=82&width=129",
+  "t": "img",
+  "sz": 5130
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v377120732786334646/widget/v3/caasWidget/templates/display-wi4500069.template",
+  "t": "xmlhttprequest",
+  "sz": 300
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icon-desconto.png&height=25&width=25&outputFormat=PNG",
+  "t": "img",
+  "sz": 853
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/marca_dochef.jpg",
+  "t": "img",
+  "sz": 15749
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/marca_maturatta.jpg",
+  "t": "img",
+  "sz": 24860
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/marca_blackfriboi.jpg",
+  "t": "img",
+  "sz": 30303
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/marca_1953.jpg",
+  "t": "img",
+  "sz": 19245
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/marca_friboi.jpg",
+  "t": "img",
+  "sz": 18066
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/institucional_friboi_1200x185.jpg",
+  "t": "img",
+  "sz": 28546
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/Bnn_Comodato_Desktop_1920x400_V4.jpg&height=250&width=1200&outputFormat=JPEG&quality=0.9",
+  "t": "img",
+  "sz": 22312
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/B_PIX.png&height=250&width=1200&outputFormat=JPEG&quality=0.9",
+  "t": "img",
+  "sz": 33295
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/B_supergelados_16.09.jpg&height=250&width=1200&outputFormat=JPEG&quality=0.9",
+  "t": "img",
+  "sz": 40204
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v9080620603328175187/widget/recommendationsTracking/js/recsRequest.min.js?bust=26.10",
+  "t": "script",
+  "sz": 915
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/v147600203412215771/widget/recommendationsTracking/js/gdprConsent.min.js?bust=26.10",
+  "t": "script",
+  "sz": 634
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/thirdparty/fonts/helvetica-neue-condensed-bold.woff2",
+  "t": "css",
+  "sz": 21588
+ },
+ {
+  "n": "https://visit-prod-us.occa.ocs.oraclecloud.com/Visit/unified/v1/visit/a7475737c1PRD_siteUS/1380YZx7OzYXZREmj2bnppfnxWrQGsMpLzmEIdYknNs7yGQ19CC?dnc=1792627247934",
+  "t": "xmlhttprequest",
+  "sz": 0
+ },
+ {
+  "n": "https://l.clarity.ms/collect",
+  "t": "xmlhttprequest",
+  "sz": 0
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/merchant/production-Recommendations",
+  "t": "xmlhttprequest",
+  "sz": 552
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icone-bovinos.png&height=52&width=52&outputFormat=PNG",
+  "t": "img",
+  "sz": 1943
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icone-aves-2.png&height=52&width=52&outputFormat=PNG",
+  "t": "img",
+  "sz": 1923
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icone-suinos.png&height=52&width=52&outputFormat=PNG",
+  "t": "img",
+  "sz": 1975
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icone-pescados-2.png&height=52&width=52&outputFormat=PNG",
+  "t": "img",
+  "sz": 1864
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icone-batatas.png&height=52&width=52&outputFormat=PNG",
+  "t": "img",
+  "sz": 1934
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icone-cordeiro.png&height=52&width=52&outputFormat=PNG",
+  "t": "img",
+  "sz": 2083
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icone-charque-2.png&height=52&width=52&outputFormat=PNG",
+  "t": "img",
+  "sz": 1959
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icone-bovinosimportado.png&height=52&width=52&outputFormat=PNG",
+  "t": "img",
+  "sz": 2244
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/general/icone-promo.png&height=52&width=52&outputFormat=PNG",
+  "t": "img",
+  "sz": 1604
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/C_1_Costela.jpg",
+  "t": "img",
+  "sz": 17537
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/C_2_Picanha.png",
+  "t": "img",
+  "sz": 11868
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/C_3_Contra.png",
+  "t": "img",
+  "sz": 11512
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/C_4_Coxaomole.png",
+  "t": "img",
+  "sz": 14435
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/C_5_pescado.png",
+  "t": "img",
+  "sz": 14552
+ },
+ {
+  "n": "https://www.friboionline.com.br/file/general/C_6_batatas.png",
+  "t": "img",
+  "sz": 11961
+ },
+ {
+  "n": "https://recs.occa.us-phoenix-1.ocs.oraclecloud.com/pr/view/recommendations/3.0/json/a7475737c1PRD",
+  "t": "xmlhttprequest",
+  "sz": 0
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/analytics/visitorsMetric",
+  "t": "xmlhttprequest",
+  "sz": 431
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/products?storePriceListGroupId=padrao&productIds=374492%2C370933%2C389793%2C355390%2C507%2C85%2C111%2C4950",
+  "t": "xmlhttprequest",
+  "sz": 16175
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/products?storePriceListGroupId=padrao&productIds=358698%2C354857%2C1440%2C383188%2C1024%2C387549%2C25%2C370918",
+  "t": "xmlhttprequest",
+  "sz": 17669
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v5458865383332186743/products/374492_00_batata-palito-9mm-pacote-2kg-do-chef-vegetal-congelado.jpeg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2050
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v2833133054185146923/products/370933_00.jpg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2086
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v7507875833587092272/products/389793_00.jpeg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2063
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v4790141887961978118/products/355390_00.jpg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2786
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v7256643516033294106/products/507_00.JPG&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2637
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v7256643516033294106/products/85_00.JPG&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2637
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v3890266032130126365/products/111_00.JPG&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2399
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v4077187153698207698/products/4950_00.jpg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 3191
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v4077187153698207698/products/358698_00.jpg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 3191
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v7592247606503335803/products/354857_00.jpg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2029
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v4077187153698207698/products/1440_00.jpg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 3191
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v6980163897197726864/products/383188_00.jpg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2995
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v2147799586595205983/products/1024_00_alcatra-completa-acima-de-6-8kg-do-chef-bovino-resfriado.jpeg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2086
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v2445676986465968900/products/387549_00_contra-file-pedacos-do-chef-bovino-resfriado.JPG&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 1880
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v3643722493737555783/products/25_00.jpg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2387
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstore/v1/images/?source=/file/v4365250129978706818/products/370918_00.jpg&height=120&width=120&outputFormat=AVIF&quality=0.9",
+  "t": "img",
+  "sz": 2639
+ },
+ {
+  "n": "https://www.friboionline.com.br/ccstoreui/v1/logging/logClientErrors",
+  "t": "xmlhttprequest",
+  "sz": 300
+ },
+ {
+  "n": "https://l.clarity.ms/collect",
+  "t": "xmlhttprequest",
+  "sz": 0
+ },
+ {
+  "n": "https://www.google-analytics.com/g/collect?v=2&tid=G-ZBPWQTLZDK&gtm=45je6ak1v9123451147z8831825214za20gzb831825214zd831825214xf1&_p=1792627242487&gcs=G101&gcd=13p3t3p3p5l1&npa=1&dma_cps=-&dma=0&_eu=EAAAAGQC&are=1&cid=856478917.1792627244&frm=0&ir=1&pscdl=denied&rcb=4&sr=1440x900&uaa=x86&uab=64&uafvl=Chromium%3B148.0.7778.96%7CHeadlessChrome%3B148.0.7778.96%7CNot%252FA)Brand%3B99.0.0.0&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=pt-br&gaf=2&_s=2&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&sid=1792627244&sct=1&seg=0&dl=https%3A%2F%2Fwww.friboionline.com.br%2F&dt=Friboi%20Online%20%7C%2024%20Horas%207%20Dias%20por%20Semana!&en=page_change&ep.user_session_id=f47b5d88-6066-40e9-91d2-9eee4176af2e&ep.id_usuario=&_et=3008&tfd=11326",
+  "t": "fetch",
+  "sz": 0
+ },
+ {
+  "n": "https://l.clarity.ms/collect",
+  "t": "xmlhttprequest",
+  "sz": 0
+ },
+ {
+  "n": "https://l.clarity.ms/collect",
+  "t": "xmlhttprequest",
+  "sz": 0
+ },
+ {
+  "n": "https://l.clarity.ms/collect",
+  "t": "xmlhttprequest",
+  "sz": 0
+ },
+ {
+  "n": "https://www.google-analytics.com/g/collect?v=2&tid=G-ZBPWQTLZDK&gtm=45je6ak1v9123451147z8831825214za20gzb831825214zd831825214xf1&_p=1792627242487&gcs=G101&gcd=13p3t3p3p5l1&npa=1&dma_cps=-&dma=0&_eu=EAAAAGQC&are=1&cid=856478917.1792627244&frm=0&ir=1&pscdl=denied&rcb=4&sr=1440x900&uaa=x86&uab=64&uafvl=Chromium%3B148.0.7778.96%7CHeadlessChrome%3B148.0.7778.96%7CNot%252FA)Brand%3B99.0.0.0&uam=&uamb=0&uap=Linux&uapv=&uaw=0&ul=pt-br&gaf=2&tag_exp=115938466~115938468~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034&sid=1792627244&sct=1&seg=1&dl=https%3A%2F%2Fwww.friboionline.com.br%2F&dt=Friboi%20Online%20%7C%2024%20Horas%207%20Dias%20por%20Semana!&_s=3&tfd=33948",
+  "t": "fetch",
+  "sz": 0
+ },
+ {
+  "n": "https://l.clarity.ms/collect",
+  "t": "xmlhttprequest",
+  "sz": 0
+ }
+]

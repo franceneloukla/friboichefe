@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% from "_macros.html" import brl with context %}
+
+{% block title %}{{ page_title if page_title else 'Minha conta | Friboi Online' }}{% endblock %}
+
+{% block content %}
+{%- set _pedidos = pedidos if pedidos else (orders if orders else []) -%}
+
+<div class="account-page">
+  <nav class="breadcrumb" aria-label="Você está aqui">
+    <a href="/">Home</a><span class="sep">/</span><span class="current">Minha conta</span>
+  </nav>
+
+  <div class="account-head">
+    <div>
+      <h1>Olá, {{ user.name.split(' ')[0] if user else 'cliente' }}</h1>
+      <p class="page-subtitle">Aqui ficam seus dados e o histórico de pedidos.</p>
+    </div>
+    <a class="btn-outline" href="/api/auth/logout" data-logout>Sair da conta</a>
+  </div>
+
+  <div class="account-grid">
+    <aside class="account-card">
+      <h2>Meus dados</h2>
+      <dl>
+        <dt>Nome</dt><dd>{{ user.name if user else '—' }}</dd>
+        <dt>E-mail</dt><dd>{{ user.email if user else '—' }}</dd>
+        <dt>CPF</dt><dd>{{ user.cpf if user and user.cpf else '—' }}</dd>
+        <dt>Telefone</dt><dd>{{ user.phone if user and user.phone else '—' }}</dd>
+      </dl>
+      <a class="btn-outline" href="/carrinho" style="margin-top:18px;width:100%">Ver meu carrinho</a>
+    </aside>
+
+    <section class="account-card">
+      <h2>Histórico de pedidos</h2>
+      {% if _pedidos %}
+        <div style="overflow-x:auto">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Data</th>
+                <th>Itens</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for o in _pedidos %}
+                <tr>
+                  <td class="strong">#{{ o.get('id') }}</td>
+                  <td>{{ (o.get('created_at') or '')[:10] }}</td>
+                  <td>
+                    {%- set _it = o.get('items', []) -%}
+                    {{ _it|length }} {{ 'item' if _it|length == 1 else 'itens' }}
+                  </td>
+                  <td class="strong">R$ {{ brl(o.get('total', 0)) }}</td>
+                  <td><span class="status-pill {{ (o.get('status') or 'pendente')|lower }}">{{ o.get('status') or 'pendente' }}</span></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <h2>Nenhum pedido ainda</h2>
+          <p>Quando você finalizar uma compra, ela aparece aqui.</p>
+          <a class="btn-outline" href="/">Ver produtos</a>
+        </div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

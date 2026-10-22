@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ page_title if page_title else (store_name if store_name else 'Friboi Online') }}{% endblock %}</title>
+  <meta name="description" content="{{ meta_description if meta_description else 'Friboi Online — carnes e produtos para o seu negócio.' }}">
+  <link rel="icon" type="image/png" href="/assets/img/ui/logos/favicon.png">
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body data-page="{{ current_path if current_path else '' }}">
+<a class="sr-only" href="#conteudo">Ir para o conteúdo</a>
+
+{%- set _cats = categories if categories else [] -%}
+{%- set _nav = nav_categories if nav_categories else _cats|selectattr('parent_id', 'none')|list -%}
+{%- set _nav_links = [] -%}
+{%- for c in _nav -%}
+  {%- if c.id not in ['MARCAS'] and c.slug not in ['marcas', 'marcas-friboi', 'promocoes', 'promocao-oferta'] -%}
+    {%- set _ = _nav_links.append(c) -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- set _cart = cart if cart else {} -%}
+{%- set _count = cart_count if cart_count is defined and cart_count is not none else (_cart.get('count', 0) if _cart else 0) -%}
+{%- set _path = current_path if current_path else '' -%}
+{%- set _marcas = [] -%}
+{%- for c in _cats -%}
+  {%- if (c.slug in ['marcas', 'marcas-friboi']) or (c.id in ['MARCAS']) -%}{%- set _ = _marcas.append(c) -%}{%- endif -%}
+{%- endfor -%}
+
+{# ==========================================================================
+   HEADER
+   ========================================================================== #}
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="/" aria-label="Friboi Online — página inicial">
+      <img class="logo-img" src="/assets/img/ui/logos/logo-friboi-online.png" alt="Friboi Online" width="89" height="57">
+      <span class="logo-text">Friboi<small>online</small></span>
+    </a>
+
+    <form class="search" role="search" action="/busca" method="get">
+      <label class="sr-only" for="q">Buscar produto</label>
+      <input id="q" type="search" name="q" autocomplete="off" placeholder="Busque aqui seu produto..."
+             value="{{ q if q else '' }}" aria-label="Buscar produto">
+      <button type="submit" aria-label="Pesquisar produtos">
+        <img class="ic-img" src="/assets/img/ui/icones/icone-busca.png" alt="" width="22" height="22">
+        <svg class="fb ic-fb" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>
+      </button>
+    </form>
+
+    <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" data-menu-toggle>
+      <span></span>
+    </button>
+
+    <div class="header-actions">
+      {% if user %}
+        <a class="btn-login btn-account" href="/conta">
+          <img class="ic-img" src="/assets/img/ui/icones/icone-user-active.png" alt="" width="18" height="18">
+          <svg class="fb ic-fb" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"/></svg>
+          Minha conta
+        </a>
+        <a class="btn-logout" href="/api/auth/logout" data-logout>Sair</a>
+      {% else %}
+        <a class="btn-login" href="/login">
+          <img class="ic-img" src="/assets/img/ui/icones/icone-utilizador.png" alt="" width="18" height="18">
+          <svg class="fb ic-fb" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"/></svg>
+          Login ou Cadastre-se
+        </a>
+      {% endif %}
+      <a class="cart-link" href="/carrinho" aria-label="Carrinho de compras">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2A2 2 0 0 0 9.6 17h8.9a2 2 0 0 0 2-1.6L22 7H6"/></svg>
+        <span class="cart-count" data-cart-count data-empty="{{ 'true' if not _count else 'false' }}">{{ _count }}</span>
+      </a>
+    </div>
+  </div>
+
+  {# NAV de categorias — dinâmico a partir de `categories` #}
+  <nav class="main-nav" aria-label="Categorias">
+    <div class="nav-inner">
+      <ul>
+        {% for c in _nav_links %}
+          {%- set kids = _cats|selectattr('parent_id', 'equalto', c.id)|list -%}
+          {%- set url = '/categoria/' ~ c.slug -%}
+          <li class="{% if kids %}has-kids{% endif %}">
+            <a href="{{ url }}" class="{% if _path == url %}is-active{% endif %}">{{ c.name }}</a>
+            {% if kids %}
+              <ul class="submenu">
+                {% for k in kids|sort(attribute='name') %}
+                  <li><a href="/categoria/{{ k.slug }}">{{ k.name }}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        {% endfor %}
+        <li>
+          <a href="/promocoes" class="{% if _path == '/promocoes' %}is-active{% endif %}">Promoções</a>
+        </li>
+        <li>
+          {% if _marcas %}
+            <a href="/categoria/{{ _marcas[0].slug }}" class="{% if _path == '/categoria/' ~ _marcas[0].slug %}is-active{% endif %}">Marcas</a>
+          {% else %}
+            <a href="/busca?q=friboi">Marcas</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  {# nav mobile (drawer) #}
+  <div class="mobile-nav" data-mobile-nav>
+    {% for c in _nav_links %}
+      <a href="/categoria/{{ c.slug }}">{{ c.name }}</a>
+    {% endfor %}
+    <a href="/promocoes">Promoções</a>
+    <a href="/carrinho">Meu carrinho ({{ _count }})</a>
+    {% if user %}
+      <a href="/conta">Minha conta</a>
+    {% else %}
+      <a href="/login">Login ou Cadastre-se</a>
+    {% endif %}
+  </div>
+</header>
+
+{# ==========================================================================
+   FAIXA DE CUPOM
+   ========================================================================== #}
+<div class="coupon-bar" role="region" aria-label="Cupom de desconto">
+  <div class="coupon-inner">
+    <img class="coupon-img" src="/assets/img/ui/icones/icone-desconto.png" alt="" width="25" height="25">
+    <svg class="fb coupon-fb" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>
+    <span><strong>CADASTRE-SE E GANHE 5% DE DESCONTO</strong> na primeira compra com o cupom PCFRIBOI5.</span>
+    <a href="/cadastro">Cadastre-se</a>
+  </div>
+</div>
+
+{# ==========================================================================
+   CONTEÚDO
+   ========================================================================== #}
+<main class="site-main" id="conteudo">
+  {% block content %}{% endblock %}
+</main>
+
+{# ==========================================================================
+   RODAPÉ
+   ========================================================================== #}
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-column">
+        <h3>Acesso Rápido</h3>
+        <nav class="footer-content" aria-label="Acesso rápido">
+          <a class="footer-link" href="{{ '/conta' if user else '/login' }}">Login ou Cadastre-se</a>
+          <a class="footer-link" href="/unidades">Unidades de Atendimento</a>
+          <a class="footer-link" href="/boleto">Segunda via Boleto</a>
+          <a class="footer-link" href="/exclusao-conta">Exclusão/Cancelamento de Conta</a>
+          <a class="footer-link" href="/entregas">Entregas</a>
+        </nav>
+      </div>
+
+      <div class="footer-column">
+        <h3>Nossas Marcas</h3>
+        <nav class="footer-content" aria-label="Nossas marcas">
+          <a class="footer-link" href="/busca?q=friboi">Friboi</a>
+          <a class="footer-link" href="/busca?q=maturatta">Maturatta</a>
+          <a class="footer-link" href="/busca?q=chef">Do Chef</a>
+          <a class="footer-link" href="/busca?q=black">Black Friboi</a>
+          <a class="footer-link" href="/busca?q=1953">1953</a>
+        </nav>
+      </div>
+
+      <div class="footer-column">
+        <h3>A Friboi</h3>
+        <nav class="footer-content" aria-label="A Friboi">
+          <a class="footer-link" href="/quemsomos">Nossa História</a>
+          <a class="footer-link" href="/politica-de-privacidade">Política de Privacidade</a>
+          <a class="footer-link" href="/politica-de-cookies">Política de Cookies</a>
+          <a class="footer-link" href="/mapa-do-site">Mapa do Site</a>
+          <a class="footer-link" href="/faq">FAQ</a>
+        </nav>
+      </div>
+
+      <div class="footer-column">
+        <div class="footer-pay">
+          <h3>Meios de Pagamento</h3>
+          <div class="payment-row">
+            <div class="payment-item" title="Boleto">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5v14h18V5H3z"/><path d="M7 9v6"/><path d="M10 9v6"/><path d="M14 9v6"/><path d="M17 9v6"/></svg>
+            </div>
+            <div class="payment-item pix" title="PIX">PIX</div>
+            <div class="payment-item" title="Visa">
+              <svg viewBox="0 0 100 32" width="36" height="12">
+                <path d="M35.6.6 26.3 21.9l-1-5.1C23.6 11.2 18.4 5 12.7 2.1l10.4 29.1h10.4L49.1.6H35.6z" fill="#1A1F71"/>
+                <path d="M85.4.6h-8.1c-2.5 0-4.4.7-5.5 3.2L55.9 21.9h10.7l2.1-5.9h13.2l1.2 5.9h9.5L85.4.6zM76.9 12.9l4.5 12.4 2.6-12.4H76.9z" fill="#1A1F71"/>
+                <path d="M12.6.6H.2l.2 1.1c9.4 2.4 15.6 8.2 18.2 15.1L14.7.6h-2.1z" fill="#F79E1B"/>
+                <path d="M54.5.6 46 31.8h10.4L64.9.6H54.5z" fill="#1A1F71"/>
+              </svg>
+            </div>
+            <div class="payment-item" title="Mastercard">
+              <svg viewBox="0 0 24 24" width="28" height="28"><circle cx="8" cy="12" r="7" fill="#EB001B"/><circle cx="16" cy="12" r="7" fill="#FF5F00" fill-opacity=".8"/></svg>
+            </div>
+            <div class="payment-item amex" title="American Express"><span>AMEX</span></div>
+          </div>
+
+          <div class="safety-row">
+            <div class="safety-badge">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2 4 5v6c0 5.19 3.41 10.05 8 11 4.59-.95 8-5.81 8-11V5L12 2z" fill="#34A853"/><path d="M11 17 7.5 13.5l1.41-1.41L11 14.17l4.09-4.09L16.5 11.5 11 17z" fill="#fff"/></svg>
+              <div class="badge-text-group">
+                <span class="badge-title">GOOGLE</span>
+                <span class="badge-subtitle">Safe Browsing</span>
+              </div>
+            </div>
+            <div class="safety-badge">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5L12 1z" fill="#FFD700" fill-opacity=".2"/><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5L12 1z" stroke="#FFD700" stroke-width="1.5"/><rect x="9" y="10" width="6" height="5" rx="1" fill="#FFD700"/><path d="M10 10V8.5a2 2 0 1 1 4 0V10" stroke="#FFD700" stroke-width="1.5"/></svg>
+              <div class="badge-text-group">
+                <span class="badge-title">SITE 100%</span>
+                <span class="badge-subtitle">Seguro</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="footer-social-title">Redes Sociais</p>
+          <div class="social-row">
+            <a class="social-icon" href="https://www.instagram.com/friboibrasil/" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a class="social-icon" href="https://www.facebook.com/Friboi" target="_blank" rel="noopener" aria-label="Facebook">
+              <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a class="social-icon" href="https://www.youtube.com/user/AlimentosFriboi" target="_blank" rel="noopener" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright-bar">
+      <p>© {{ year if year else 2026 }} JBS Friboi. Todos os direitos reservados. CNPJ 02.916.265/0027-07</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" data-toast role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+  <span data-toast-text>Adicionado ao Carrinho</span>
+</div>
+
+<script src="/static/js/app.js" defer></script>
+</body>
+</html>

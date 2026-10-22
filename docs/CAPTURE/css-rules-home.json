@@ -1,0 +1,2173 @@
+{
+ "header.landing-wrapper": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary",
+    "css": "display: block;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "header",
+    "css": "height: 85px !important;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 header",
+    "css": "position: fixed; top: 0px; z-index: 9999999; width: 100vw; background: rgb(255, 255, 255); height: 85px !important;"
+   }
+  ]
+ },
+ "#navbar": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".row",
+    "css": "margin-right: -15px; margin-left: -15px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "padding-left: 0px; padding-right: 0px; -webkit-box-align: center; align-items: center; margin-top: 34px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-top: 34px !important; margin-left: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-left: 0px; margin-right: 0px; left: 0px; top: -18px; -webkit-box-align: center; align-items: center; margin-top: 0px !important; padding-left: 0px !important; padding-right: 0px !important; padding-top: 10px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-top: 34px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-left: 0px; margin-right: 0px; left: 0px; top: -18px; margin-top: 0px !important; padding-left: 0px !important; padding-right: 0px !important; padding-top: 10px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-top: 34px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row",
+    "css": "margin: 0px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .row.bg_barra",
+    "css": "margin-top: 0px !important;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .row.bg_barra",
+    "css": "margin-top: 0px; padding-left: 0px; padding-right: 0px; z-index: 9999999;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .row.bg_barra",
+    "css": "margin-left: 0px; margin-right: 0px; left: 0px; top: -18px; margin-top: 0px !important; padding-left: 0px !important; padding-right: 0px !important; padding-top: 10px !important;"
+   }
+  ]
+ },
+ ".bg_barra": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".row",
+    "css": "margin-right: -15px; margin-left: -15px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "padding-left: 0px; padding-right: 0px; -webkit-box-align: center; align-items: center; margin-top: 34px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-top: 34px !important; margin-left: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-left: 0px; margin-right: 0px; left: 0px; top: -18px; -webkit-box-align: center; align-items: center; margin-top: 0px !important; padding-left: 0px !important; padding-right: 0px !important; padding-top: 10px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-top: 34px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-left: 0px; margin-right: 0px; left: 0px; top: -18px; margin-top: 0px !important; padding-left: 0px !important; padding-right: 0px !important; padding-top: 10px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row.bg_barra",
+    "css": "margin-top: 34px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".row",
+    "css": "margin: 0px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .row.bg_barra",
+    "css": "margin-top: 0px !important;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .row.bg_barra",
+    "css": "margin-top: 0px; padding-left: 0px; padding-right: 0px; z-index: 9999999;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .row.bg_barra",
+    "css": "margin-left: 0px; margin-right: 0px; left: 0px; top: -18px; margin-top: 0px !important; padding-left: 0px !important; padding-right: 0px !important; padding-top: 10px !important;"
+   }
+  ]
+ },
+ "img.logo": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "img",
+    "css": "border: 0px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "tr, img",
+    "css": "break-inside: avoid;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "img",
+    "css": "max-width: 100% !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "img",
+    "css": "vertical-align: middle;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "img.logo",
+    "css": "margin-left: -40px; margin-top: -21px; width: 129px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "img.logo",
+    "css": "margin-left: -40px; margin-top: -21px; width: 129px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "img.logo",
+    "css": "margin-left: -36px; margin-top: -14px; width: 109px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 #navbar .barraMenu a img.logo",
+    "css": "width: 129px; height: 82px; aspect-ratio: 1.57317 / 1; object-fit: contain;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 #navbar .barraMenu a img.logo",
+    "css": "margin-left: -36px; margin-top: -14px; width: 109px; height: 69.3333px; position: absolute; z-index: 9;"
+   }
+  ]
+ },
+ "#logoFriboi": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "background: transparent;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a, a:visited",
+    "css": "text-decoration: underline;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "color: rgb(66, 139, 202); text-decoration: none;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar-brand",
+    "css": "float: left; height: 50px; padding: 15px; font-size: 18px; line-height: 20px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a",
+    "css": "outline: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".navbar-brand",
+    "css": "padding: 3px 15px !important;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .navbar-brand",
+    "css": "margin-right: 1rem; white-space: nowrap; padding: 3px 15px !important;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .navbar-brand",
+    "css": "margin-right: 1rem; white-space: nowrap; padding: 3px 15px !important;"
+   }
+  ]
+ },
+ "a.btn.login": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "background: transparent;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a, a:visited",
+    "css": "text-decoration: underline;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "color: rgb(66, 139, 202); text-decoration: none;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".btn",
+    "css": "display: inline-block; padding: 6px 12px; margin-bottom: 0px; font-size: 14px; font-weight: normal; line-height: 1.42857; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; user-select: none; background-image: none; border: 1px solid transparent; border-radius: 4px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".btn",
+    "css": "display: inline-block; margin-bottom: 0px; font-weight: normal; text-align: center; vertical-align: middle; cursor: pointer; background-image: none; border: 1px solid transparent; white-space: nowrap; padding: 6px 12px; font-size: 14px; line-height: 1.42857; border-radius: 4px; user-select: none;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a",
+    "css": "outline: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a.btn.login",
+    "css": "border: 1px solid rgb(225, 225, 225); background-color: rgb(255, 255, 255); border-radius: 0px; width: 134px; font-family: helveticaBOld; color: rgb(128, 128, 128); height: 38px; position: static;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a.btn.login",
+    "css": "border: 0px; display: flex; -webkit-box-orient: vertical; -webkit-box-direction: normal; flex-direction: column; -webkit-box-pack: center; justify-content: center; -webkit-box-align: center; align-items: center; padding: 0px; width: 90px; margin-left: 0px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.btn.login",
+    "css": "border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background-color: rgb(255, 255, 255); border-radius: 0px; font-family: helveticaBold; padding: 6px 12px; color: rgb(128, 128, 128); height: 38px; width: 200px; position: static;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.btn.login",
+    "css": "border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background-color: rgb(255, 255, 255); border-radius: 0px; font-family: helveticaBold; padding: 6px 2px; color: rgb(128, 128, 128); position: static; height: 38px; width: 220px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.btn.login",
+    "css": "margin-left: 10px; width: 120px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.btn.login",
+    "css": "border: 1px solid rgb(225, 225, 225); display: inline-block; flex-direction: column; justify-content: center; align-items: center; padding: 6px 2px; color: rgb(128, 128, 128); font-family: helveticaBold; width: auto; margin-left: 55%;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.btn.login",
+    "css": "margin-left: 10px; width: 120px;"
+   }
+  ]
+ },
+ "a.btn.login span": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.btn.login span",
+    "css": "font-weight: 600; font-family: helvetica;"
+   }
+  ]
+ },
+ "input.search-query": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, input, optgroup, select, textarea",
+    "css": "margin: 0px; font: inherit; color: inherit;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "input",
+    "css": "line-height: normal;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "input, button, select, textarea",
+    "css": "font-family: inherit; font-size: inherit; line-height: inherit;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".form-control",
+    "css": "display: block; width: 100%; height: 34px; padding: 6px 12px; font-size: 14px; line-height: 1.42857; color: rgb(85, 85, 85); background-color: rgb(255, 255, 255); background-image: none; border: 1px solid rgb(204, 204, 204); border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px inset; tra"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".input-group .form-control",
+    "css": "position: relative; z-index: 2; float: left; width: 100%; margin-bottom: 0px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".input-group-addon, .input-group-btn, .input-group .form-control",
+    "css": "display: table-cell;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".input-group .form-control:first-child, .input-group-addon:first-child, .input-group-btn:first-child > .btn, .input-group-btn:first-child > .btn-group > .btn, .",
+    "css": "border-top-right-radius: 0px; border-bottom-right-radius: 0px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".hidden-xs",
+    "css": "display: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".hidden-sm",
+    "css": "display: none !important;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 #element-search2 input",
+    "css": "width: 565px; border-radius: 0px; border: 1px solid rgb(225, 225, 225); margin-left: 50px; font-family: Helvetica; height: 38px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .form-control",
+    "css": "background-clip: padding-box; overflow: visible;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .form-control",
+    "css": "background-clip: padding-box; overflow: visible;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 #element-search2 input",
+    "css": "width: 90% !important; margin: 0px !important;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 #element-search2 input",
+    "css": "width: calc(100% - 118px); margin-left: 0px;"
+   }
+  ]
+ },
+ "button.btn.buscar": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, input, optgroup, select, textarea",
+    "css": "margin: 0px; font: inherit; color: inherit;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button",
+    "css": "overflow: visible;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, select",
+    "css": "text-transform: none;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, html input[type=\"button\"], input[type=\"reset\"], input[type=\"submit\"]",
+    "css": "appearance: button; cursor: pointer;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "input, button, select, textarea",
+    "css": "font-family: inherit; font-size: inherit; line-height: inherit;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".btn",
+    "css": "display: inline-block; padding: 6px 12px; margin-bottom: 0px; font-size: 14px; font-weight: normal; line-height: 1.42857; text-align: center; white-space: nowrap; vertical-align: middle; cursor: pointer; user-select: none; background-image: none; border: 1px solid transparent; border-radius: 4px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".btn",
+    "css": "display: inline-block; margin-bottom: 0px; font-weight: normal; text-align: center; vertical-align: middle; cursor: pointer; background-image: none; border: 1px solid transparent; white-space: nowrap; padding: 6px 12px; font-size: 14px; line-height: 1.42857; border-radius: 4px; user-select: none;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "button.btn.btn-outline.buscar",
+    "css": "background-color: rgb(246, 246, 246); border: 1px solid rgb(225, 225, 225); border-radius: 0px; margin-left: -5px; font-family: helveticaBold; color: rgb(128, 128, 128); height: 38px; z-index: 9;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 button.btn",
+    "css": "font-weight: 600; font-size: 14px; height: 38px; z-index: 9; margin-bottom: 0px; line-height: 1.42857; text-align: center; white-space: nowrap; vertical-align: middle; padding: 6px 12px 6px 22px; overflow: visible; transition-property: color, background-color, border-color, box-shadow; transition-du"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 button.btn",
+    "css": "font-weight: 600; font-size: 14px; height: 38px; z-index: 9; margin-bottom: 0px; line-height: 1.42857; text-align: center; white-space: nowrap; vertical-align: middle; padding: 6px 12px 6px 22px; overflow: visible; transition-property: color, background-color, border-color, box-shadow; transition-du"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 button.btn",
+    "css": "display: none;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 button.btn",
+    "css": "width: 123px;"
+   }
+  ]
+ },
+ ".navbar.container.menu": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary",
+    "css": "display: block;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar",
+    "css": "display: none;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".container",
+    "css": "padding-right: 15px; padding-left: 15px; margin-right: auto; margin-left: auto;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".container",
+    "css": "width: 750px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".container",
+    "css": "width: 970px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".container",
+    "css": "width: 1170px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar",
+    "css": "position: relative; min-height: 50px; margin-bottom: 20px; border: 1px solid transparent;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar",
+    "css": "border-radius: 4px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "padding-left: 4px; margin-top: 0px; left: -20px; margin-bottom: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "padding-left: 0px; padding-right: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "left: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "top: -53px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".container",
+    "css": "max-width: 760px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "top: -96px; left: 0px; z-index: 5555; width: 70px; margin-right: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "top: -92px; left: -6px; width: 42px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "position: absolute; right: 20px; left: unset !important; top: 20px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".container",
+    "css": "padding-right: 0px; padding-left: 0px; margin-right: 0px; margin-left: 0px; width: 100%;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .container",
+    "css": "padding-right: 15px; padding-left: 15px; margin-right: auto; margin-left: auto;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "align-items: center; flex-flow: row; justify-content: flex-start; display: block; line-height: 1.42857; margin-bottom: 0px; margin-top: 0px; padding-left: 4px; padding-top: 5px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "align-items: center; flex-flow: row; justify-content: flex-start; display: block; line-height: 1.42857; margin-bottom: 0px; margin-top: 0px; padding-left: 4px; padding-top: 5px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "display: none;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .container",
+    "css": "max-width: 1140px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 nav.navbar.navbar-expand-lg.navbar-light.container.menu",
+    "css": "display: none;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .container",
+    "css": "max-width: 1140px;"
+   }
+  ]
+ },
+ "ul.navbar-nav.color": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "ul, ol",
+    "css": "margin-top: 0px; margin-bottom: 10px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar-nav",
+    "css": "margin: 7.5px -15px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar-nav",
+    "css": "float: left; margin: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".navbar-expand-lg .navbar-nav",
+    "css": "position: relative;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".menu .navbar-nav",
+    "css": "position: fixed; left: 0px; width: calc(85%); margin: 0px; background: rgb(255, 255, 255); top: 114px; padding: 0px 15px; max-height: calc(-24vh); overflow: auto;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".mr-auto, .mx-auto",
+    "css": "margin-right: auto !important; height: 560px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".menu .navbar-nav",
+    "css": "top: 115px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".menu .navbar-nav",
+    "css": "max-height: calc(-11vh);"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .navbar-nav.mr-auto.color",
+    "css": "padding-inline-start: 0px; padding-left: 0px; margin: 0px auto; list-style: outside none none;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .navbar-nav.mr-auto.color",
+    "css": "padding-inline-start: 0px; padding-left: 0px; list-style: outside none none;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .navbar-nav",
+    "css": "margin: 0px -15px; background-color: rgb(255, 255, 255);"
+   }
+  ]
+ },
+ "li.nav-item": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar-nav > li",
+    "css": "float: left;"
+   }
+  ]
+ },
+ "a.nav-link": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "background: transparent;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a, a:visited",
+    "css": "text-decoration: underline;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "color: rgb(66, 139, 202); text-decoration: none;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar-nav > li > a",
+    "css": "padding-top: 10px; padding-bottom: 10px; line-height: 20px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar-nav > li > a",
+    "css": "padding-top: 15px; padding-bottom: 15px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a",
+    "css": "outline: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a.nav-link",
+    "css": "font-family: \"Helvetica Neue\"; font-weight: 500; font-size: 15px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".navbar-light .navbar-nav .nav-link",
+    "css": "color: rgb(0, 0, 0); font-family: Helvetica; font-weight: 600;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a.nav-link",
+    "css": "padding-right: 13px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".col-md-6.botao-slide, .navbar-expand-lg .navbar-nav .nav-link",
+    "css": "padding-left: 0px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .nav-link",
+    "css": "display: block; font-family: Helvetica; font-weight: 600; color: rgb(0, 0, 0); padding-left: 5px; padding-right: 13px; cursor: pointer;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.nav-link",
+    "css": "background-color: rgb(255, 255, 255); display: block; font-family: Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif; font-weight: 500; color: rgb(16, 33, 97); padding-left: 5px; padding-right: 13px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.nav-link",
+    "css": "display: block; font-family: Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif; font-weight: 500; color: rgb(16, 33, 97); padding-left: 5px; padding-right: 13px;"
+   }
+  ]
+ },
+ "a[class*=nav-link]": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "background: transparent;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a, a:visited",
+    "css": "text-decoration: underline;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "color: rgb(66, 139, 202); text-decoration: none;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar-nav > li > a",
+    "css": "padding-top: 10px; padding-bottom: 10px; line-height: 20px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar-nav > li > a",
+    "css": "padding-top: 15px; padding-bottom: 15px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a",
+    "css": "outline: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a.nav-link",
+    "css": "font-family: \"Helvetica Neue\"; font-weight: 500; font-size: 15px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".navbar-light .navbar-nav .nav-link",
+    "css": "color: rgb(0, 0, 0); font-family: Helvetica; font-weight: 600;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a.nav-link",
+    "css": "padding-right: 13px !important;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": ".col-md-6.botao-slide, .navbar-expand-lg .navbar-nav .nav-link",
+    "css": "padding-left: 0px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 .nav-link",
+    "css": "display: block; font-family: Helvetica; font-weight: 600; color: rgb(0, 0, 0); padding-left: 5px; padding-right: 13px; cursor: pointer;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.nav-link",
+    "css": "background-color: rgb(255, 255, 255); display: block; font-family: Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif; font-weight: 500; color: rgb(16, 33, 97); padding-left: 5px; padding-right: 13px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 a.nav-link",
+    "css": "display: block; font-family: Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif; font-weight: 500; color: rgb(16, 33, 97); padding-left: 5px; padding-right: 13px;"
+   }
+  ]
+ },
+ ".textoMenu": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_CustomHeader_v1-wi400005 #mobile-menu ul li a .textoMenu",
+    "css": "color: rgb(0, 0, 0); font-family: Helvetica; font-weight: 600; font-size: 14px; line-height: 20px;"
+   }
+  ]
+ },
+ ".dropdown-menu": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "ul, ol",
+    "css": "margin-top: 0px; margin-bottom: 10px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "ul ul, ol ul, ul ol, ol ol",
+    "css": "margin-bottom: 0px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".dropdown-menu",
+    "css": "position: absolute; top: 100%; left: 0px; z-index: 1000; display: none; float: left; min-width: 160px; padding: 5px 0px; margin: 2px 0px 0px; font-size: 14px; list-style: none; background-color: rgb(255, 255, 255); background-clip: padding-box; border: 1px solid rgba(0, 0, 0, 0.15); border-radius: 4"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": ".navbar-nav > li > .dropdown-menu",
+    "css": "margin-top: 0px; border-top-left-radius: 0px; border-top-right-radius: 0px;"
+   }
+  ]
+ },
+ ".category-list": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".category-list",
+    "css": "display: flex; align-items: center; justify-content: center; overflow-x: auto; gap: 16px; padding: 8px 4px; scrollbar-width: none;"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".category-list",
+    "css": "justify-content: flex-start;"
+   }
+  ]
+ },
+ ".category-item": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "background: transparent;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a, a:visited",
+    "css": "text-decoration: underline;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "color: rgb(66, 139, 202); text-decoration: none;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a",
+    "css": "outline: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".category-item",
+    "css": "display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; min-width: 100px; flex: 0 1 auto; padding: 8px; border-radius: 8px; border: 1px solid rgb(181, 0, 11); position: relative; overflow: hidden; transition: background-color var(--transition-speed"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".category-item",
+    "css": "min-width: 90px; flex: 0 0 auto;"
+   }
+  ]
+ },
+ ".icon-box": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".icon-box",
+    "css": "margin-bottom: 12px; padding: 5px; border-radius: 12px; transition: transform 0.3s, background-color 0.3s; display: flex; align-items: center; justify-content: center;"
+   }
+  ]
+ },
+ ".category-name": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".category-name",
+    "css": "font-size: 13px; font-weight: 600; color: rgb(181, 0, 11); transition: color 0.3s; white-space: nowrap; text-align: center;"
+   }
+  ]
+ },
+ ".product-card": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-card",
+    "css": "background-color: var(--color-background); border-radius: 8px; width: 255px; min-width: 255px; flex-shrink: 0; position: relative; display: flex; flex-direction: column; transition: transform 0.2s; overflow: hidden; border: 1px solid rgb(239, 239, 239); scroll-snap-align: start;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-card",
+    "css": "width: calc(49%); min-width: calc(49%); max-width: calc(49%); flex: 0 0 calc(49%); scroll-snap-align: start;"
+   }
+  ]
+ },
+ ".product-tag": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-tag",
+    "css": "position: absolute; top: 10px; right: 10px; padding: 0px 8px; border-radius: 0px; font-size: 0.6rem; font-weight: 700; color: rgb(255, 255, 255); z-index: 10; text-transform: capitalize;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .temperatura",
+    "css": "background-color: rgb(13, 23, 79);"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-tag, #recsCustom_v1_v1-wi6400003 #cc-recs .product-tag-left",
+    "css": "font-size: 8px; padding: 1px 6px;"
+   }
+  ]
+ },
+ ".product-name": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "p, h2, h3",
+    "css": "orphans: 3; widows: 3;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h2, h3",
+    "css": "break-after: avoid;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6",
+    "css": "font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h1, .h1, h2, .h2, h3, .h3",
+    "css": "margin-top: 20px; margin-bottom: 10px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h3, .h3",
+    "css": "font-size: 24px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "h3",
+    "css": "color: inherit; font-family: inherit; font-size: 1.75rem; font-style: inherit; font-weight: bold; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "h3",
+    "css": "color: inherit; font-family: inherit; font-size: 1.75rem; font-style: inherit; font-weight: bold; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-name",
+    "css": "font-size: 12px; font-weight: 700; color: rgb(16, 33, 97); margin: 0px 0px 8px; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; white-space: normal; line-height: 1.3em; max-height: 1.3em; text-transform: capitalize;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-name",
+    "css": "font-size: 10px; line-height: 1.3em; max-height: 1.3em; -webkit-line-clamp: 1; overflow: hidden; margin-bottom: 8px; text-transform: capitalize;"
+   }
+  ]
+ },
+ ".product-code-tag": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-code-tag",
+    "css": "display: inline-flex; align-items: center; gap: 4px; background-color: transparent; padding: 0px; border-radius: 0px; color: var(--color-text); font-size: 10px; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-code-tag",
+    "css": "font-size: 9px; margin-bottom: 8px;"
+   }
+  ]
+ },
+ ".label-cod": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-code-tag .label-cod",
+    "css": "color: rgb(16, 33, 97); font-weight: 700;"
+   }
+  ]
+ },
+ ".info-item": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .info-item",
+    "css": "display: flex; align-items: center; gap: 4px; font-size: 8px; color: rgb(73, 80, 87); font-weight: 500; background-color: rgb(240, 240, 240); padding: 4px 8px; border-radius: 4px; line-height: 1;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .info-item",
+    "css": "font-size: 7px; padding: 3px 5px; gap: 2px;"
+   }
+  ]
+ },
+ ".ver-produto-btn": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, input, optgroup, select, textarea",
+    "css": "margin: 0px; font: inherit; color: inherit;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button",
+    "css": "overflow: visible;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, select",
+    "css": "text-transform: none;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, html input[type=\"button\"], input[type=\"reset\"], input[type=\"submit\"]",
+    "css": "appearance: button; cursor: pointer;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "input, button, select, textarea",
+    "css": "font-family: inherit; font-size: inherit; line-height: inherit;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .ver-produto-btn",
+    "css": "background-color: rgb(181, 0, 11); color: rgb(255, 255, 255); border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; border-radius: 4px; padding: 8px 16px; cursor: pointer; transition: background-color 0.2s, box-shadow 0.2s; height: 35px; position: relative; wid"
+   }
+  ]
+ },
+ ".ver-produto-btn p": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "p, h2, h3",
+    "css": "orphans: 3; widows: 3;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "p",
+    "css": "margin: 0px 0px 10px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "p",
+    "css": "color: inherit; font-family: inherit; font-size: 1rem; font-style: inherit; font-weight: normal; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "p",
+    "css": "color: inherit; font-family: inherit; font-size: 1rem; font-style: inherit; font-weight: normal; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   }
+  ]
+ },
+ ".carousel-arrow": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, input, optgroup, select, textarea",
+    "css": "margin: 0px; font: inherit; color: inherit;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button",
+    "css": "overflow: visible;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, select",
+    "css": "text-transform: none;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "button, html input[type=\"button\"], input[type=\"reset\"], input[type=\"submit\"]",
+    "css": "appearance: button; cursor: pointer;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "input, button, select, textarea",
+    "css": "font-family: inherit; font-size: inherit; line-height: inherit;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .carousel-arrow",
+    "css": "position: static; transform: none; background: rgb(181, 0, 11); border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20; box-s"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .carousel-container .carousel-arrow",
+    "css": "position: absolute; top: -50px; width: 35px; height: 35px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .carousel-container .prev-arrow",
+    "css": "right: 50px;"
+   }
+  ]
+ },
+ ".arrow-icon": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "svg:not(:root)",
+    "css": "overflow: hidden;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .arrow-icon",
+    "css": "width: 20px; height: 20px; fill: rgb(255, 255, 255);"
+   }
+  ]
+ },
+ ".cc-recommendations-title": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .cc-recommendations-title",
+    "css": "margin-bottom: 32px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .cc-recommendations-title",
+    "css": "margin-bottom: 20px; padding-left: 15px;"
+   }
+  ]
+ },
+ ".titleText1": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .cc-recommendations-title .titleText1",
+    "css": "font-family: Roboto; font-size: 40px; font-weight: 900; text-transform: capitalize; color: rgb(13, 1, 84);"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .cc-recommendations-title .titleText1",
+    "css": "font-size: 19px; font-weight: 900; color: rgb(13, 1, 84);"
+   }
+  ]
+ },
+ ".titleText2": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .cc-recommendations-title .titleText2",
+    "css": "font-family: \"Roboto Condensed\"; font-size: 40px; font-weight: 300; color: rgb(13, 1, 84); text-transform: capitalize;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .cc-recommendations-title .titleText2",
+    "css": "font-size: 19px; font-weight: 300; color: rgb(13, 1, 84); text-transform: capitalize;"
+   }
+  ]
+ },
+ ".card-beneficio": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#caasWidget_v3-wi4500010 *",
+    "css": "box-sizing: border-box; -webkit-font-smoothing: antialiased;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#caasWidget_v3-wi4500010 .card-beneficio",
+    "css": "flex: 0 0 70%; scroll-snap-align: center; background: linear-gradient(135deg, rgb(13, 23, 79) 0px, rgb(42, 98, 221) 100%); border-radius: 16px; padding: 16px; color: rgb(255, 255, 255); display: flex; flex-direction: column; min-height: 150px; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 15px; border-widt"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#caasWidget_v3-wi4500010 .card-beneficio",
+    "css": "flex: 0 0 auto; width: 100%; min-height: 160px; transition: transform 0.3s;"
+   }
+  ]
+ },
+ ".icon-wrapper": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#caasWidget_v3-wi4500010 *",
+    "css": "box-sizing: border-box; -webkit-font-smoothing: antialiased;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#caasWidget_v3-wi4500010 .icon-wrapper",
+    "css": "background-color: rgb(227, 6, 19); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;"
+   }
+  ]
+ },
+ ".beneficio-titulo": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "p, h2, h3",
+    "css": "orphans: 3; widows: 3;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h2, h3",
+    "css": "break-after: avoid;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6",
+    "css": "font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h1, .h1, h2, .h2, h3, .h3",
+    "css": "margin-top: 20px; margin-bottom: 10px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h3, .h3",
+    "css": "font-size: 24px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "h3",
+    "css": "color: inherit; font-family: inherit; font-size: 1.75rem; font-style: inherit; font-weight: bold; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "h3",
+    "css": "color: inherit; font-family: inherit; font-size: 1.75rem; font-style: inherit; font-weight: bold; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#caasWidget_v3-wi4500010 *",
+    "css": "box-sizing: border-box; -webkit-font-smoothing: antialiased;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#caasWidget_v3-wi4500010 .beneficio-titulo",
+    "css": "font-weight: 800; font-size: 1rem; margin: 0px 0px 4px; text-transform: capitalize; line-height: 1.2; color: rgb(255, 255, 255);"
+   }
+  ]
+ },
+ ".beneficio-texto": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "p, h2, h3",
+    "css": "orphans: 3; widows: 3;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "p",
+    "css": "margin: 0px 0px 10px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "p",
+    "css": "color: inherit; font-family: inherit; font-size: 1rem; font-style: inherit; font-weight: normal; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "p",
+    "css": "color: inherit; font-family: inherit; font-size: 1rem; font-style: inherit; font-weight: normal; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#caasWidget_v3-wi4500010 *",
+    "css": "box-sizing: border-box; -webkit-font-smoothing: antialiased;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#caasWidget_v3-wi4500010 .beneficio-texto",
+    "css": "font-size: 0.75rem; opacity: 0.9; line-height: 1.3; margin: 0px; font-weight: 400; color: rgb(255, 255, 255);"
+   }
+  ]
+ },
+ ".footer-column h3": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "p, h2, h3",
+    "css": "orphans: 3; widows: 3;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h2, h3",
+    "css": "break-after: avoid;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6",
+    "css": "font-family: inherit; font-weight: 500; line-height: 1.1; color: inherit;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h1, .h1, h2, .h2, h3, .h3",
+    "css": "margin-top: 20px; margin-bottom: 10px;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "h3, .h3",
+    "css": "font-size: 24px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "h3",
+    "css": "color: inherit; font-family: inherit; font-size: 1.75rem; font-style: inherit; font-weight: bold; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "h3",
+    "css": "color: inherit; font-family: inherit; font-size: 1.75rem; font-style: inherit; font-weight: bold; line-height: 150%; text-align: inherit; text-decoration: inherit;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_meusPedidos_v1-wi6600004 .footer-column h3",
+    "css": "font-size: 0.95rem; font-weight: 800; margin-bottom: 1.2rem; position: relative; padding-left: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-left: 3px solid rgb(227, 6, 19); margin-top: 0px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_meusPedidos_v1-wi6600004 .footer-column h3",
+    "css": "cursor: default; pointer-events: none;"
+   }
+  ]
+ },
+ ".footer-link": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "background: transparent;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a, a:visited",
+    "css": "text-decoration: underline;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "color: rgb(66, 139, 202); text-decoration: none;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a",
+    "css": "outline: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_meusPedidos_v1-wi6600004 .footer-link",
+    "css": "text-decoration: none; transition: 0.2s; padding: 0.4rem 0px; display: block; font-size: 0.85rem; opacity: 0.75; color: rgb(255, 255, 255) !important;"
+   }
+  ]
+ },
+ ".section-title": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_meusPedidos_v1-wi6600004 .section-title",
+    "css": "font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 0.8rem; opacity: 0.9; color: rgb(255, 255, 255); letter-spacing: 1px; display: block;"
+   }
+  ]
+ },
+ ".copyright-bar": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_meusPedidos_v1-wi6600004 .copyright-bar",
+    "css": "border-top: 1px solid rgba(255, 255, 255, 0.08); margin-top: 2rem; padding-top: 1rem; text-align: center; font-size: 0.7rem; opacity: 0.5;"
+   }
+  ]
+ },
+ ".payment-item": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_meusPedidos_v1-wi6600004 .payment-item",
+    "css": "background: rgb(255, 255, 255); padding: 2px; border-radius: 3px; display: flex; align-items: center; justify-content: center; width: 44px; height: 28px; overflow: hidden;"
+   }
+  ]
+ },
+ ".social-icon": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "background: transparent;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a, a:visited",
+    "css": "text-decoration: underline;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "a",
+    "css": "color: rgb(66, 139, 202); text-decoration: none;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a",
+    "css": "outline: 0px;"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "base.css?occsite=siteUS",
+    "sel": "a:link",
+    "css": "color: rgb(25, 93, 141);"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#Bex_meusPedidos_v1-wi6600004 .social-icon",
+    "css": "background: rgba(255, 255, 255, 0.08); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px; transition: 0.2s; text-decoration: none;"
+   }
+  ]
+ },
+ ".brand-item": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".brand-item",
+    "css": "display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.4s; text-decoration: none; padding: 10px; width: 220px;"
+   }
+  ]
+ },
+ ".brand-name": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".brand-name",
+    "css": "margin-top: 12px; font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; opacity: 0; transition: 0.3s;"
+   }
+  ]
+ },
+ ".brands-grid": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".brands-grid",
+    "css": "display: none; justify-content: space-around; align-items: center; padding: 20px 0px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".brands-grid",
+    "css": "display: flex;"
+   }
+  ]
+ },
+ ".promo-item": {
+  "found": false
+ },
+ ".coupon-code": {
+  "found": false
+ },
+ ".product-details": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-details",
+    "css": "padding: 10px; display: flex; flex-direction: column; flex-grow: 1;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-details",
+    "css": "padding: 8px;"
+   }
+  ]
+ },
+ ".added-to-cart-message": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .added-to-cart-message",
+    "css": "position: absolute; bottom: 10px; left: 10px; right: 10px; background-color: rgb(255, 255, 255); border: 1px solid rgb(0, 119, 0); color: rgb(0, 119, 0); padding: 10px; box-shadow: rgba(0, 119, 0, 0.3) 0px 2px 8px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font"
+   }
+  ]
+ },
+ ".product-image-container": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-image-container",
+    "css": "width: 120px; height: 120px; max-width: 120px; max-height: 120px; margin: 10px auto; background-color: var(--color-light-grey); cursor: pointer; display: flex; align-items: center; justify-content: center; overflow: hidden;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .product-image-container",
+    "css": "width: 100px; height: 100px; max-width: 100px; max-height: 100px; margin: 8px auto;"
+   }
+  ]
+ },
+ ".carousel-wrapper": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .carousel-wrapper",
+    "css": "overflow: hidden; position: relative; width: 100%;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .carousel-wrapper",
+    "css": "overflow: hidden; position: relative; touch-action: pan-y;"
+   }
+  ]
+ },
+ ".carousel-container": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .cc-recs-custom-carousel",
+    "css": "position: relative; padding: 0px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 62%; margin: 0px auto;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .carousel-container",
+    "css": "position: relative; padding: 0px; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin: 0px auto;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .cc-recs-custom-carousel",
+    "css": "width: 100%; padding: 0px;"
+   },
+   {
+    "sheet": "inline",
+    "sel": "#recsCustom_v1_v1-wi6400003 #cc-recs .carousel-container",
+    "css": "gap: 0px; padding: 0px;"
+   }
+  ]
+ },
+ ".section-container": {
+  "found": true,
+  "rules": [
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary",
+    "css": "display: block;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "color: rgb(0, 0, 0) !important; text-shadow: none !important; background: transparent !important; box-shadow: none !important;"
+   },
+   {
+    "sheet": "style.css?bust=26.10",
+    "sel": "*",
+    "css": "box-sizing: border-box;"
+   },
+   {
+    "sheet": "inline",
+    "sel": ".section-container",
+    "css": "width: 100%; max-width: 1200px; margin: 0px auto;"
+   }
+  ]
+ }
+}

@@ -1,0 +1,221 @@
+{# ============================================================================
+   Macros compartilhados — card de produto, paginação, breadcrumb
+   Qualquer template que precise de um card usa product_card(p, ...)
+   ========================================================================== #}
+
+{% macro brl(v) -%}
+{# Formata número no padrão brasileiro: 1234.5 -> 1.234,50 #}
+{%- if v is none or v == '' -%}0,00
+{%- else -%}
+{{ ('%.2f'|format(v|float))|replace(',', 'X')|replace('.', ',')|replace('X', '.') }}
+{%- endif -%}
+{%- endmacro %}
+
+
+{% macro temp_tag(p) -%}
+{%- set attrs = p.attrs if p.attrs else {} -%}
+{%- set t = attrs.get('x_TEMPERATURA') or attrs.get('temperatura') or '' -%}
+{{ (t|string|trim) if t else 'Congelado' }}
+{%- endmacro %}
+
+
+{% macro caixa_label(p) -%}
+{%- set wmin = p.weight_min -%}
+{%- set wmax = p.weight_max -%}
+{%- if wmin and wmax and (wmin|float) != (wmax|float) -%}
+Caixa: {{ (wmin|float)|round(0, 'floor')|int }}kg a {{ (wmax|float)|round(0, 'floor')|int }}kg
+{%- elif wmax -%}
+Caixa: {{ (wmax|float)|round(0, 'floor')|int }}kg
+{%- elif wmin -%}
+Caixa: {{ (wmin|float)|round(0, 'floor')|int }}kg
+{%- else -%}
+Caixa: sob consulta
+{%- endif -%}
+{%- endmacro %}
+
+
+{% macro pecas_label(p) -%}
+{%- set attrs = p.attrs if p.attrs else {} -%}
+{%- set q = attrs.get('x_iQtdeMinimaPeca') or attrs.get('x_iQtdMinimaPeca') or attrs.get('pecas') -%}
+{%- if q -%}
+Peças: {{ q }}
+{%- else -%}
+Unidade: {{ p.unit or 'KG' }}
+{%- endif -%}
+{%- endmacro %}
+
+
+{#
+  product_card(p, ctx='vitrine')
+  ctx: 'vitrine' (largura fixa 255) ou 'grid' (ocupa a coluna do grid)
+#}
+{% macro product_card(p, ctx='vitrine') %}
+{%- set attrs = p.attrs if p.attrs else {} -%}
+{%- set temp = (attrs.get('x_TEMPERATURA') or 'Congelado')|string|trim -%}
+{%- set in_stock = p.in_stock if p.in_stock is defined else ((p.stock or '')|lower).startswith('dispon') -%}
+{%- set sale = p.sale_price if p.sale_price else none -%}
+{%- set price = p.price if p.price is not none else 0 -%}
+{%- set effective = sale if sale and (sale|float) < (price|float) else price -%}
+<article class="product-card{% if not in_stock %} unavailable{% endif %}" data-product-id="{{ p.id }}" data-slug="{{ p.slug }}">
+  <span class="product-tag temperatura">{{ temp|capitalize if temp else 'Congelado' }}</span>
+  {% if sale and (sale|float) < (price|float) %}
+    <span class="product-tag oferta">Oferta</span>
+  {% endif %}
+
+  <a class="product-image-container" href="/produto/{{ p.slug }}" aria-label="{{ p.name }}">
+    {% if p.image_url %}
+      <img src="{{ p.image_url }}" alt="{{ p.name }}" loading="lazy" width="120" height="120">
+    {% else %}
+      <span class="noimg">Sem imagem</span>
+    {% endif %}
+  </a>
+
+  <div class="product-details">
+    <div class="product-code-tag">
+      <span class="label-cod">CÓD.</span>
+      <span class="cod-num">{{ p.sku if p.sku else p.id }}</span>
+    </div>
+
+    <h3 class="product-name">
+      <a href="/produto/{{ p.slug }}" title="{{ p.name }}">{{ p.name }}</a>
+    </h3>
+
+    <div class="product-info-grid">
+      <div class="info-item">{{ caixa_label(p) }}</div>
+      <div class="info-item">{{ pecas_label(p) }}</div>
+    </div>
+
+    <div class="product-pricing">
+      {% if sale and (sale|float) < (price|float) %}
+        <div class="price-old-wrapper">
+          <span class="price-label">De</span>
+          <span class="price-old">R$ {{ brl(price) }}</span>
+        </div>
+      {% endif %}
+      <div class="price-now-wrapper">
+        <span class="price-label">Por</span>
+        <span class="price-now">R$ {{ brl(effective) }}</span>
+        <span class="price-unit">/{{ (p.unit or 'KG')|lower }}</span>
+      </div>
+    </div>
+
+    <a class="ver-produto-btn" href="/produto/{{ p.slug }}">Ver Produto</a>
+  </div>
+</article>
+{% endmacro %}
+
+
+{#
+  product_card_simple(p) — versão compacta usada em "relacionados"
+#}
+{% macro product_card_compact(p) %}
+{{ product_card(p, ctx='grid') }}
+{% endmacro %}
+
+
+{#
+  pagination(page, pages, base_url, params)
+  params: dict com q/sort/on_sale/in_stock a preservar na query string
+#}
+{% macro pagination(page, pages, base_url, params={}) %}
+{%- set page = page|int(1) -%}
+{%- set pages = pages|int(1) -%}
+{%- if pages and pages > 1 -%}
+{%- macro qs(extra) -%}
+{%- set parts = [] -%}
+{%- for k, v in params.items() -%}
+{%- if v not in (none, '', false, 'false', 0) and k != 'page' -%}
+{%- set _ = parts.append(k ~ '=' ~ (v|urlencode)) -%}
+{%- endif -%}
+{%- endfor -%}
+{%- if extra is not none -%}{%- set _ = parts.append('page=' ~ extra) -%}{%- endif -%}
+{{ ('?' ~ parts|join('&')) if parts else '' }}
+{%- endmacro -%}
+<nav class="pagination" aria-label="Paginação">
+  {% if page > 1 %}
+    <a href="{{ base_url }}{{ qs(page - 1) }}" rel="prev" aria-label="Página anterior">Anterior</a>
+  {% else %}
+    <span class="is-disabled">Anterior</span>
+  {% endif %}
+
+  {%- set start = [1, page - 2]|max -%}
+  {%- set end = [pages, start + 4]|min -%}
+  {%- set start = [1, end - 4]|max -%}
+
+  {% if start > 1 %}
+    <a href="{{ base_url }}{{ qs(1) }}">1</a>
+    {% if start > 2 %}<span class="is-disabled">…</span>{% endif %}
+  {% endif %}
+
+  {% for n in range(start, end + 1) %}
+    {% if n == page %}
+      <span class="is-current" aria-current="page">{{ n }}</span>
+    {% else %}
+      <a href="{{ base_url }}{{ qs(n) }}">{{ n }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if end < pages %}
+    {% if end < pages - 1 %}<span class="is-disabled">…</span>{% endif %}
+    <a href="{{ base_url }}{{ qs(pages) }}">{{ pages }}</a>
+  {% endif %}
+
+  {% if page < pages %}
+    <a href="{{ base_url }}{{ qs(page + 1) }}" rel="next" aria-label="Próxima página">Próxima</a>
+  {% else %}
+    <span class="is-disabled">Próxima</span>
+  {% endif %}
+</nav>
+{%- endif -%}
+{% endmacro %}
+
+
+{#
+  breadcrumb(items) — items = [{label, url}]
+#}
+{% macro breadcrumb(items) %}
+{% if items %}
+<nav class="breadcrumb" aria-label="Você está aqui">
+  {% for it in items %}
+    {% if not loop.last %}
+      <a href="{{ it.url }}">{{ it.label }}</a>
+      <span class="sep">/</span>
+    {% else %}
+      <span class="current">{{ it.label }}</span>
+    {% endif %}
+  {% endfor %}
+</nav>
+{% endif %}
+{% endmacro %}
+
+
+{#
+  Ícones SVG reutilizáveis (inline, sem CDN)
+#}
+{% macro icon_user() %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z"/></svg>
+{% endmacro %}
+
+{% macro icon_search() %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>
+{% endmacro %}
+
+{% macro icon_cart() %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2A2 2 0 0 0 9.6 17h8.9a2 2 0 0 0 2-1.6L22 7H6"/></svg>
+{% endmacro %}
+
+{% macro icon_ticket() %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>
+{% endmacro %}
+
+{% macro icon_chevron_left() %}
+<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M13 3 6 10l7 7z"/></svg>
+{% endmacro %}
+
+{% macro icon_chevron_right() %}
+<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 3l7 7-7 7z"/></svg>
+{% endmacro %}
+
+{% macro icon_trash() %}
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
+{% endmacro %}

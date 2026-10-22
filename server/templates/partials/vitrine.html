@@ -1,0 +1,28 @@
+{# Vitrine de produtos com carrossel horizontal e setas circulares.
+   Espera no contexto: v (dict com titulo/produtos) e produtos (lista). #}
+{% from "_macros.html" import product_card, icon_chevron_left, icon_chevron_right with context %}
+{%- set _lista = produtos if produtos else (v.produtos if v and v.produtos else []) -%}
+{%- set _titulo = (v.titulo if v and v.titulo else 'Sugestão Para O Seu Negócio')|trim -%}
+{%- set _partes = _titulo.split(' ') -%}
+<section class="vitrine" data-carousel aria-label="{{ _titulo }}">
+  <h2 class="vitrine-title"><span class="t1">{{ _partes[0] }}</span><span class="t2">{{ _partes[1:]|join(' ') }}</span></h2>
+  <div class="vitrine-carousel">
+    <button class="carousel-arrow prev" type="button" aria-label="Produtos anteriores" data-carousel-prev>
+      {{ icon_chevron_left() }}
+    </button>
+    <div class="vitrine-track-wrap">
+      <div class="vitrine-track" data-carousel-track>
+        {% for p in _lista %}
+          {{ product_card(p) }}
+        {% else %}
+          <article class="product-card" style="flex:1 1 100%;align-items:center;justify-content:center;padding:40px">
+            <p style="font-size:13px;color:#6c757d">Nenhum produto nesta vitrine.</p>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+    <button class="carousel-arrow next" type="button" aria-label="Próximos produtos" data-carousel-next>
+      {{ icon_chevron_right() }}
+    </button>
+  </div>
+</section>

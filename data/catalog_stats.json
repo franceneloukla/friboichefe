@@ -1,0 +1,23 @@
+{
+ "products": 1567,
+ "categories": 471,
+ "images": 1557,
+ "bytes": 56369402,
+ "elapsed_s": 836.9,
+ "scraped_at": "2026-10-21T21:12:59-03:00",
+ "products_with_image": 1557,
+ "products_without_image": 10,
+ "images_mb": 53.76,
+ "image_dimensions_max": "600x600",
+ "sale_price_not_null": 0,
+ "price_9999": 1566,
+ "price_null": 1,
+ "price_null_ids": [
+  "389279"
+ ],
+ "price_distinct_values": [
+  9999.0
+ ],
+ "failed_downloads": 0,
+ "aborted": false
+}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title if page_title else 'Página não encontrada | Friboi Online' }}{% endblock %}
+
+{% block content %}
+<div class="notfound">
+  <p class="code">404</p>
+  <h1>Página não encontrada</h1>
+  <p>O endereço que você acessou não existe ou foi movido. Volte para a home e continue comprando.</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <a class="btn-primary" href="/" style="width:auto;padding:0 28px;text-decoration:none">Ir para a home</a>
+    <a class="btn-outline" href="/promocoes">Ver promoções</a>
+  </div>
+</div>
+{% endblock %}

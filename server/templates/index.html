@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% from "_macros.html" import product_card, icon_chevron_left, icon_chevron_right with context %}
+
+{% block title %}{{ page_title if page_title else 'Friboi Online — carnes para o seu negócio' }}{% endblock %}
+
+{% block content %}
+{%- set _cats = categories if categories else [] -%}
+{%- set _vitrines = vitrines if vitrines else [
+  {'slug': 'negocios-como-o-seu', 'titulo': 'Negócios Como O Seu Compraram', 'produtos': (mais_vendidos if mais_vendidos else lancamentos if lancamentos else [])},
+  {'slug': 'sugestao-para-o-seu-negocio', 'titulo': 'Sugestão Para O Seu Negócio', 'produtos': (sugestao if sugestao else promoacoes if promoacoes is defined else [])}
+] -%}
+
+{# ---------------------------------------------------------------------------
+   HERO — carrossel de banners institucionais (4 slides; o 3º é o PIX, que é o
+   slide ativo na captura de referência do site original)
+   ------------------------------------------------------------------------ #}
+<section class="hero" aria-label="Destaques da loja" data-hero>
+  <h2 class="sr-only">Destaques</h2>
+  <div class="hero-viewport">
+    <div class="hero-slide">
+      <a href="/busca?q=friboi">
+        <img class="hero-img" src="/assets/img/ui/hero/hero-1-institucional-1200x250.jpg"
+             alt="Friboi Online" width="1200" height="250">
+        <div class="hero-fallback" style="background:linear-gradient(90deg,#04264f 0%,#0a4a8f 100%)">
+          <div class="hero-copy">
+            <h2>Friboi, do seu jeito</h2>
+            <p>Carne de qualidade para o seu negócio, com entrega para todo o Brasil.</p>
+            <span class="hero-cta">Compre agora</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="hero-slide">
+      <a href="/promocoes">
+        <img class="hero-img" src="/assets/img/ui/hero/hero-2-comodato-1200x250.jpg"
+             alt="Comodato Friboi Online" width="1200" height="250">
+        <div class="hero-fallback" style="background:linear-gradient(90deg,#0b2b7a 0%,#12459f 100%)">
+          <div class="hero-copy">
+            <h2>Comodato Friboi Online</h2>
+            <p>Abasteça seu estoque e receba os produtos gratuitamente no seu estabelecimento.</p>
+            <span class="hero-cta">Saiba mais</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="hero-slide is-active">
+      <a href="/promocoes">
+        <img class="hero-img" src="/assets/img/ui/hero/hero-3-pix-1200x250.jpg"
+             alt="Pague rápido e fácil com PIX" width="1200" height="250">
+        <div class="hero-fallback">
+          <span class="pix-mark">pix</span>
+          <div class="hero-copy">
+            <h2>Pague rápido e fácil com PIX</h2>
+            <p>Mais opções. Mais facilidade.</p>
+            <span class="hero-payline">O <strong>Friboi Online</strong> aceita cartão de crédito, boleto <strong>(com opção de parcelamento)</strong>* e agora <strong>PIX</strong>.</span>
+            <span class="hero-cta">Aproveite e faça suas compras!</span>
+            <div class="hero-note">*Para clientes aptos a comprar nessa modalidade</div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="hero-slide">
+      <a href="/categoria/outros">
+        <img class="hero-img" src="/assets/img/ui/hero/hero-4-supergelados-1200x250.jpg"
+             alt="Supergelados" width="1200" height="250">
+        <div class="hero-fallback" style="background:linear-gradient(90deg,#0a2c63 0%,#1b4fa8 100%)">
+          <div class="hero-copy">
+            <h2>Supergelados</h2>
+            <p>Praticidade e sabor para o seu food service.</p>
+            <span class="hero-cta">Ver produtos</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <button class="hero-nav prev" type="button" aria-label="Banner anterior" data-hero-prev>
+      {{ icon_chevron_left() }}
+    </button>
+    <button class="hero-nav next" type="button" aria-label="Próximo banner" data-hero-next>
+      {{ icon_chevron_right() }}
+    </button>
+  </div>
+
+  <div class="hero-dots" role="tablist" aria-label="Banners">
+    <button type="button" aria-label="Banner 1" aria-selected="false"></button>
+    <button type="button" aria-label="Banner 2" aria-selected="false"></button>
+    <button type="button" class="is-active" aria-label="Banner 3" aria-selected="true"></button>
+    <button type="button" aria-label="Banner 4" aria-selected="false"></button>
+  </div>
+</section>
+
+{# ---------------------------------------------------------------------------
+   GRID DE CATEGORIAS COM ÍCONES (9 itens, como no original)
+   ------------------------------------------------------------------------ #}
+{%- set _ordem = ['bovinos', 'aves', 'suinos', 'pescados', 'batatas-e-vegetais', 'cordeiros', 'charques', 'bovinos-importados', 'promocoes'] -%}
+{%- set _icones = {
+  'bovinos': '/assets/img/ui/categorias/cat-bovinos.png',
+  'aves': '/assets/img/ui/categorias/cat-aves.png',
+  'suinos': '/assets/img/ui/categorias/cat-suinos.png',
+  'pescados': '/assets/img/ui/categorias/cat-pescados.png',
+  'batatas-e-vegetais': '/assets/img/ui/categorias/cat-batatas-e-vegetais.png',
+  'cordeiros': '/assets/img/ui/categorias/cat-cordeiros.png',
+  'charques': '/assets/img/ui/categorias/cat-charque.png',
+  'bovinos-importados': '/assets/img/ui/categorias/cat-bovinos-importados.png',
+  'promocoes': '/assets/img/ui/categorias/cat-promocoes.png'
+} -%}
+{%- set _glifos = {
+  'bovinos': 'M6 8c0-2 1.6-3.2 3-3.2S12 6 12 8M18 8c0-2-1.6-3.2-3-3.2M5 7 2.6 5.4M19 7l2.4-1.6M6 8.5c0 4 2.7 6.5 6 6.5s6-2.5 6-6.5M9.5 11.5h.01M14.5 11.5h.01M10.5 14.2c.9.7 2.1.7 3 0',
+  'aves': 'M15.5 8.5a3 3 0 1 0-4.6 2.6c-1.2 1-2 2.3-2.4 3.9M9.5 15c-2.2.2-4 1-5 2.5 2.4.9 5.2 1.1 7.6.4M15.5 8.5c1.6 0 2.6.6 3.5 1.5M18.6 10 21 8.8l-2 3',
+  'suinos': 'M7 9.5a4.5 4.5 0 0 1 9 0v4a3 3 0 0 1-3 3h-3a3 3 0 0 1-3-3zM8 8 5.5 6.5M16 8l2.5-1.5M11.5 13.5h.01M14.5 13.5h.01M12 16.5v1.5M10 18h4',
+  'pescados': 'M3 12c3.5-4.5 8-6 12-4.5 1.6.6 3 1.8 4 3.5M3 12c3.5 4.5 8 6 12 4.5 1.6-.6 3-1.8 4-3.5M19 12c1.4 0 2.4-.6 3-1.5M19 12c1.4 0 2.4.6 3 1.5M9 11h.01',
+  'batatas-e-vegetais': 'M8 6.5h8l1 11a1.5 1.5 0 0 1-1.5 1.6H8.5A1.5 1.5 0 0 1 7 17.5zM9 6.5V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M10 10.5l.01.01M14 10.5l.01.01M9.5 14l.01.01M13 13.5l.01.01M11.5 16.5l.01.01',
+  'cordeiros': 'M9 8a3 3 0 0 1 6 0M7.5 11.5a4.5 4.5 0 0 1 9 0v3a3 3 0 0 1-3 3h-3a3 3 0 0 1-3-3zM9 7c-.8-1.6-2.4-2-3.4-1.2M15 7c.8-1.6 2.4-2 3.4-1.2M11 12.5h.01M13 12.5h.01',
+  'charques': 'M4 9h16M4 15h16M7 6v12M11 6v12M15 6v12M19 6v12',
+  'bovinos-importados': 'M12 4.5 20 8v5c0 4-3.4 7-8 8-4.6-1-8-4-8-8V8zM9 12l2 2 4-4',
+  'promocoes': 'M4 11.5V5.5A1.5 1.5 0 0 1 5.5 4h6l8.5 8.5a1.5 1.5 0 0 1 0 2.1l-5.4 5.4a1.5 1.5 0 0 1-2.1 0zM8 8h.01'
+} -%}
+
+<section class="categories-strip" aria-label="Categorias">
+  <nav class="categories-grid">
+    {% for slug in _ordem %}
+      {%- set cat = (_cats|selectattr('slug', 'equalto', slug)|list|first)
+                 or (_cats|selectattr('id', 'equalto', slug|upper|replace('-', '_'))|list|first) -%}
+      {%- if cat -%}
+        {%- set nome = cat.name -%}
+        {%- set url = '/categoria/' ~ cat.slug -%}
+      {%- else -%}
+        {%- set nome = {'bovinos':'Bovinos','aves':'Aves','suinos':'Suínos','pescados':'Pescados','batatas-e-vegetais':'Batatas e Vegetais','cordeiros':'Cordeiros','charques':'Charque','bovinos-importados':'Bovinos Importados','promocoes':'Promoções'}[slug] -%}
+        {%- set url = ('/promocoes' if slug == 'promocoes' else '/categoria/' ~ slug) -%}
+      {%- endif -%}
+      <a class="category-item" href="{{ url }}">
+        <span class="icon-box">
+          <img class="cat-img" src="{{ _icones.get(slug, '') }}" alt="{{ nome }}" width="52" height="52" loading="lazy">
+          <span class="cat-fallback fb">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="{{ _glifos.get(slug, 'M12 5v14M5 12h14') }}"/></svg>
+          </span>
+        </span>
+        <span class="category-name">{{ nome }}</span>
+      </a>
+    {% endfor %}
+  </nav>
+</section>
+
+{# ---------------------------------------------------------------------------
+   VITRINES — "Negócios Como O Seu Compraram" e "Sugestão Para O Seu Negócio"
+   ------------------------------------------------------------------------ #}
+{% for v in _vitrines %}
+  {%- set produtos = v.produtos if v.produtos else [] -%}
+  {% include "partials/vitrine.html" %}
+{% endfor %}
+
+{# ---------------------------------------------------------------------------
+   CARDS DE MARCA — 6 banners "COMPRE AGORA"
+   ------------------------------------------------------------------------ #}
+{%- set _cards = [
+  {'nome': 'Costela', 'cls': '', 'categoria': 'Bovinos', 'desc': 'Textura surpreendente e um sabor profundo. Essencial para quem busca uma experiência gastronômica memorável, seja em cozidos longos ou no churrasco de domingo.', 'slug': 'costela', 'img': '/assets/img/ui/cards-marca/card-costela.jpg'},
+  {'nome': 'Picanha', 'cls': 'is-picanha', 'categoria': 'Bovinos', 'desc': 'Sabor e maciez premium para churrascarias e açougues que querem oferecer o melhor aos clientes.', 'slug': 'picanha', 'img': '/assets/img/ui/cards-marca/card-picanha.png'},
+  {'nome': 'Contra Filé', 'cls': 'is-contrafile', 'categoria': 'Bovinos', 'desc': 'Versátil, nobre e suculento. Garante sabor e rendimento para o seu cardápio. Ideal para grelha, chapa ou forno.', 'slug': 'contra-file', 'img': '/assets/img/ui/cards-marca/card-contrafile.png'},
+  {'nome': 'Coxão mole', 'cls': 'is-coxaomole', 'categoria': 'Bovinos', 'desc': 'Carne magra e macia, ideal para assados, grelhados e preparos em larga escala no food service.', 'slug': 'coxao-mole', 'img': '/assets/img/ui/cards-marca/card-coxao-mole.png'},
+  {'nome': 'Pescados', 'cls': 'is-pescados', 'categoria': 'Pescados', 'desc': 'Variedade de peixes e frutos do mar para garantir frescor e qualidade nos cardápios do food service.', 'slug': 'pescados', 'img': '/assets/img/ui/cards-marca/card-pescados.png'},
+  {'nome': 'Batatas', 'cls': 'is-batatas', 'categoria': 'Vegetais', 'desc': 'Acompanhamento essencial no food service. Garantia de crocância e sabor para qualquer cardápio.', 'slug': 'batatas-e-vegetais', 'img': '/assets/img/ui/cards-marca/card-batatas.png'}
+] -%}
+{%- set _globos = {
+  'Bovinos': 'M6 8c0-2 1.6-3.2 3-3.2S12 6 12 8M18 8c0-2-1.6-3.2-3-3.2M5 7 2.6 5.4M19 7l2.4-1.6M6 8.5c0 4 2.7 6.5 6 6.5s6-2.5 6-6.5',
+  'Pescados': 'M3 12c3.5-4.5 8-6 12-4.5 1.6.6 3 1.8 4 3.5M3 12c3.5 4.5 8 6 12 4.5 1.6-.6 3-1.8 4-3.5M19 12c1.4 0 2.4-.6 3-1.5M19 12c1.4 0 2.4.6 3 1.5',
+  'Vegetais': 'M8 6.5h8l1 11a1.5 1.5 0 0 1-1.5 1.6H8.5A1.5 1.5 0 0 1 7 17.5zM9 6.5V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5'
+} -%}
+
+<section class="brand-cards" aria-label="Compre por marca">
+  {% for c in _cards %}
+    {%- set cat = (_cats|selectattr('slug', 'equalto', c.slug)|list|first) -%}
+    {%- set url = ('/categoria/' ~ cat.slug) if cat else ('/busca?q=' ~ (c.nome|urlencode)) -%}
+    <a class="brand-card {{ c.cls }}" href="{{ url }}" aria-label="{{ c.nome }} — compre agora">
+      <img src="{{ c.img }}" alt="{{ c.nome }}" loading="lazy" width="600" height="240">
+      <div class="brand-card-fallback">
+        <span class="brand-eyebrow">
+          <svg viewBox="0 0 24 20" aria-hidden="true" fill="currentColor" stroke="none"><path d="{{ _globos.get(c.categoria, '') }}" stroke="currentColor" fill="none" stroke-width="1.4"/></svg>
+          {{ c.categoria }}
+        </span>
+        <h3>{{ c.nome }}</h3>
+        <p>{{ c.desc }}</p>
+        <span class="brand-cta">Compre agora</span>
+        <span class="brand-plate"><span class="plate-ph"></span></span>
+      </div>
+    </a>
+  {% endfor %}
+</section>
+
+{# ---------------------------------------------------------------------------
+   FAIXA DAS MARCAS — Friboi, Do Chef, Maturatta, Black Friboi, 1953
+   ------------------------------------------------------------------------ #}
+{%- set _marcas_faixa = [
+  {'nome': 'Friboi', 'cls': 'is-friboi', 'img': '/assets/img/ui/marcas/marca-friboi.jpg'},
+  {'nome': 'Do Chef', 'cls': 'is-chef', 'img': '/assets/img/ui/marcas/marca-do-chef.jpg'},
+  {'nome': 'Maturatta', 'cls': 'is-maturatta', 'img': '/assets/img/ui/marcas/marca-maturatta.jpg'},
+  {'nome': 'Black Friboi', 'cls': 'is-black', 'img': '/assets/img/ui/marcas/marca-black-friboi.jpg'},
+  {'nome': '1953', 'cls': 'is-1953', 'img': '/assets/img/ui/marcas/marca-1953.jpg'}
+] -%}
+<section class="brand-strip" aria-label="Nossas marcas">
+  {% for m in _marcas_faixa %}
+    <a class="brand-item {{ m.cls }}" href="/busca?q={{ m.nome|urlencode }}" aria-label="{{ m.nome }}">
+      <span class="brand-ph">{{ m.nome }}</span>
+      <img src="{{ m.img }}" alt="{{ m.nome }}" loading="lazy" width="253" height="430">
+    </a>
+  {% endfor %}
+</section>
+
+{# ---------------------------------------------------------------------------
+   CARDS DE BENEFÍCIO (copy original do site)
+   ------------------------------------------------------------------------ #}
+<section class="benefits" aria-label="Vantagens de comprar no Friboi Online">
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="icon-wrapper">
+        <svg viewBox="0 0 24 24"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      </div>
+      <h3 class="beneficio-titulo">Descontos Exclusivos</h3>
+      <p class="beneficio-texto">Toda semana produtos com descontos exclusivos no site.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="icon-wrapper">
+        <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <h3 class="beneficio-titulo">Frete Grátis</h3>
+      <p class="beneficio-texto">Receba gratuitamente em seu estabelecimento comercial.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="icon-wrapper">
+        <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      </div>
+      <h3 class="beneficio-titulo">Pague No Cartão</h3>
+      <p class="beneficio-texto">Melhore o seu fluxo de caixa realizando compras no cartão.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="icon-wrapper">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h3 class="beneficio-titulo">Compre Quando Quiser</h3>
+      <p class="beneficio-texto">Pedidos disponíveis 24hs por dia, todos os dias da semana.</p>
+    </div>
+  </div>
+</section>
+
+{# ---------------------------------------------------------------------------
+   BANNER INSTITUCIONAL FINAL
+   ------------------------------------------------------------------------ #}
+<section class="institutional" aria-label="Friboi">
+  <a class="institutional-banner" href="/busca?q=friboi">
+    <img src="/assets/img/ui/banners/banner-institucional.jpg" alt="Friboi — primeiro lugar na cabeça e no prato dos brasileiros" loading="lazy">
+    <div class="institutional-fallback">
+      <div class="inst-copy">
+        <h2>Friboi. Primeiro lugar na cabeça<br>e no prato dos brasileiros.</h2>
+        <p>Pelo terceiro ano consecutivo, Friboi é a marca mais lembrada na categoria de carnes do Top Of Mind da Folha.</p>
+      </div>
+      <span class="inst-plate"><span class="plate-ph"></span></span>
+      <span class="inst-logo">Friboi</span>
+    </div>
+  </a>
+</section>
+{% endblock %}

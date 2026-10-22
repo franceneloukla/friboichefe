@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title if page_title else 'Entrar | Friboi Online' }}{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>Entrar</h1>
+    <p class="auth-sub">Acesse sua conta para comprar no atacado.</p>
+
+    <div class="form-alert" data-form-alert role="alert"></div>
+
+    <form data-login-form novalidate>
+      <input type="hidden" name="next" value="{{ next if next else '/' }}">
+
+      <div class="field" data-field="email">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" autocomplete="email" required
+               placeholder="voce@empresa.com.br" inputmode="email">
+        <span class="field-error" data-error>Informe um e-mail válido.</span>
+      </div>
+
+      <div class="field" data-field="password">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required
+               placeholder="Sua senha">
+        <span class="field-error" data-error>Informe a sua senha.</span>
+      </div>
+
+      <button class="btn-primary" type="submit" data-submit>Entrar</button>
+    </form>
+
+    <p class="auth-alt">Ainda não tem conta? <a href="/cadastro">Cadastre-se</a></p>
+    <p class="auth-alt" style="margin-top:8px">
+      <a href="/carrinho" style="color:#6c757d;font-weight:400">Continuar sem login</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

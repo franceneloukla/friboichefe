@@ -1,0 +1,87 @@
+[20:57:15] === fase catálogo (limit=250) ===
+[20:57:24] menu: 297 categorias com nome
+[20:57:27] página offset=0: 250 itens | acumulado 250/1567
+[20:57:27] --max-pages atingido, parando paginação
+[20:57:27] catálogo: 250 produtos brutos
+[20:57:44] coleções: 338/343 com nome oficial
+[20:57:44] catalog.json escrito: 250 produtos, 347 categorias, 0 duplicados descartados
+[20:57:44] com imagem: 249 | sem imagem: 1
+[20:57:45] OK em 30.0s
+[20:58:21] === fase catálogo (limit=250) ===
+[20:58:31] menu: 297 categorias com nome
+[20:58:31] retomando do checkpoint: 1 páginas feitas, próximo offset=250
+[20:58:35] página offset=250: 250 itens | acumulado 500/1567
+[20:58:35] --max-pages atingido, parando paginação
+[20:58:35] catálogo: 500 produtos brutos
+[20:58:49] coleções: 366/371 com nome oficial
+[20:58:49] catalog.json escrito: 500 produtos, 373 categorias, 0 duplicados descartados
+[20:58:49] com imagem: 498 | sem imagem: 2
+[20:58:50] OK em 28.3s
+[20:59:54] === fase catálogo (limit=250) ===
+[21:00:01] menu: 297 categorias com nome
+[21:00:01] retomando do checkpoint: 2 páginas feitas, próximo offset=500
+[21:00:05] página offset=500: 250 itens | acumulado 750/1567
+[21:00:08] página offset=750: 250 itens | acumulado 1000/1567
+[21:00:13] página offset=1000: 250 itens | acumulado 1250/1567
+[21:00:18] página offset=1250: 250 itens | acumulado 1500/1567
+[21:00:19] página offset=1500: 67 itens | acumulado 1567/1567
+[21:00:20] catálogo: 1567 produtos brutos
+[21:00:38] coleções: 465/470 com nome oficial
+[21:00:38] catalog.json escrito: 1567 produtos, 471 categorias, 0 duplicados descartados
+[21:00:38] com imagem: 1557 | sem imagem: 10
+[21:00:38] === fase imagens (workers=5) ===
+[21:00:38] imagens: 1557 a baixar (0 já no disco), workers=5
+[21:00:46]   5 abas prontas
+[21:01:10]   50/1557 (50 ok, 0 falhas) 1.6 img/s ETA 15.8min
+[21:01:30]   100/1557 (100 ok, 0 falhas) 1.9 img/s ETA 12.5min
+[21:01:47]   150/1557 (150 ok, 0 falhas) 2.2 img/s ETA 10.8min
+[21:02:07]   200/1557 (200 ok, 0 falhas) 2.3 img/s ETA 10.0min
+[21:02:24]   250/1557 (250 ok, 0 falhas) 2.4 img/s ETA 9.2min
+[21:02:43]   300/1557 (300 ok, 0 falhas) 2.4 img/s ETA 8.7min
+[21:02:59]   350/1557 (350 ok, 0 falhas) 2.5 img/s ETA 8.1min
+[21:03:19]   400/1557 (400 ok, 0 falhas) 2.5 img/s ETA 7.7min
+[21:03:36]   450/1557 (450 ok, 0 falhas) 2.5 img/s ETA 7.3min
+[21:03:53]   500/1557 (500 ok, 0 falhas) 2.6 img/s ETA 6.9min
+[21:04:11]   550/1557 (550 ok, 0 falhas) 2.6 img/s ETA 6.5min
+[21:04:28]   600/1557 (600 ok, 0 falhas) 2.6 img/s ETA 6.1min
+[21:04:45]   650/1557 (650 ok, 0 falhas) 2.6 img/s ETA 5.7min
+[21:05:04]   700/1557 (700 ok, 0 falhas) 2.6 img/s ETA 5.4min
+[21:05:22]   750/1557 (750 ok, 0 falhas) 2.6 img/s ETA 5.1min
+[21:05:42]   800/1557 (800 ok, 0 falhas) 2.6 img/s ETA 4.8min
+[21:06:01]   850/1557 (850 ok, 0 falhas) 2.6 img/s ETA 4.5min
+[21:06:17]   900/1557 (900 ok, 0 falhas) 2.7 img/s ETA 4.1min
+[21:06:34]   950/1557 (950 ok, 0 falhas) 2.7 img/s ETA 3.8min
+[21:06:51]   1000/1557 (1000 ok, 0 falhas) 2.7 img/s ETA 3.5min
+[21:07:07]   1050/1557 (1050 ok, 0 falhas) 2.7 img/s ETA 3.1min
+[21:07:23]   1100/1557 (1100 ok, 0 falhas) 2.7 img/s ETA 2.8min
+[21:07:40]   1150/1557 (1150 ok, 0 falhas) 2.7 img/s ETA 2.5min
+[21:07:56]   1200/1557 (1200 ok, 0 falhas) 2.7 img/s ETA 2.2min
+[21:08:13]   1250/1557 (1250 ok, 0 falhas) 2.8 img/s ETA 1.9min
+[21:08:29]   1300/1557 (1300 ok, 0 falhas) 2.8 img/s ETA 1.6min
+[21:08:44]   1350/1557 (1350 ok, 0 falhas) 2.8 img/s ETA 1.2min
+[21:09:01]   1400/1557 (1400 ok, 0 falhas) 2.8 img/s ETA 0.9min
+[21:09:17]   1450/1557 (1450 ok, 0 falhas) 2.8 img/s ETA 0.6min
+[21:09:36]   1500/1557 (1500 ok, 0 falhas) 2.8 img/s ETA 0.3min
+[21:09:52]   1550/1557 (1550 ok, 0 falhas) 2.8 img/s ETA 0.0min
+[21:09:55]   1557/1557 (1557 ok, 0 falhas) 2.8 img/s ETA 0.0min
+[21:09:55] imagens: 1557 baixadas, 0 falhas
+[21:09:55] === fase finalize ===
+[21:09:56] finalize: {'products': 1567, 'categories': 471, 'images': 1557, 'bytes': 146448500, 'elapsed_s': 601.4, 'scraped_at': '2026-10-21T21:00:38-03:00', 'products_with_image': 1557, 'products_without_image': 10, 'images_mb': 139.66, 'failed_downloads': 0, 'aborted': False}
+[21:09:56] OK em 602.0s
+[21:10:25] === fase resize (600x600) ===
+[21:12:15] resize: 1556 redimensionadas p/ 600x600, 1 já ok, 0 falhas
+[21:12:15] OK em 109.4s
+[21:12:29] === fase catálogo (limit=250) ===
+[21:12:36] menu: 297 categorias com nome
+[21:12:36] retomando do checkpoint: 7 páginas feitas, próximo offset=1750
+[21:12:37] catálogo: 1567 produtos brutos
+[21:12:58] coleções: 465/470 com nome oficial
+[21:12:59] catalog.json escrito: 1567 produtos, 471 categorias, 0 duplicados descartados
+[21:12:59] com imagem: 1557 | sem imagem: 10
+[21:12:59] OK em 30.4s
+[21:13:00] === fase finalize ===
+[21:13:01] finalize: {'products': 1567, 'categories': 471, 'images': 1557, 'bytes': 56369402, 'elapsed_s': 0.0, 'scraped_at': '2026-10-21T21:12:59-03:00', 'products_with_image': 1557, 'products_without_image': 10, 'images_mb': 53.76, 'image_dimensions_max': '600x600', 'sale_price_not_null': 0, 'price_9999': 1566, 'price_null': 1, 'price_null_ids': ['389279'], 'price_distinct_values': [9999.0], 'failed_downloads': 0, 'aborted': False}
+[21:13:01] OK em 0.4s
+[21:13:33] === fase finalize ===
+[21:13:33] finalize: {'products': 1567, 'categories': 471, 'images': 1557, 'bytes': 56369402, 'elapsed_s': 836.9, 'scraped_at': '2026-10-21T21:12:59-03:00', 'products_with_image': 1557, 'products_without_image': 10, 'images_mb': 53.76, 'image_dimensions_max': '600x600', 'sale_price_not_null': 0, 'price_9999': 1566, 'price_null': 1, 'price_null_ids': ['389279'], 'price_distinct_values': [9999.0], 'failed_downloads': 0, 'aborted': False}
+[21:13:33] OK em 0.5s

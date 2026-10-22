@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title if page_title else 'Criar conta | Friboi Online' }}{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>Criar conta</h1>
+    <p class="auth-sub">Cadastre-se e ganhe <strong>5% de desconto</strong> na primeira compra com o cupom PCFRIBOI5.</p>
+
+    <div class="form-alert" data-form-alert role="alert"></div>
+
+    <form data-register-form novalidate>
+      <input type="hidden" name="next" value="{{ next if next else '/' }}">
+
+      <div class="field" data-field="name">
+        <label for="name">Nome completo</label>
+        <input type="text" id="name" name="name" autocomplete="name" required placeholder="Seu nome">
+        <span class="field-error" data-error>Informe o seu nome.</span>
+      </div>
+
+      <div class="field" data-field="email">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" autocomplete="email" required
+               placeholder="voce@empresa.com.br" inputmode="email">
+        <span class="field-error" data-error>Informe um e-mail válido.</span>
+      </div>
+
+      <div class="form-row">
+        <div class="field" data-field="cpf">
+          <label for="cpf">CPF</label>
+          <input type="text" id="cpf" name="cpf" autocomplete="off" placeholder="000.000.000-00"
+                 inputmode="numeric" maxlength="14" data-mask="cpf">
+          <span class="field-error" data-error>CPF inválido.</span>
+        </div>
+        <div class="field" data-field="phone">
+          <label for="phone">Telefone</label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="(00) 00000-0000"
+                 inputmode="numeric" maxlength="16" data-mask="phone">
+          <span class="field-error" data-error>Telefone inválido.</span>
+        </div>
+      </div>
+
+      <div class="field" data-field="password">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" autocomplete="new-password" required
+               placeholder="Mínimo de 6 caracteres" minlength="6">
+        <span class="field-error" data-error>A senha precisa ter no mínimo 6 caracteres.</span>
+      </div>
+
+      <div class="field" data-field="password_confirm">
+        <label for="password_confirm">Confirmar senha</label>
+        <input type="password" id="password_confirm" name="password_confirm" autocomplete="new-password" required
+               placeholder="Repita a senha">
+        <span class="field-error" data-error>As senhas não conferem.</span>
+      </div>
+
+      <button class="btn-primary" type="submit" data-submit>Criar conta</button>
+    </form>
+
+    <p class="auth-alt">Já tem conta? <a href="/login">Entrar</a></p>
+  </div>
+</div>
+{% endblock %}

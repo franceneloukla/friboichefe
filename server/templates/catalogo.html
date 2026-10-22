@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% from "_macros.html" import product_card, pagination, breadcrumb as bc with context %}
+
+{% block title %}{{ page_title if page_title else titulo if titulo else 'Catálogo' }}{% endblock %}
+
+{% block content %}
+{%- set _itens = items if items else (products if products else []) -%}
+{%- set _total = total if total is defined and total is not none else _itens|length -%}
+{%- set _page = page|int(1) if page is defined else 1 -%}
+{%- set _pages = pages|int(1) if pages is defined else 1 -%}
+{%- set _sort = sort if sort else 'relevance' -%}
+{%- set _on_sale = on_sale if on_sale is defined else false -%}
+{%- set _in_stock = in_stock if in_stock is defined else false -%}
+{%- set _q = q if q else '' -%}
+{%- set _base = base_url if base_url else '/busca' -%}
+{%- set _cat = categoria if categoria else (category if category is defined else none) -%}
+{%- set _titulo = titulo if titulo else (_cat.name if _cat else 'Catálogo') -%}
+
+{%- set _crumbs = [{'label': 'Home', 'url': '/'}] -%}
+{%- if _cat -%}
+  {%- set _ = _crumbs.append({'label': _cat.name, 'url': '/categoria/' ~ _cat.slug}) -%}
+{%- elif _q -%}
+  {%- set _ = _crumbs.append({'label': 'Busca', 'url': '/busca?q=' ~ (_q|urlencode)}) -%}
+{%- else -%}
+  {%- set _ = _crumbs.append({'label': _titulo, 'url': _base}) -%}
+{%- endif -%}
+
+<div class="page-head">
+  {{ bc(_crumbs) }}
+  <h1 class="page-title">{{ _titulo }}</h1>
+  {% if _q %}<p class="page-subtitle">Resultados para “{{ _q }}”</p>{% endif %}
+</div>
+
+<div class="catalog-layout">
+  {# ---------------------------- FILTROS ---------------------------- #}
+  <aside class="filters" aria-label="Filtros de produtos">
+    <h2>Filtrar</h2>
+    <form method="get" action="{{ _base }}" data-filters-form>
+      {% if _q %}<input type="hidden" name="q" value="{{ _q }}">{% endif %}
+
+      <div class="filter-group">
+        <label for="sort">Ordenar por</label>
+        <select id="sort" name="sort">
+          <option value="relevance" {% if _sort == 'relevance' %}selected{% endif %}>Relevância</option>
+          <option value="price_asc" {% if _sort == 'price_asc' %}selected{% endif %}>Menor preço</option>
+          <option value="price_desc" {% if _sort == 'price_desc' %}selected{% endif %}>Maior preço</option>
+          <option value="name" {% if _sort == 'name' %}selected{% endif %}>Nome (A-Z)</option>
+          <option value="newest" {% if _sort == 'newest' %}selected{% endif %}>Novidades</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>
+          <input type="checkbox" name="on_sale" value="1" {% if _on_sale %}checked{% endif %}>
+          Só promoções
+        </label>
+        <label>
+          <input type="checkbox" name="in_stock" value="1" {% if _in_stock %}checked{% endif %}>
+          Só em estoque
+        </label>
+      </div>
+
+      <button class="apply-btn" type="submit">Aplicar filtros</button>
+      <a class="clear-link" href="{{ _base }}{% if _q %}?q={{ _q|urlencode }}{% endif %}">Limpar filtros</a>
+    </form>
+  </aside>
+
+  {# ---------------------------- RESULTADOS ---------------------------- #}
+  <section class="catalog-results">
+    <div class="catalog-toolbar">
+      <p class="catalog-count">
+        <strong>{{ _total }}</strong> {{ 'produto' if _total == 1 else 'produtos' }}
+        {%- if _total %} · página {{ _page }} de {{ _pages }}{% endif %}
+      </p>
+      <form class="catalog-sort" method="get" action="{{ _base }}" data-sort-form>
+        {% if _q %}<input type="hidden" name="q" value="{{ _q }}">{% endif %}
+        {% if _on_sale %}<input type="hidden" name="on_sale" value="1">{% endif %}
+        {% if _in_stock %}<input type="hidden" name="in_stock" value="1">{% endif %}
+        <label for="sort-top">Ordenar:</label>
+        <select id="sort-top" name="sort" data-auto-submit>
+          <option value="relevance" {% if _sort == 'relevance' %}selected{% endif %}>Relevância</option>
+          <option value="price_asc" {% if _sort == 'price_asc' %}selected{% endif %}>Menor preço</option>
+          <option value="price_desc" {% if _sort == 'price_desc' %}selected{% endif %}>Maior preço</option>
+          <option value="name" {% if _sort == 'name' %}selected{% endif %}>Nome (A-Z)</option>
+          <option value="newest" {% if _sort == 'newest' %}selected{% endif %}>Novidades</option>
+        </select>
+      </form>
+    </div>
+
+    {% if _itens %}
+      <div class="products-grid">
+        {% for p in _itens %}
+          {{ product_card(p, 'grid') }}
+        {% endfor %}
+      </div>
+
+      {{ pagination(_page, _pages, _base, {'q': _q, 'sort': _sort, 'on_sale': ('1' if _on_sale else ''), 'in_stock': ('1' if _in_stock else '')}) }}
+    {% else %}
+      <div class="empty-state">
+        <h2>Nenhum produto encontrado</h2>
+        <p>Tente ajustar os filtros ou refazer a busca com outro termo.</p>
+        <a class="btn-outline" href="/">Voltar para a home</a>
+      </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

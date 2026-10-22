@@ -1,0 +1,8 @@
+<svg viewBox="0 0 24 24" width="16" height="16" fill="none">
+                                    <path d="M12 2L4 5V11C4 16.19 7.41 21.05 12 22C16.59 21.05 20 16.19 20 11V5L12 2Z" fill="#34A853"></path>
+                                    <path d="M11 17L7.5 13.5L8.91 12.09L11 14.17L15.09 10.08L16.5 11.5L11 17Z" fill="white"></path>
+                                </svg>
+                                <div class="badge-text-group">
+                                    <span class="badge-title">GOOGLE</span>
+                                    <span class="badge-subtitle">Safe Browsing</span>
+                                </div>

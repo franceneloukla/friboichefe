@@ -1,0 +1,470 @@
+{
+ "url": "https://www.friboionline.com.br/",
+ "title": "Friboi Online | 24 Horas 7 Dias por Semana!",
+ "els": {
+  "h1": null,
+  "h2": null,
+  ".product-card": null,
+  ".product-grid": null,
+  ".products-grid": null,
+  ".cc-product-grid": null,
+  ".results": null,
+  ".filter": null,
+  ".filters": null,
+  ".sidebar": null,
+  ".breadcrumb": null,
+  ".product-title": null,
+  ".price": null,
+  ".product-price": null,
+  ".product-detail": null,
+  ".product-image": null,
+  ".quantity": null,
+  ".add-to-cart": null,
+  ".tab": null,
+  ".tabs": null,
+  ".pagination": null,
+  ".sku": null,
+  ".breadcrumbs": null,
+  "main": {
+   "tag": "main",
+   "cls": "page-row page-row-expanded",
+   "id": "",
+   "x": 0,
+   "y": 143,
+   "w": 1137,
+   "h": 2606,
+   "bg": "rgba(0, 0, 0, 0)",
+   "color": "rgb(51, 51, 51)",
+   "ff": "Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+   "fs": "14px",
+   "fw": "400",
+   "lh": "21px",
+   "tt": "none",
+   "pad": "0px",
+   "radius": "0px",
+   "border": "0px none rgb(51, 51, 51)",
+   "shadow": "none",
+   "disp": "table-row",
+   "cols": "none",
+   "gap": "normal",
+   "txt": "CADASTRE-SE E GANHE 5% DE DESCONTO na primeira compra com o cupom PCFRIBOI5. Cadastre-se / H",
+   "count": 1
+  },
+  "#main": {
+   "tag": "div",
+   "cls": "",
+   "id": "main",
+   "x": 0,
+   "y": 143,
+   "w": 1137,
+   "h": 2606,
+   "bg": "rgba(0, 0, 0, 0)",
+   "color": "rgb(51, 51, 51)",
+   "ff": "Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+   "fs": "14px",
+   "fw": "400",
+   "lh": "21px",
+   "tt": "none",
+   "pad": "0px",
+   "radius": "0px",
+   "border": "0px none rgb(51, 51, 51)",
+   "shadow": "none",
+   "disp": "block",
+   "cols": "none",
+   "gap": "normal",
+   "txt": "CADASTRE-SE E GANHE 5% DE DESCONTO na primeira compra com o cupom PCFRIBOI5. Cadastre-se / H",
+   "count": 1
+  },
+  ".row": {
+   "tag": "div",
+   "cls": "row",
+   "id": "",
+   "x": 0,
+   "y": 0,
+   "w": 1137,
+   "h": 1,
+   "bg": "rgba(0, 0, 0, 0)",
+   "color": "rgb(51, 51, 51)",
+   "ff": "Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+   "fs": "14px",
+   "fw": "400",
+   "lh": "21px",
+   "tt": "none",
+   "pad": "0px",
+   "radius": "0px",
+   "border": "0px none rgb(51, 51, 51)",
+   "shadow": "none",
+   "disp": "block",
+   "cols": "none",
+   "gap": "normal",
+   "txt": "",
+   "count": 12
+  }
+ },
+ "structure": [
+  {
+   "d": 0,
+   "tag": "div",
+   "id": "main",
+   "cls": "",
+   "y": 143,
+   "h": 2606,
+   "w": 1137
+  },
+  {
+   "d": 1,
+   "tag": "div",
+   "id": "",
+   "cls": "row",
+   "y": 143,
+   "h": 344,
+   "w": 1137
+  },
+  {
+   "d": 1,
+   "tag": "div",
+   "id": "",
+   "cls": "row",
+   "y": 487,
+   "h": 1861,
+   "w": 1137
+  },
+  {
+   "d": 1,
+   "tag": "div",
+   "id": "",
+   "cls": "row",
+   "y": 2348,
+   "h": 401,
+   "w": 1137
+  }
+ ],
+ "headings": [
+  {
+   "tag": "h3",
+   "cls": "label-hidden",
+   "id": "",
+   "x": -10000,
+   "y": 226,
+   "w": 1,
+   "h": 1,
+   "bg": "rgba(0, 0, 0, 0)",
+   "color": "rgb(51, 51, 51)",
+   "ff": "Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+   "fs": "24.5px",
+   "fw": "700",
+   "lh": "36.75px",
+   "tt": "none",
+   "pad": "0px",
+   "radius": "0px",
+   "border": "0px none rgb(51, 51, 51)",
+   "shadow": "none",
+   "disp": "block",
+   "cols": "none",
+   "gap": "normal",
+   "txt": "Hero",
+   "level": "h3"
+  },
+  {
+   "tag": "h3",
+   "cls": "beneficio-titulo",
+   "id": "",
+   "x": 16,
+   "y": 2419,
+   "w": 237,
+   "h": 17,
+   "bg": "rgba(0, 0, 0, 0)",
+   "color": "rgb(255, 255, 255)",
+   "ff": "Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+   "fs": "14px",
+   "fw": "800",
+   "lh": "16.8px",
+   "tt": "capitalize",
+   "pad": "0px",
+   "radius": "0px",
+   "border": "0px none rgb(255, 255, 255)",
+   "shadow": "none",
+   "disp": "block",
+   "cols": "none",
+   "gap": "normal",
+   "txt": "Descontos Exclusivos",
+   "level": "h3"
+  },
+  {
+   "tag": "h3",
+   "cls": "beneficio-titulo",
+   "id": "",
+   "x": 305,
+   "y": 2419,
+   "w": 237,
+   "h": 17,
+   "bg": "rgba(0, 0, 0, 0)",
+   "color": "rgb(255, 255, 255)",
+   "ff": "Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+   "fs": "14px",
+   "fw": "800",
+   "lh": "16.8px",
+   "tt": "capitalize",
+   "pad": "0px",
+   "radius": "0px",
+   "border": "0px none rgb(255, 255, 255)",
+   "shadow": "none",
+   "disp": "block",
+   "cols": "none",
+   "gap": "normal",
+   "txt": "Frete Grátis",
+   "level": "h3"
+  },
+  {
+   "tag": "h3",
+   "cls": "beneficio-titulo",
+   "id": "",
+   "x": 595,
+   "y": 2419,
+   "w": 237,
+   "h": 17,
+   "bg": "rgba(0, 0, 0, 0)",
+   "color": "rgb(255, 255, 255)",
+   "ff": "Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+   "fs": "14px",
+   "fw": "800",
+   "lh": "16.8px",
+   "tt": "capitalize",
+   "pad": "0px",
+   "radius": "0px",
+   "border": "0px none rgb(255, 255, 255)",
+   "shadow": "none",
+   "disp": "block",
+   "cols": "none",
+   "gap": "normal",
+   "txt": "Pague No Cartão",
+   "level": "h3"
+  },
+  {
+   "tag": "h3",
+   "cls": "beneficio-titulo",
+   "id": "",
+   "x": 884,
+   "y": 2419,
+   "w": 237,
+   "h": 17,
+   "bg": "rgba(0, 0, 0, 0)",
+   "color": "rgb(255, 255, 255)",
+   "ff": "Roboto, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+   "fs": "14px",
+   "fw": "800",
+   "lh": "16.8px",
+   "tt": "capitalize",
+   "pad": "0px",
+   "radius": "0px",
+   "border": "0px none rgb(255, 255, 255)",
+   "shadow": "none",
+   "disp": "block",
+   "cols": "none",
+   "gap": "normal",
+   "txt": "Compre Quando Quiser",
+   "level": "h3"
+  },
+  {
+   "tag": "h4",
+   "cls": "direitosAutoraisFooter",
+   "id": "",
+   "x": 15,
+   "y": 3299,
+   "w": 1122,
+   "h": 46,
+   "bg": "rgba(0, 0, 0, 0)",
+   "color": "rgb(148, 148, 148)",
+   "ff": "\"Helvetica Neue\"",
+   "fs": "13px",
+   "fw": "200",
+   "lh": "19.5px",
+   "tt": "none",
+   "pad": "16px 0px 0px",
+   "radius": "0px",
+   "border": "0px none rgb(148, 148, 148)",
+   "shadow": "none",
+   "disp": "block",
+   "cols": "none",
+   "gap": "normal",
+   "txt": "Copyright © 2020-2025 Friboi. Todos os direitos reservados - Av. Marginal Direita do Tietê",
+   "level": "h4"
+  }
+ ],
+ "images": [
+  {
+   "src": "/ccstore/v1/images/?source=/file/general/icon-desconto.png&height=25&width=25&outputFormat=PNG",
+   "alt": "Desconto",
+   "w": 25,
+   "h": 25
+  },
+  {
+   "src": "/file/general/Bnn_Comodato_Desktop_1920x400_V4.jpg&outputFormat=JPEG&quality=0.9",
+   "alt": "",
+   "w": 1109,
+   "h": 231
+  },
+  {
+   "src": "/file/general/C_1_Costela.jpg",
+   "alt": "Costela",
+   "w": 560,
+   "h": 224
+  },
+  {
+   "src": "/file/general/C_2_Picanha.png",
+   "alt": "Picanha",
+   "w": 560,
+   "h": 224
+  },
+  {
+   "src": "/file/general/C_3_Contra.png",
+   "alt": "Contra Filé",
+   "w": 560,
+   "h": 224
+  },
+  {
+   "src": "/file/general/C_4_Coxaomole.png",
+   "alt": "Coxão Mole",
+   "w": 560,
+   "h": 224
+  },
+  {
+   "src": "/file/general/C_5_pescado.png",
+   "alt": "Pescados",
+   "w": 560,
+   "h": 224
+  },
+  {
+   "src": "/file/general/C_6_batatas.png",
+   "alt": "Batatas",
+   "w": 560,
+   "h": 224
+  },
+  {
+   "src": "/file/general/marca_friboi.jpg",
+   "alt": "Friboi",
+   "w": 200,
+   "h": 340
+  },
+  {
+   "src": "/file/general/marca_dochef.jpg",
+   "alt": "Do Chef",
+   "w": 200,
+   "h": 340
+  },
+  {
+   "src": "/file/general/marca_maturatta.jpg",
+   "alt": "Maturatta",
+   "w": 200,
+   "h": 340
+  },
+  {
+   "src": "/file/general/marca_blackfriboi.jpg",
+   "alt": "Black Friboi",
+   "w": 200,
+   "h": 340
+  },
+  {
+   "src": "/file/general/marca_1953.jpg",
+   "alt": "1953",
+   "w": 200,
+   "h": 340
+  },
+  {
+   "src": "/file/general/institucional_friboi_1200x185.jpg",
+   "alt": "Marca Friboi",
+   "w": 1140,
+   "h": 176
+  },
+  {
+   "src": "/file/general/facebook.png",
+   "alt": "",
+   "w": 27,
+   "h": 31
+  },
+  {
+   "src": "/file/general/instagram.png",
+   "alt": "",
+   "w": 31,
+   "h": 31
+  },
+  {
+   "src": "/file/general/go-top.png",
+   "alt": "",
+   "w": 32,
+   "h": 32
+  },
+  {
+   "src": "/file/general/icone-bandeiras.png",
+   "alt": "Imagem responsiva",
+   "w": 64,
+   "h": 48
+  },
+  {
+   "src": "/file/general/icone_pix_rodape.png",
+   "alt": "Imagem responsiva",
+   "w": 37,
+   "h": 14
+  },
+  {
+   "src": "/file/general/icone_visa.png",
+   "alt": "Imagem responsiva",
+   "w": 37,
+   "h": 23
+  },
+  {
+   "src": "/file/general/Mask_Group_72.png",
+   "alt": "Imagem responsiva",
+   "w": 37,
+   "h": 23
+  },
+  {
+   "src": "/file/general/icone_boleto.png",
+   "alt": "Imagem responsiva",
+   "w": 37,
+   "h": 23
+  },
+  {
+   "src": "/file/general/icone_elo.png",
+   "alt": "Imagem responsiva",
+   "w": 37,
+   "h": 23
+  },
+  {
+   "src": "/file/general/icone_amex.png",
+   "alt": "Imagem responsiva",
+   "w": 37,
+   "h": 23
+  },
+  {
+   "src": "/file/general/Hipercard.png",
+   "alt": "Imagem responsiva",
+   "w": 37,
+   "h": 23
+  },
+  {
+   "src": "/file/general/cadeado.png",
+   "alt": "Imagem responsiva",
+   "w": 26,
+   "h": 35
+  },
+  {
+   "src": "/file/general/selo-site-seguro-pt.png",
+   "alt": "Imagem responsiva",
+   "w": 162,
+   "h": 35
+  },
+  {
+   "src": "/file/general/selo-google.png",
+   "alt": "Imagem responsiva",
+   "w": 124,
+   "h": 46
+  },
+  {
+   "src": "/file/general/Selo_PoweredByOracle-02.svg",
+   "alt": "Imagem responsiva",
+   "w": 112,
+   "h": 30
+  }
+ ]
+}

@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% from "_macros.html" import product_card, breadcrumb as bc, brl with context %}
+
+{% block title %}{{ page_title if page_title else (product.name if product else 'Produto') }}{% endblock %}
+
+{% block content %}
+{%- set p = product if product else produto -%}
+{%- if not p -%}
+  <div class="pdp"><div class="empty-state"><h2>Produto não encontrado</h2><p>O produto que você procura não está mais disponível.</p><a class="btn-outline" href="/">Voltar para a home</a></div></div>
+{%- else -%}
+{%- set attrs = p.attrs if p.attrs else {} -%}
+{%- set temp = (attrs.get('x_TEMPERATURA') or 'Congelado')|string|trim -%}
+{%- set marca = p.brand if p.brand else (attrs.get('x_MARCA') or '') -%}
+{%- set in_stock = p.in_stock if p.in_stock is defined else ((p.stock or '')|lower).startswith('dispon') -%}
+{%- set sale = p.sale_price if p.sale_price else none -%}
+{%- set has_sale = sale and (sale|float) < (p.price|float) -%}
+{%- set effective = sale if has_sale else p.price -%}
+{%- set max_qty = p.max_qty|int(1) if p.max_qty else 1 -%}
+{%- set _imgs = images if images else (p.images if p.images else ([p.image_url] if p.image_url else [])) -%}
+{%- set _crumbs = breadcrumb if breadcrumb else [
+  {'label': 'Home', 'url': '/'},
+  {'label': p.name, 'url': '/produto/' ~ p.slug}
+] -%}
+
+<div class="pdp">
+  {{ bc(_crumbs) }}
+
+  <div class="pdp-top">
+    {# ------------------------------ GALERIA ------------------------------ #}
+    <div class="pdp-gallery">
+      <div class="main-image">
+        {% if _imgs %}
+          <img src="{{ _imgs[0] }}" alt="{{ p.name }}" id="pdp-main-image" width="380" height="380">
+        {% else %}
+          <span style="font-size:12px;color:#6c757d">Sem imagem</span>
+        {% endif %}
+      </div>
+      {% if _imgs|length > 1 %}
+        <div class="thumbs">
+          {% for img in _imgs %}
+            <button type="button" class="{% if loop.first %}is-active{% endif %}" data-thumb="{{ img }}" aria-label="Imagem {{ loop.index }}">
+              <img src="{{ img }}" alt="{{ p.name }} — imagem {{ loop.index }}">
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {# ------------------------------ INFO ------------------------------ #}
+    <div class="pdp-info">
+      {% if marca %}<p class="brand-line">{{ marca }}</p>{% endif %}
+      <h1 class="pdp-title">{{ p.name }}</h1>
+      <p class="pdp-code">CÓD. <strong>{{ p.sku if p.sku else p.id }}</strong>{% if p.ean %} &nbsp;·&nbsp; EAN {{ p.ean }}{% endif %}</p>
+
+      <div class="pdp-badges">
+        <span class="badge temp">{{ temp|capitalize if temp else 'Congelado' }}</span>
+        {% if has_sale %}<span class="badge oferta">Oferta</span>{% endif %}
+        {% if in_stock %}
+          <span class="badge stock-in">Disponível</span>
+        {% else %}
+          <span class="badge stock-out">{{ p.stock if p.stock else 'Indisponível' }}</span>
+        {% endif %}
+      </div>
+
+      <div class="pdp-price-box">
+        {% if has_sale %}
+          <div class="price-old-line">De <s>R$ {{ brl(p.price) }}</s> por</div>
+        {% endif %}
+        <div class="price-main">
+          <span class="value">R$ {{ brl(effective) }}</span>
+          <span class="unit">/ {{ (p.unit or 'KG')|lower }}</span>
+        </div>
+        {% if has_sale %}
+          <p class="price-savings">
+            Economia de R$ {{ brl((p.price|float) - (sale|float)) }}
+            {%- if p.discount_percent %} ({{ p.discount_percent }}% off){% endif %}
+          </p>
+        {% endif %}
+      </div>
+
+      <div class="pdp-specs">
+        {% if p.weight_min or p.weight_max %}
+          <div class="info-item">
+            Caixa:
+            {% if p.weight_min and p.weight_max and (p.weight_min|float) != (p.weight_max|float) %}
+              {{ (p.weight_min|float)|round(0,'floor')|int }}kg a {{ (p.weight_max|float)|round(0,'floor')|int }}kg
+            {% else %}
+              {{ ((p.weight_max or p.weight_min)|float)|round(0,'floor')|int }}kg
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if p.weight_avg %}<div class="info-item">Peso médio: {{ ('%.2f'|format(p.weight_avg|float))|replace('.', ',') }}kg</div>{% endif %}
+        <div class="info-item">Unidade: {{ p.unit or 'KG' }}</div>
+        {% if attrs.get('x_LINHA') %}<div class="info-item">Linha: {{ attrs.get('x_LINHA') }}</div>{% endif %}
+        {% if attrs.get('x_recomendadoPara') %}<div class="info-item">Recomendado para: {{ attrs.get('x_recomendadoPara') }}</div>{% endif %}
+      </div>
+
+      <form class="pdp-buy" data-add-to-cart-form data-product-id="{{ p.id }}"
+            data-product-name="{{ p.name }}" data-unit="{{ p.unit or 'KG' }}"
+            data-max-qty="{{ max_qty if max_qty > 0 else 1 }}">
+        <div class="qty-control">
+          <span class="min-qty-label">Quantidade</span>
+          <div class="stepper">
+            <button type="button" data-qty-minus aria-label="Diminuir quantidade" {% if not in_stock %}disabled{% endif %}>-</button>
+            <input type="number" name="qty" value="1" min="1" max="{{ max_qty if max_qty > 0 else 1 }}"
+                   data-qty-input aria-label="Quantidade" {% if not in_stock %}disabled{% endif %}>
+            <button type="button" data-qty-plus aria-label="Aumentar quantidade" {% if not in_stock %}disabled{% endif %}>+</button>
+          </div>
+        </div>
+
+        <button class="btn-add-cart" type="submit" {% if not in_stock %}disabled{% endif %}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2A2 2 0 0 0 9.6 17h8.9a2 2 0 0 0 2-1.6L22 7H6"/></svg>
+          {% if in_stock %}Adicionar ao carrinho{% else %}Produto indisponível{% endif %}
+        </button>
+      </form>
+
+      <p class="add-feedback" data-add-feedback role="status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  {# ------------------------------ ABAS ------------------------------ #}
+  <section class="pdp-tabs" data-tabs>
+    <div class="tabs-nav" role="tablist">
+      <button type="button" class="is-active" role="tab" aria-selected="true" data-tab="descricao">Descrição</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="nutricao">Informação Nutricional</button>
+      <button type="button" role="tab" aria-selected="false" data-tab="informacoes">Informações</button>
+    </div>
+
+    <div class="tab-panel is-active" data-panel="descricao" role="tabpanel">
+      {% if p.description_html %}
+        <div class="rich-text">{{ p.description_html|safe }}</div>
+      {% else %}
+        <p>{{ p.name }}{% if marca %} — linha {{ marca }}{% endif %}. Produto fornecido em embalagem fechada,
+           mantido sob temperatura controlada. Ideal para o food service.</p>
+      {% endif %}
+    </div>
+
+    <div class="tab-panel" data-panel="nutricao" role="tabpanel">
+      {% if p.nutrition %}
+        <h3>Informação nutricional por porção</h3>
+        <ul>
+          {% for linha in p.nutrition %}
+            <li>{{ linha }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>Informação nutricional não disponível para este produto. Consulte o rótulo da embalagem.</p>
+      {% endif %}
+    </div>
+
+    <div class="tab-panel" data-panel="informacoes" role="tabpanel">
+      <h3>Informações do produto</h3>
+      <table>
+        <tbody>
+          <tr><th>Código (SKU)</th><td>{{ p.sku if p.sku else p.id }}</td></tr>
+          {% if p.ean %}<tr><th>EAN</th><td>{{ p.ean }}</td></tr>{% endif %}
+          {% if marca %}<tr><th>Marca</th><td>{{ marca }}</td></tr>{% endif %}
+          <tr><th>Unidade de medida</th><td>{{ p.unit or 'KG' }}</td></tr>
+          {% if p.weight_min %}<tr><th>Peso mínimo</th><td>{{ (p.weight_min|float)|round(0,'floor')|int }} kg</td></tr>{% endif %}
+          {% if p.weight_avg %}<tr><th>Peso médio</th><td>{{ ('%.2f'|format(p.weight_avg|float))|replace('.', ',') }} kg</td></tr>{% endif %}
+          {% if p.weight_max %}<tr><th>Peso máximo</th><td>{{ (p.weight_max|float)|round(0,'floor')|int }} kg</td></tr>{% endif %}
+          <tr><th>Temperatura</th><td>{{ temp|capitalize if temp else 'Congelado' }}</td></tr>
+          <tr><th>Estoque</th><td>{{ p.stock if p.stock else 'Indisponível' }}</td></tr>
+          {% if p.video_url %}<tr><th>Vídeo</th><td><a href="{{ p.video_url }}" target="_blank" rel="noopener">Assistir</a></td></tr>{% endif %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {# ------------------------------ RELACIONADOS ------------------------------ #}
+  {%- set _rel = relacionados if relacionados else (related if related else []) -%}
+  {% if _rel %}
+    <section class="related" aria-label="Produtos relacionados">
+      <h2 class="related-title"><span class="t1">Produtos</span><span class="t2">relacionados</span></h2>
+      <div class="products-grid">
+        {% for r in _rel[:4] %}
+          {{ product_card(r, 'grid') }}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+</div>
+{%- endif %}
+{% endblock %}
