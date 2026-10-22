@@ -89,7 +89,7 @@ Se `products` vier 0, o seed não rodou: confira se `data/catalog.json` subiu
 | Sintoma | Causa | Solução |
 |---|---|---|
 | 404 em `/assets/...` | `public/` vazio no deploy | veja o log do build: `scripts/build_vercel.py` tem que imprimir "1.672 arquivos" |
-| 500 em toda página | template fora do bundle | confirme `includeFiles: ["server/**", "data/catalog.json"]` |
+| 500 em toda página | template fora do bundle | confirme `includeFiles: "{server/**,data/catalog.json,data/seed.db}"` |
 | `Internal Server Error` na primeira visita | timeout do seed com Postgres lento | aumente `maxDuration` em `vercel.json` (60 → 120) ou rode o seed uma vez |
 | Cadastro "some" depois de um tempo | sem `DATABASE_URL` (SQLite efêmero) | conecte o Neon |
 | Erro `psycopg2` | dependência faltando | `psycopg2-binary` já está no `requirements.txt` |
