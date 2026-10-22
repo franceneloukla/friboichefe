@@ -1,0 +1,5 @@
+# Driver Postgres — instale/descomente APENAS se for usar DATABASE_URL.
+# Fica separado porque psycopg2 precisa de wheel compilado: em runtime Python
+# 3.14 (default do Vercel) nao existe wheel e o build falha por falta de
+# pg_config. Com o Python fixado em 3.12 (.python-version) ele instala normal.
+psycopg2-binary==2.9.10

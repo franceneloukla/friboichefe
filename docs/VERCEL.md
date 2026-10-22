@@ -68,6 +68,7 @@ vercel --prod
 | Variável | Obrigatória | Default | Para que serve |
 |---|---|---|---|
 | `DATABASE_URL` | em produção | — | Postgres; sem ela o Vercel usa SQLite em `/tmp` |
+| `.python-version` (arquivo) | sim | `3.12` | fixa o CPython do build; sem isso o Vercel usa 3.14 e as wheels de `pydantic-core`/`psycopg2` não existem |
 | `SECRET_KEY` | recomendada | valor de dev | assinatura do JWT — troque em produção |
 | `SEED_ON_INIT` | não | `1` | popula o banco automaticamente se estiver vazio |
 | `DEV_MODE` | não | `0` | `1` cria o admin de teste `admin@loja.local` |
@@ -92,7 +93,7 @@ Se `products` vier 0, o seed não rodou: confira se `data/catalog.json` subiu
 | 500 em toda página | template fora do bundle | confirme `includeFiles: "{server/**,data/catalog.json,data/seed.db}"` |
 | `Internal Server Error` na primeira visita | timeout do seed com Postgres lento | aumente `maxDuration` em `vercel.json` (60 → 120) ou rode o seed uma vez |
 | Cadastro "some" depois de um tempo | sem `DATABASE_URL` (SQLite efêmero) | conecte o Neon |
-| Erro `psycopg2` | dependência faltando | `psycopg2-binary` já está no `requirements.txt` |
+| `pg_config executable not found` | `psycopg2` tentando compilar por falta de wheel | mantenha `.python-version` = `3.12`. O driver Postgres fica em `requirements-postgres.txt` e **não** entra no build por padrão |
 | Login não persiste | cookies de terceiros bloqueados | use o domínio próprio, não um preview |
 
 ## 8. Estático vs. função — se o rewrite conflitar
@@ -106,3 +107,28 @@ passarem a ser capturados pela função, troque o bloco por exclusão explícita
   { "source": "/((?!assets/|static/|img/|favicon).*)", "destination": "/api/index" }
 ]
 ```
+
+## 9. Python 3.12 é obrigatório
+
+O Vercel escolhe o CPython pelo arquivo `.python-version` na raiz. **Não remova esse
+arquivo**: sem ele o build usa o 3.14 (default) e quebra em dois pontos, porque não
+existem wheels cp314 para as versões fixadas:
+
+- `pydantic-core==2.27.2` teria que compilar (precisa de Rust);
+- `psycopg2-binary` teria que compilar (precisa de `pg_config`) → `BUILD_UTILS_SPAWN_1`.
+
+Com `3.12`, os 34 pacotes da árvore resolvem 100 % como wheel (verificado com
+`pip download --only-binary=:all: --python-version 3.12 --platform manylinux2014_x86_64`).
+
+### Quero usar Postgres no Vercel
+
+O driver fica separado para não quebrar o build de quem não usa banco externo:
+
+```bash
+# 1) acrescente a linha do requirements-postgres.txt ao requirements.txt
+echo "psycopg2-binary==2.9.10" >> requirements.txt
+# 2) crie a env var DATABASE_URL (Neon) no projeto do Vercel
+# 3) redeploy
+```
+
+Confirme em `/api/health`: `"db":"postgres:<host>/<banco>"`.
