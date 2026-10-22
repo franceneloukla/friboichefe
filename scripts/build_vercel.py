@@ -45,9 +45,32 @@ def main() -> int:
     for src, dst in PAIRS:
         total += copytree(src, dst)
 
-    fav = ROOT / "web" / "static" / "img" / "ui" / "favicon.ico"
-    if fav.is_file():
-        shutil.copy2(fav, PUBLIC / "favicon.ico")
+    # favicon.ico: envolve o PNG do tema num container ICO (o formato aceita
+    # payload PNG desde o Vista, então não precisa de Pillow no build)
+    fav_png = None
+    for candidate in (
+        ROOT / "web" / "static" / "img" / "ui" / "logos" / "favicon-v3.png",
+        ROOT / "web" / "static" / "img" / "ui" / "logos" / "favicon.png",
+    ):
+        if candidate.is_file():
+            fav_png = candidate
+            break
+    if fav_png is not None:
+        data = fav_png.read_bytes()
+        side = 32
+        if data[:8] == b"\x89PNG\r\n\x1a\n" and len(data) > 24:
+            side = min(int.from_bytes(data[16:20], "big"), 256)
+        header = (0).to_bytes(2, "little") + (1).to_bytes(2, "little") + (1).to_bytes(2, "little")
+        entry = (
+            bytes([side if side < 256 else 0, side if side < 256 else 0])
+            + b"\x00\x00"
+            + (1).to_bytes(2, "little")
+            + (32).to_bytes(2, "little")
+            + len(data).to_bytes(4, "little")
+            + (22).to_bytes(4, "little")
+        )
+        (PUBLIC / "favicon.ico").write_bytes(header + entry + data)
+        shutil.copy2(fav_png, PUBLIC / "favicon.png")
 
     (PUBLIC / "robots.txt").write_text("User-agent: *\nAllow: /\n", encoding="utf-8")
 

@@ -1930,3 +1930,36 @@ if __name__ == "__main__":  # pragma: no cover - atalho para desenvolvimento
     import uvicorn
 
     uvicorn.run("app:app", host="127.0.0.1", port=8099, reload=True)
+
+
+# ---------------------------------------------------------------------------
+# DIAGNÓSTICO TEMPORÁRIO (remover depois): expõe o traceback da busca
+# ---------------------------------------------------------------------------
+@app.get("/__diag_busca_9f2c", include_in_schema=False)
+def _diag_busca(q: str = "acem", token: str = ""):
+    import os as _os
+    import platform
+    import sqlite3 as _sqlite
+    import sys as _sys
+    import traceback
+
+    if token != _os.environ.get("DIAG_TOKEN", "diag-9f2c"):
+        raise HTTPException(status_code=404, detail="Not Found")
+
+    info = {
+        "python": _sys.version.split()[0],
+        "sqlite": _sqlite.sqlite_version,
+        "platform": platform.platform()[:80],
+        "q": q,
+    }
+    try:
+        with SessionLocal() as db:
+            like = f"%{fold_text(q)}%"
+            expr = fold_sql(Product.name)
+            stmt = select(Product.id).where(expr.like(like)).limit(5)
+            rows = [r[0] for r in db.execute(stmt).all()]
+        info.update({"ok": True, "hits": rows})
+    except Exception:
+        info.update({"ok": False, "traceback": traceback.format_exc()[-3000:]})
+        return JSONResponse(info, status_code=500)
+    return JSONResponse(info)
