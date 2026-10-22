@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "python3 scripts/build_vercel.py",
+  "buildCommand": "python3 scripts/build_vercel.py || python scripts/build_vercel.py",
   "outputDirectory": "public",
   "functions": {
     "api/index.py": {
