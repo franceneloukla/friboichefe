@@ -1,10 +1,11 @@
-# Dependencias do app (instaladas pelo runtime Python do Vercel)
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
-sqlalchemy==2.0.36
-jinja2==3.1.5
-pydantic==2.10.4
-python-jose[cryptography]==3.3.0
-bcrypt==4.2.1
-python-multipart==0.0.20
-requests==2.32.3
+# Dependencias do app — versoes exatamente iguais as testadas localmente
+# (resolvem como wheel tanto em cp312 quanto em cp314/x86_64; nenhum build de fonte)
+fastapi==0.159.1
+uvicorn[standard]==0.54.0
+sqlalchemy==2.0.51
+jinja2==3.1.6
+pydantic==2.14.1
+python-jose[cryptography]==3.5.0
+bcrypt==5.0.0
+python-multipart==0.0.32
+requests==2.32.5

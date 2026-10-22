@@ -68,7 +68,6 @@ vercel --prod
 | Variável | Obrigatória | Default | Para que serve |
 |---|---|---|---|
 | `DATABASE_URL` | em produção | — | Postgres; sem ela o Vercel usa SQLite em `/tmp` |
-| `.python-version` (arquivo) | sim | `3.12` | fixa o CPython do build; sem isso o Vercel usa 3.14 e as wheels de `pydantic-core`/`psycopg2` não existem |
 | `SECRET_KEY` | recomendada | valor de dev | assinatura do JWT — troque em produção |
 | `SEED_ON_INIT` | não | `1` | popula o banco automaticamente se estiver vazio |
 | `DEV_MODE` | não | `0` | `1` cria o admin de teste `admin@loja.local` |
@@ -108,27 +107,29 @@ passarem a ser capturados pela função, troque o bloco por exclusão explícita
 ]
 ```
 
-## 9. Python 3.12 é obrigatório
+## 9. Versões de dependências (não troque por conta própria)
 
-O Vercel escolhe o CPython pelo arquivo `.python-version` na raiz. **Não remova esse
-arquivo**: sem ele o build usa o 3.14 (default) e quebra em dois pontos, porque não
-existem wheels cp314 para as versões fixadas:
+O Vercel constrói com o CPython que ele tem na imagem (hoje 3.14). Por isso as
+versões do `requirements.txt` são as mais recentes **e** as mesmas que rodaram nos
+testes locais — elas têm wheel `manylinux` publicada para cp312 **e** cp314:
 
-- `pydantic-core==2.27.2` teria que compilar (precisa de Rust);
-- `psycopg2-binary` teria que compilar (precisa de `pg_config`) → `BUILD_UTILS_SPAWN_1`.
+```
+pip download --only-binary=:all: --platform manylinux2014_x86_64 \
+  --python-version 3.14 --implementation cp --abi cp314 -r requirements.txt
+→ 38 pacotes, 0 builds de fonte
+```
 
-Com `3.12`, os 34 pacotes da árvore resolvem 100 % como wheel (verificado com
-`pip download --only-binary=:all: --python-version 3.12 --platform manylinux2014_x86_64`).
+Versões antigas (fastapi 0.115 / pydantic 2.10) **quebram o build** em Python 3.14:
+`pydantic-core` não tem wheel e o `maturin` falha com
+*"the configured Python interpreter version (3.14) is newer than PyO3's maximum supported version (3.13)"*.
 
 ### Quero usar Postgres no Vercel
 
 O driver fica separado para não quebrar o build de quem não usa banco externo:
 
 ```bash
-# 1) acrescente a linha do requirements-postgres.txt ao requirements.txt
 echo "psycopg2-binary==2.9.10" >> requirements.txt
-# 2) crie a env var DATABASE_URL (Neon) no projeto do Vercel
-# 3) redeploy
+# + DATABASE_URL (Neon) nas envs do projeto + redeploy
 ```
 
 Confirme em `/api/health`: `"db":"postgres:<host>/<banco>"`.
