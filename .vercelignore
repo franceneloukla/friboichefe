@@ -1,12 +1,14 @@
+# Nao sobe para o build do Vercel (o que o app precisa esta no repo)
 .venv
 __pycache__
 *.pyc
 _scratch
+public
+tests
+docs/CAPTURE
 data/store.db
 data/store.db-*
 data/_checkpoint.json
 data/_raw
 data/scrape.log
 data/images_missing.json
-tests/screenshots
-public
