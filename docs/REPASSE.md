@@ -68,11 +68,35 @@ git push origin main
 git push github2 main      # mantém o espelho em sincronia
 ```
 
-> Os remotes locais do dono carregam um Personal Access Token na URL
-> (`https://franceneloukla:<TOKEN>@github.com/...`). O token **não** está em
-> nenhum arquivo do repositório — se você for commitar, use **suas próprias
-> credenciais** (`git remote set-url origin https://github.com/franceneloukla/friboichefes.git`
-> + `gh auth login` ou um token seu).
+### Credenciais (token NUNCA no repositório)
+
+O token **não** está em nenhum arquivo versionado — confira:
+
+```bash
+git grep -I -n -F -e "github_pat" -e "ghp_" HEAD     # tem que voltar vazio
+```
+
+No setup do dono ele fica fora do repo, em `~/.secret/git-credentials` (permissão
+600), lido por um credential helper **local do repositório**:
+
+```bash
+git config credential.helper "store --file=$HOME/.secret/git-credentials"
+git remote -v      # as URLs ficam limpas, sem token
+```
+
+Para um dev novo, **gere credencial própria** (não reaproveite a do dono):
+
+```bash
+gh auth login                                   # opção mais simples
+# ou: github.com/settings/tokens → "Fine-grained token" escopo repo → e então
+git config credential.helper "store --file=$HOME/.secret/git-credentials"
+printf 'https://SEU_USUARIO:SEU_TOKEN@github.com\n' > ~/.secret/git-credentials
+chmod 600 ~/.secret/git-credentials
+```
+
+Alternativas sem arquivo: `git config credential.helper cache` (memória por 15 min)
+ou colar o token só na hora do push (`git push https://USER:TOKEN@github.com/...`),
+evitando deixá-lo no `.git/config`.
 
 ### Regras de commit do projeto (aprendidas na dor)
 
