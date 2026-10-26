@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{#-
+   Página de cotação — a loja não exibe preço, então todo pedido começa aqui.
+   Contexto esperado do backend (todos opcionais):
+     produto : dict do produto quando ?produto=<slug>
+     itens   : lista de itens do carrinho quando ?carrinho=1
+     ufs     : [{sigla, nome}] com as 27 UFs
+     origem  : 'produto' | 'carrinho' | 'geral'
+   Sem `ufs` o select usa a lista fixa local das 27 UFs.
+-#}
+
+{%- set _UFS_FALLBACK = [
+  ('AC', 'Acre'), ('AL', 'Alagoas'), ('AP', 'Amapá'), ('AM', 'Amazonas'),
+  ('BA', 'Bahia'), ('CE', 'Ceará'), ('DF', 'Distrito Federal'), ('ES', 'Espírito Santo'),
+  ('GO', 'Goiás'), ('MA', 'Maranhão'), ('MT', 'Mato Grosso'), ('MS', 'Mato Grosso do Sul'),
+  ('MG', 'Minas Gerais'), ('PA', 'Pará'), ('PB', 'Paraíba'), ('PR', 'Paraná'),
+  ('PE', 'Pernambuco'), ('PI', 'Piauí'), ('RJ', 'Rio de Janeiro'), ('RN', 'Rio Grande do Norte'),
+  ('RS', 'Rio Grande do Sul'), ('RO', 'Rondônia'), ('RR', 'Roraima'),
+  ('SC', 'Santa Catarina'), ('SP', 'São Paulo'), ('SE', 'Sergipe'), ('TO', 'Tocantins')
+] -%}
+
+{%- set _ufs_list = [] -%}
+{%- if ufs is defined and ufs -%}
+  {%- for u in ufs -%}
+    {%- set _ = _ufs_list.append({'sigla': u.sigla, 'nome': u.nome}) -%}
+  {%- endfor -%}
+{%- else -%}
+  {%- for sigla, nome in _UFS_FALLBACK -%}
+    {%- set _ = _ufs_list.append({'sigla': sigla, 'nome': nome}) -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- set _produto = produto if produto is defined and produto else none -%}
+{%- set _itens_ctx = itens if itens is defined and itens else [] -%}
+{%- set _linhas = [] -%}
+{%- set _payload_itens = [] -%}
+{%- if _produto -%}
+  {%- set _ = _linhas.append({
+      'product_id': (_produto.id if _produto.id is defined else '')|string,
+      'name': _produto.name if _produto.name is defined else 'Produto',
+      'slug': _produto.slug if _produto.slug is defined else '',
+      'image_url': _produto.image_url if _produto.image_url is defined else none,
+      'unit': _produto.unit if _produto.unit is defined else 'KG',
+      'qty': 1}) -%}
+{%- else -%}
+  {%- for it in _itens_ctx -%}
+    {%- set _pid = (it.product_id if it.product_id is defined else (it.id if it.id is defined else '')) -%}
+    {%- set _qty = (it.qty if it.qty is defined else (it.quantity if it.quantity is defined else 1))|int(1) -%}
+    {%- set _ = _linhas.append({
+        'product_id': _pid|string,
+        'name': it.name if it.name is defined else 'Produto',
+        'slug': it.slug if it.slug is defined else '',
+        'image_url': it.image_url if it.image_url is defined else none,
+        'unit': it.unit if it.unit is defined else 'KG',
+        'qty': _qty}) -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- for l in _linhas -%}
+  {%- set _ = _payload_itens.append({'product_id': l.product_id, 'qty': l.qty|int(1)}) -%}
+{%- endfor -%}
+
+{%- set _origem = (origem if origem is defined and origem else ('produto' if _produto else ('carrinho' if _linhas else 'geral'))) -%}
+{%- set _qtd_total = _linhas|length -%}
+
+{% block title %}{{ page_title if page_title else 'Solicitar cotação | Friboi Online' }}{% endblock %}
+{% block meta_description %}Solicite a cotação dos seus produtos Friboi Online. O representante do seu estado envia a tabela atualizada, condições de entrega e prazos.{% endblock %}
+
+{% block content %}
+<div class="cotacao-page">
+  <nav class="breadcrumb" aria-label="Você está aqui">
+    <a href="/">Home</a><span class="sep">/</span>
+    {% if _linhas %}<a href="/carrinho">Carrinho</a><span class="sep">/</span>{% endif %}
+    <span class="current">Solicitar cotação</span>
+  </nav>
+
+  <header class="cotacao-head">
+    <span class="cotacao-eyebrow">Venda por cotação</span>
+    <h1 class="cotacao-title">Solicitar cotação</h1>
+    <p class="cotacao-sub">
+      Esta loja não exibe preço: a tabela é definida pelo
+      <strong>representante do seu estado</strong>. Envie a sua lista e receba os valores da
+      sua região, as condições de entrega e os prazos.
+    </p>
+  </header>
+
+  <div class="cotacao-layout">
+    {# ------------------------------ formulário ------------------------------ #}
+    <section class="cotacao-form-card" aria-labelledby="cotacao-form-title">
+      <h2 id="cotacao-form-title">Seus dados de contato</h2>
+      <p class="cotacao-form-sub">O representante da sua UF responde em até 1 dia útil.</p>
+
+      <div class="form-alert" data-form-alert role="alert" aria-live="assertive"></div>
+
+      <form class="cotacao-form" data-cotacao-form novalidate
+            data-origem="{{ _origem }}"
+            data-produto-id="{{ _produto.id if _produto else '' }}">
+        <input type="hidden" name="origem" value="{{ _origem }}">
+        <input type="hidden" name="produto_id" value="{{ _produto.id if _produto else '' }}">
+        <input type="hidden" name="items_json" value='{{ _payload_itens|tojson }}'>
+
+        <div class="field">
+          <label for="cot-nome">Nome completo <span class="req">*</span></label>
+          <input id="cot-nome" name="nome" type="text" autocomplete="name" required
+                 placeholder="Como podemos te chamar" maxlength="120">
+          <span class="field-error" data-error>Informe o nome completo (mínimo 3 letras).</span>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="cot-email">E-mail <span class="req">*</span></label>
+            <input id="cot-email" name="email" type="email" autocomplete="email" required
+                   placeholder="voce@empresa.com.br" maxlength="160">
+            <span class="field-error" data-error>Informe um e-mail válido.</span>
+          </div>
+          <div class="field">
+            <label for="cot-telefone">Telefone / WhatsApp <span class="req">*</span></label>
+            <input id="cot-telefone" name="telefone" type="tel" autocomplete="tel" required
+                   placeholder="(11) 99999-9999" data-mask="phone" maxlength="16">
+            <span class="field-error" data-error>Informe o telefone com DDD (mínimo 10 dígitos).</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="cot-uf">Estado (UF) <span class="req">*</span></label>
+            <select id="cot-uf" name="uf" required aria-describedby="cot-uf-hint">
+              <option value="">Selecione o seu estado</option>
+              {% for u in _ufs_list %}
+                <option value="{{ u.sigla }}">{{ u.sigla }} — {{ u.nome }}</option>
+              {% endfor %}
+            </select>
+            <span class="hint" id="cot-uf-hint">Define qual representante atende você.</span>
+            <span class="field-error" data-error>Selecione uma UF válida.</span>
+          </div>
+          <div class="field">
+            <label for="cot-cidade">Cidade</label>
+            <input id="cot-cidade" name="cidade" type="text" autocomplete="address-level2"
+                   placeholder="Cidade do estabelecimento" maxlength="120">
+            <span class="field-error" data-error>Informe a cidade.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="cot-mensagem">Mensagem</label>
+          <textarea id="cot-mensagem" name="mensagem" rows="4" maxlength="2000"
+                    placeholder="Quantidade estimada, frequência de compra, prazo desejado…"></textarea>
+          <span class="hint">Opcional — quanto mais detalhe, mais precisa a cotação.</span>
+          <span class="field-error" data-error>Revise a mensagem.</span>
+        </div>
+
+        <button class="btn-primary cotacao-submit" type="submit" data-cotacao-submit>
+          Enviar solicitação de cotação
+        </button>
+        <p class="cotacao-privacy">
+          Usamos os seus dados apenas para responder a esta cotação.
+          Veja a <a href="/institucional/politica-de-privacidade">Política de Privacidade</a>.
+        </p>
+      </form>
+
+      {# cartão de sucesso — o app.js troca o formulário por este bloco #}
+      <div class="cotacao-success" data-cotacao-success hidden tabindex="-1">
+        <span class="cotacao-success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        <h2>Cotação enviada!</h2>
+        <p>O representante do seu estado vai entrar em contato.</p>
+        <p class="cotacao-protocol">
+          Protocolo <strong data-cotacao-protocol>#—</strong>
+        </p>
+        <p class="cotacao-success-note">
+          Guarde o número do protocolo para acompanhar o atendimento.
+        </p>
+        <div class="cotacao-success-actions">
+          <a class="btn-outline" href="/">Continuar comprando</a>
+          <a class="btn-outline" href="/carrinho">Ver carrinho</a>
+        </div>
+      </div>
+    </section>
+
+    {# -------------------------------- resumo -------------------------------- #}
+    <aside class="cotacao-resumo" aria-labelledby="cotacao-resumo-title">
+      <h2 id="cotacao-resumo-title">Produtos da cotação</h2>
+
+      {% if _linhas %}
+        <ul class="cot-list">
+          {% for l in _linhas %}
+            <li class="cot-item">
+              <span class="cot-thumb">
+                {% if l.image_url %}
+                  <img src="{{ l.image_url }}" alt="{{ l.name }}" loading="lazy">
+                {% else %}
+                  <span class="noimg">Sem foto</span>
+                {% endif %}
+              </span>
+              <span class="cot-info">
+                <span class="cot-name">
+                  {% if l.slug %}<a href="/produto/{{ l.slug }}">{{ l.name }}</a>{% else %}{{ l.name }}{% endif %}
+                </span>
+                <span class="cot-meta">Qtd. {{ l.qty }} · Unidade {{ l.unit or 'KG' }} · Preço sob consulta</span>
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+        <p class="cot-count">
+          {{ _qtd_total }} {{ 'produto' if _qtd_total == 1 else 'produtos' }} na cotação
+        </p>
+      {% else %}
+        <div class="cot-empty">
+          <p>Nenhum produto selecionado ainda.</p>
+          <p>Você pode navegar pelas categorias e voltar aqui pelo carrinho, ou descrever
+             na mensagem o que precisa cotar.</p>
+          <a class="btn-outline" href="/">Ver produtos</a>
+        </div>
+      {% endif %}
+
+      <div class="cot-steps">
+        <h3>Como funciona</h3>
+        <ol>
+          <li><span>1</span> Você envia os dados e a lista de produtos.</li>
+          <li><span>2</span> O representante da sua UF monta a tabela da região.</li>
+          <li><span>3</span> Você recebe os valores, a entrega e os prazos por e-mail ou telefone.</li>
+        </ol>
+      </div>
+
+      <p class="cot-contact">
+        Prefere falar agora?
+        <a href="/institucional/unidades">Veja a unidade de atendimento</a> da sua região.
+      </p>
+    </aside>
+  </div>
+</div>
+{% endblock %}

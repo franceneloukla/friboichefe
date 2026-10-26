@@ -1,150 +1,28 @@
 {% extends "base.html" %}
-{% from "_macros.html" import brl, preco, preco_br with context %}
+{#-
+   O /checkout foi descontinuado: a rota redireciona (303) para /cotacao?carrinho=1.
+   Este template segue existindo apenas como página de aviso, sem nenhum valor.
+-#}
 
-{% block title %}{{ page_title if page_title else 'Finalizar compra | Friboi Online' }}{% endblock %}
+{% block title %}{{ page_title if page_title else 'Solicitar cotação | Friboi Online' }}{% endblock %}
 
 {% block content %}
-{%- set _cart = cart if cart else {} -%}
-{%- set _itens = _cart.get('items', []) if _cart else [] -%}
-{%- set _subtotal = _cart.get('subtotal', 0) if _cart else 0 -%}
-{%- set _precisa_login = requires_login if requires_login is defined else (not user) -%}
-
 <div class="checkout-page">
   <nav class="breadcrumb" aria-label="Você está aqui">
-    <a href="/">Home</a><span class="sep">/</span>
-    <a href="/carrinho">Carrinho</a><span class="sep">/</span>
-    <span class="current">Finalizar compra</span>
+    <a href="/">Home</a><span class="sep">/</span><span class="current">Cotação</span>
   </nav>
-  <h1 class="page-title">Finalizar compra</h1>
 
-  {% if not _itens %}
-    <div class="empty-state" style="margin-top:20px">
-      <h2>Seu carrinho está vazio</h2>
-      <p>Adicione produtos antes de finalizar a compra.</p>
-      <a class="btn-outline" href="/">Ver produtos</a>
+  <div class="empty-state" style="margin-top:20px">
+    <h1 class="page-title">A compra agora é por cotação</h1>
+    <p>
+      Esta loja não fecha pedido direto pelo site. Envie a sua lista e o
+      <strong>representante do seu estado</strong> responde com a tabela atualizada,
+      as condições de entrega e os prazos.
+    </p>
+    <div class="empty-actions">
+      <a class="btn-primary" href="/cotacao?carrinho=1">Solicitar cotação do carrinho</a>
+      <a class="btn-outline" href="/">Continuar comprando</a>
     </div>
-  {% else %}
-  <div class="checkout-layout">
-    <form data-checkout-form>
-      {% if _precisa_login %}
-        <div class="checkout-block">
-          <h2>Identificação</h2>
-          <p style="font-size:13px;color:#495057;margin-bottom:12px">
-            Para concluir o pedido é necessário entrar na sua conta.
-          </p>
-          <a class="btn-primary" href="/login?next=/checkout" style="display:inline-flex;width:auto;padding:0 26px;text-decoration:none">Entrar ou cadastrar</a>
-        </div>
-      {% endif %}
-
-      <div class="checkout-block">
-        <h2>Dados de entrega</h2>
-        <div class="form-row">
-          <div class="field" data-field="name">
-            <label for="ship_name">Nome do destinatário *</label>
-            <input type="text" id="ship_name" name="ship_name" required
-                   value="{{ user.name if user else '' }}" placeholder="Nome de quem recebe">
-            <span class="field-error" data-error>Informe o nome do destinatário.</span>
-          </div>
-          <div class="field" data-field="email">
-            <label for="ship_email">E-mail</label>
-            <input type="email" id="ship_email" name="ship_email"
-                   value="{{ user.email if user else '' }}" placeholder="voce@empresa.com.br">
-            <span class="field-error" data-error>Informe um e-mail válido.</span>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="field" data-field="phone">
-            <label for="ship_phone">Telefone</label>
-            <input type="tel" id="ship_phone" name="ship_phone" data-mask="phone"
-                   value="{{ user.phone if user and user.phone else '' }}" placeholder="(00) 00000-0000">
-          </div>
-          <div class="field" data-field="cep">
-            <label for="ship_cep">CEP *</label>
-            <input type="text" id="ship_cep" name="ship_cep" required data-mask="cep"
-                   placeholder="00000-000" maxlength="9" inputmode="numeric">
-            <span class="field-error" data-error>Informe o CEP.</span>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="field" style="flex:3 1 0" data-field="address">
-            <label for="ship_address">Endereço</label>
-            <input type="text" id="ship_address" name="ship_address" placeholder="Rua, avenida...">
-          </div>
-          <div class="field" data-field="number">
-            <label for="ship_number">Número</label>
-            <input type="text" id="ship_number" name="ship_number" placeholder="123">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="field" data-field="complement">
-            <label for="ship_complement">Complemento</label>
-            <input type="text" id="ship_complement" name="ship_complement" placeholder="Sala, galpão...">
-          </div>
-          <div class="field" data-field="district">
-            <label for="ship_district">Bairro</label>
-            <input type="text" id="ship_district" name="ship_district" placeholder="Bairro">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="field" style="flex:2 1 0" data-field="city">
-            <label for="ship_city">Cidade</label>
-            <input type="text" id="ship_city" name="ship_city" placeholder="Cidade">
-          </div>
-          <div class="field" data-field="state">
-            <label for="ship_state">UF</label>
-            <input type="text" id="ship_state" name="ship_state" placeholder="SP" maxlength="2"
-                   style="text-transform:uppercase">
-          </div>
-        </div>
-      </div>
-
-      <div class="checkout-block">
-        <h2>Forma de pagamento</h2>
-        <div class="payment-options">
-          <label class="payment-option is-selected">
-            <input type="radio" name="payment" value="pix" checked>
-            <span>Pix — aprovação imediata</span>
-          </label>
-          <label class="payment-option">
-            <input type="radio" name="payment" value="boleto">
-            <span>Boleto bancário</span>
-          </label>
-          <label class="payment-option">
-            <input type="radio" name="payment" value="cartao">
-            <span>Cartão de crédito (com opção de parcelamento)</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="form-alert" data-form-alert role="alert"></div>
-    </form>
-
-    <aside class="summary-card">
-      <h2>Resumo do pedido</h2>
-      {% for it in _itens %}
-        <div class="summary-line">
-          <span>{{ it.qty }}x {{ it.name }}</span>
-          <span>{{ preco(it.subtotal, true) }}</span>
-        </div>
-      {% endfor %}
-      <div class="summary-line">
-        <span>Frete</span>
-        <span class="free">Grátis</span>
-      </div>
-      <div class="summary-line total">
-        <span>Total</span>
-        <span>{{ preco(_subtotal, true) }}</span>
-      </div>
-      <button class="btn-primary" type="button" data-checkout-submit {% if _precisa_login %}disabled{% endif %}>
-        {% if _precisa_login %}Entre para finalizar{% else %}Confirmar pedido{% endif %}
-      </button>
-      <a class="continue" href="/carrinho">Voltar ao carrinho</a>
-    </aside>
   </div>
-  {% endif %}
 </div>
 {% endblock %}

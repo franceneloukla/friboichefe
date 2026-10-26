@@ -18,12 +18,6 @@
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   };
 
-  function brl(value) {
-    var n = Number(value);
-    if (!isFinite(n)) n = 0;
-    return 'R$ ' + n.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  }
-
   function parseJSON(text) {
     try { return JSON.parse(text); } catch (e) { return null; }
   }
@@ -120,6 +114,8 @@
     }).catch(function () { return null; });
   }
 
+  // O carrinho não exibe valores: só quantidade. A cotação é pedida na página
+  // /cotacao e o representante do estado responde com a tabela da região.
   function renderCartLines(cart) {
     var list = $('[data-cart-list]');
     if (!list || !cart) return;
@@ -132,12 +128,10 @@
       var row = list.querySelector('[data-cart-item="' + item.product_id + '"]');
       if (!row) return;
       var qtyInput = $('[data-cart-qty]', row);
-      var sub = $('[data-cart-subtotal]', row);
       if (qtyInput && document.activeElement !== qtyInput) qtyInput.value = item.qty;
-      if (sub) sub.textContent = brl(item.subtotal);
     });
-    $$('[data-cart-subtotal-total]').forEach(function (el) { el.textContent = brl(cart.subtotal); });
-    $$('[data-cart-total]').forEach(function (el) { el.textContent = brl(cart.total || cart.subtotal); });
+    var count = typeof cart.count === 'number' ? cart.count : items.length;
+    $$('[data-cart-count-line]').forEach(function (el) { el.textContent = count; });
   }
 
   /* ----------------------------------------------------------- carrinho DOM */
@@ -363,48 +357,278 @@
       .then(function () { window.location.href = '/'; });
   });
 
-  /* ------------------------------------------------------------ checkout */
+  /* ------------------------------------------------------- modal de cotação */
+  // Todo card com .js-ver-produto abre #modal-cotacao (base.html). Sem JS o
+  // <a href="/produto/SLUG"> funciona como fallback. Acessibilidade: foco
+  // preso dentro do diálogo, ESC / clique fora / ✕ fecham e o foco volta para
+  // o botão que abriu.
+  var modalEl = null;
+  var modalOpener = null;
+  var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), ' +
+                  'textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  function getModal() {
+    if (!modalEl) modalEl = document.getElementById('modal-cotacao');
+    return modalEl;
+  }
+
+  function modalFocusables(m) {
+    return $$(FOCUSABLE, m).filter(function (el) {
+      return el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement;
+    });
+  }
+
+  function focusModalTitle(m) {
+    var title = document.getElementById('modal-cotacao-title');
+    var target = title || $('.modal-box', m);
+    if (!target) return;
+    window.setTimeout(function () {
+      if (typeof target.focus === 'function') target.focus();
+    }, 40);
+  }
+
+  function openQuotationModal(slug, trigger) {
+    var m = getModal();
+    if (!m) return false;
+    var slugSafe = (slug || '').trim();
+    var quotationLink = $('[data-modal-cotacao]', m);
+    var detailLink = $('[data-modal-detalhes]', m);
+    if (slugSafe) {
+      if (quotationLink) quotationLink.setAttribute('href', '/cotacao?produto=' + encodeURIComponent(slugSafe));
+      if (detailLink) detailLink.setAttribute('href', '/produto/' + encodeURIComponent(slugSafe));
+    } else {
+      if (quotationLink) quotationLink.setAttribute('href', '/cotacao');
+    }
+
+    modalOpener = trigger || document.activeElement;
+    m.hidden = false;
+    m.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    void m.offsetWidth; // reflow: garante a transição de entrada
+    m.classList.add('is-open');
+
+    focusModalTitle(m);
+    return true;
+  }
+
+  function closeQuotationModal() {
+    var m = getModal();
+    if (!m || m.hidden) return;
+    m.classList.remove('is-open');
+    m.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    window.setTimeout(function () {
+      m.hidden = true;
+      var opener = modalOpener;
+      modalOpener = null;
+      if (opener && typeof opener.focus === 'function') opener.focus();
+    }, 180);
+  }
+
   document.addEventListener('click', function (event) {
-    var btn = event.target.closest('[data-checkout-submit]');
-    if (!btn) return;
-    var form = $('[data-checkout-form]');
-    if (!form) return;
+    var trigger = event.target.closest('.js-ver-produto');
+    if (trigger) {
+      // o card inteiro pode ser um link: não deixa navegar
+      event.preventDefault();
+      event.stopPropagation();
+      openQuotationModal(trigger.getAttribute('data-slug'), trigger);
+      return;
+    }
 
-    var shipName = $('#ship_name', form);
-    var cep = $('#ship_cep', form);
-    var ok = true;
-    if (!shipName || shipName.value.trim().length < 3) { if (shipName) fieldError(shipName); ok = false; }
-    if (!cep || onlyDigits(cep.value).length !== 8) { if (cep) fieldError(cep, 'Informe um CEP válido com 8 dígitos.'); ok = false; }
-    if (!ok) { setFormAlert(form, 'Confira os campos destacados antes de continuar.', 'error'); return; }
+    if (event.target.closest('[data-modal-close]')) {
+      event.preventDefault();
+      closeQuotationModal();
+      return;
+    }
 
-    var paymentEl = form.querySelector('input[name="payment"]:checked');
-    var payload = {
-      payment: paymentEl ? paymentEl.value : 'pix',
-      ship: {
-        name: shipName.value.trim(),
-        email: $('#ship_email', form) ? $('#ship_email', form).value.trim() : '',
-        phone: $('#ship_phone', form) ? onlyDigits($('#ship_phone', form).value) : '',
-        cep: onlyDigits(cep.value),
-        address: $('#ship_address', form) ? $('#ship_address', form).value.trim() : '',
-        number: $('#ship_number', form) ? $('#ship_number', form).value.trim() : '',
-        complement: $('#ship_complement', form) ? $('#ship_complement', form).value.trim() : '',
-        district: $('#ship_district', form) ? $('#ship_district', form).value.trim() : '',
-        city: $('#ship_city', form) ? $('#ship_city', form).value.trim() : '',
-        state: $('#ship_state', form) ? $('#ship_state', form).value.trim().toUpperCase() : ''
+    var m = getModal();
+    if (m && !m.hidden && event.target === m) closeQuotationModal();
+  }, true);
+
+  document.addEventListener('keydown', function (event) {
+    var m = getModal();
+    if (!m || m.hidden) return;
+
+    if (event.key === 'Escape' || event.key === 'Esc') {
+      event.preventDefault();
+      closeQuotationModal();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+
+    var items = modalFocusables(m);
+    if (!items.length) return;
+    var first = items[0];
+    var last = items[items.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === first || !m.contains(document.activeElement)) {
+        event.preventDefault();
+        last.focus();
       }
-    };
+      return;
+    }
+    if (document.activeElement === last || !m.contains(document.activeElement)) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
 
-    btn.disabled = true;
-    api('/api/checkout', { method: 'POST', body: payload })
+  /* ------------------------------------------------------ envio da cotação */
+  function cotacaoField(form, name) {
+    return form.elements[name] || $('[name="' + name + '"]', form);
+  }
+
+  function setFieldError(form, name, message) {
+    var input = cotacaoField(form, name);
+    if (!input) return;
+    var field = input.closest('.field');
+    if (!field) return;
+    field.classList.add('has-error');
+    var err = $('[data-error]', field);
+    if (err && message) err.textContent = message;
+  }
+
+  function clearCotacaoErrors(form) {
+    $$('.field.has-error', form).forEach(function (f) { f.classList.remove('has-error'); });
+    var alertEl = form.parentNode ? $('[data-form-alert]', form.parentNode) : null;
+    if (alertEl) {
+      alertEl.textContent = '';
+      alertEl.classList.remove('is-visible', 'is-error', 'is-success');
+    }
+  }
+
+  function showCotacaoAlert(form, message, kind) {
+    var alertEl = form.parentNode ? $('[data-form-alert]', form.parentNode) : $('[data-form-alert]');
+    if (!alertEl) { toast(message, kind !== 'success'); return; }
+    alertEl.textContent = message;
+    alertEl.classList.add('is-visible');
+    alertEl.classList.toggle('is-error', kind !== 'success');
+    alertEl.classList.toggle('is-success', kind === 'success');
+  }
+
+  function showCotacaoSuccess(form, data) {
+    var scope = form.parentNode || document;
+    var card = $('[data-cotacao-success]', scope);
+    var protocol = data && data.id !== undefined && data.id !== null ? String(data.id) : '';
+    var protocolEl = card ? $('[data-cotacao-protocol]', card) : null;
+    if (protocolEl) protocolEl.textContent = protocol ? '#' + protocol : '#—';
+
+    var alertEl = $('[data-form-alert]', scope);
+    if (alertEl) {
+      alertEl.textContent = '';
+      alertEl.classList.remove('is-visible', 'is-error', 'is-success');
+    }
+
+    if (!card) {
+      toast('Cotação enviada! Protocolo #' + protocol);
+      return;
+    }
+    form.setAttribute('hidden', 'hidden');
+    card.hidden = false;
+    card.removeAttribute('hidden');
+    card.focus();
+    if (card.scrollIntoView) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    toast('Cotação enviada! O representante do seu estado vai entrar em contato.');
+  }
+
+  function applyServerErrors(form, data) {
+    var errors = data && (data.errors || data.fields);
+    var painted = false;
+    if (errors && typeof errors === 'object') {
+      Object.keys(errors).forEach(function (key) {
+        var msg = errors[key];
+        if (typeof msg === 'string' && msg) {
+          setFieldError(form, key, msg);
+          painted = true;
+        }
+      });
+    }
+    return painted;
+  }
+
+  document.addEventListener('submit', function (event) {
+    var form = event.target.closest('[data-cotacao-form]');
+    if (!form) return;
+    event.preventDefault();
+    clearCotacaoErrors(form);
+
+    var nome = (cotacaoField(form, 'nome').value || '').trim();
+    var email = (cotacaoField(form, 'email').value || '').trim();
+    var telefone = onlyDigits(cotacaoField(form, 'telefone').value);
+    var uf = (cotacaoField(form, 'uf').value || '').trim().toUpperCase();
+    var cidade = (cotacaoField(form, 'cidade').value || '').trim();
+    var mensagem = (cotacaoField(form, 'mensagem').value || '').trim();
+    var ok = true;
+
+    if (nome.length < 3) {
+      setFieldError(form, 'nome', 'Informe o nome completo (mínimo 3 letras).');
+      ok = false;
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) {
+      setFieldError(form, 'email', 'Informe um e-mail válido.');
+      ok = false;
+    }
+    if (telefone.length < 10 || telefone.length > 11) {
+      setFieldError(form, 'telefone', 'Informe o telefone com DDD (mínimo 10 dígitos).');
+      ok = false;
+    }
+    if (!/^[A-Z]{2}$/.test(uf)) {
+      setFieldError(form, 'uf', 'Selecione uma UF válida.');
+      ok = false;
+    }
+    if (!ok) {
+      showCotacaoAlert(form, 'Confira os campos destacados antes de enviar.', 'error');
+      var firstError = $('.field.has-error input, .field.has-error select, .field.has-error textarea', form);
+      if (firstError) firstError.focus();
+      return;
+    }
+
+    var items = [];
+    var itemsInput = cotacaoField(form, 'items_json');
+    if (itemsInput) {
+      try { items = JSON.parse(itemsInput.value || '[]') || []; } catch (e) { items = []; }
+    }
+    var produtoId = (cotacaoField(form, 'produto_id') ? cotacaoField(form, 'produto_id').value : '') || '';
+    var origem = form.getAttribute('data-origem') || 'geral';
+
+    var payload = {
+      nome: nome,
+      email: email,
+      telefone: telefone,
+      uf: uf,
+      cidade: cidade,
+      mensagem: mensagem,
+      origem: origem
+    };
+    if (produtoId) payload.produto_id = produtoId;
+    if (items.length) payload.items = items;
+
+    var submitBtn = $('[data-cotacao-submit]', form);
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.setAttribute('data-label', submitBtn.textContent);
+      submitBtn.textContent = 'Enviando…';
+    }
+
+    api('/api/cotacao', { method: 'POST', body: payload })
       .then(function (data) {
-        var order = data && data.order ? data.order : data;
-        updateCartBadge(0);
-        toast('Pedido #' + (order && order.id ? order.id : '') + ' criado com sucesso!');
-        setTimeout(function () { window.location.href = '/conta'; }, 900);
+        showCotacaoSuccess(form, data);
       })
       .catch(function (err) {
-        setFormAlert(form, err.message || 'Não foi possível finalizar o pedido.', 'error');
-        btn.disabled = false;
+        var painted = applyServerErrors(form, err.data);
+        showCotacaoAlert(form, painted
+          ? 'Confira os campos destacados antes de enviar.'
+          : (err.message || 'Não foi possível enviar a cotação. Tente novamente.'),
+          'error');
+        if (painted) {
+          var firstError = $('.field.has-error input, .field.has-error select, .field.has-error textarea', form);
+          if (firstError) firstError.focus();
+        }
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitBtn.getAttribute('data-label') || 'Enviar solicitação de cotação';
+        }
       });
   });
 

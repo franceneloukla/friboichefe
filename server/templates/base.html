@@ -253,6 +253,36 @@
   </div>
 </footer>
 
+{# ==========================================================================
+   MODAL DE COTAÇÃO — todo "Ver Produto" (cards) abre este diálogo.
+   Sem JS o href leva direto para a página de produto (fallback).
+   O app.js preenche os dois links com o slug do produto clicado.
+   ========================================================================== #}
+<div class="modal" id="modal-cotacao" hidden aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-cotacao-title" aria-describedby="modal-cotacao-text">
+    <button class="modal-close" type="button" data-modal-close aria-label="Fechar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+
+    <span class="modal-eyebrow">Friboi Online · Venda por cotação</span>
+    <h2 class="modal-title" id="modal-cotacao-title" tabindex="-1">Preço sob consulta</h2>
+    <p class="modal-text" id="modal-cotacao-text">
+      Os preços desta loja são definidos pelo <strong>representante do seu estado</strong>.
+      Solicite uma cotação e receba a tabela atualizada, condições de entrega e prazos.
+    </p>
+
+    <div class="modal-actions">
+      <a class="btn-primary modal-link" data-modal-cotacao href="/cotacao">Solicitar cotação</a>
+      <a class="btn-ghost modal-link" data-modal-detalhes href="/produto/">Ver detalhes do produto</a>
+    </div>
+
+    <p class="modal-foot">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+      Atendimento de segunda a sexta, das 8h às 18h.
+    </p>
+  </div>
+</div>
+
 <div class="toast" data-toast role="status" aria-live="polite">
   <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
   <span data-toast-text>Adicionado ao Carrinho</span>

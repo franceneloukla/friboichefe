@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import product_card, breadcrumb as bc, brl, preco, preco_br with context %}
+{% from "_macros.html" import product_card, breadcrumb as bc, num_br with context %}
 
 {% block title %}{{ page_title if page_title else (product.name if product else 'Produto') }}{% endblock %}
 
@@ -12,9 +12,7 @@
 {%- set temp = (attrs.get('x_TEMPERATURA') or 'Congelado')|string|trim -%}
 {%- set marca = p.brand if p.brand else (attrs.get('x_MARCA') or '') -%}
 {%- set in_stock = p.in_stock if p.in_stock is defined else ((p.stock or '')|lower).startswith('dispon') -%}
-{%- set sale = p.sale_price if p.sale_price else none -%}
-{%- set has_sale = sale and (sale|float) < (p.price|float) -%}
-{%- set effective = sale if has_sale else p.price -%}
+{%- set on_sale = p.on_sale if p.on_sale is defined else false -%}
 {%- set max_qty = p.max_qty|int(1) if p.max_qty else 1 -%}
 {%- set _imgs = images if images else (p.images if p.images else ([p.image_url] if p.image_url else [])) -%}
 {%- set _crumbs = breadcrumb if breadcrumb else [
@@ -41,7 +39,7 @@
 
       <div class="pdp-badges">
         <span class="badge temp">{{ temp|capitalize if temp else 'Congelado' }}</span>
-        {% if has_sale %}<span class="badge oferta">Oferta</span>{% endif %}
+        {% if on_sale %}<span class="badge oferta">Oferta</span>{% endif %}
         {% if in_stock %}
           <span class="badge stock-in">Disponível</span>
         {% else %}
@@ -51,24 +49,22 @@
 
       {% if _caixa %}<p class="pdp-caixa-line">{{ _caixa }}</p>{% endif %}
 
-      <div class="pdp-price-box">
-        {% if has_sale %}
-          <div class="price-old-line">De <s>{{ preco(p.price, true) }}</s> por</div>
-        {% endif %}
-        <div class="price-main">
-          <span class="value">{{ preco(effective, true) }}</span>
-          <span class="unit">/ {{ (p.unit or 'KG')|lower }}</span>
+      <div class="pdp-quote-box">
+        <div class="quote-head">
+          <span class="quote-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.19 3.41 10.05 8 11 4.59-.95 8-5.81 8-11V5L12 2z"/><path d="M8.5 12.5 11 15l4.5-4.5"/></svg>
+          </span>
+          <div class="quote-copy">
+            <p class="quote-title">Preço sob consulta</p>
+            <p class="quote-sub">Preço sob consulta — fale com o representante do seu estado.</p>
+          </div>
         </div>
-        {% if has_sale %}
-          <p class="price-savings">
-            Economia de {{ preco((p.price|float) - (sale|float), true) }}
-            {%- if p.discount_percent %} ({{ p.discount_percent }}% off){% endif %}
-          </p>
-        {% endif %}
+        <a class="btn-primary quote-cta" href="/cotacao?produto={{ p.slug }}">Solicitar cotação</a>
+        <p class="quote-note">Você recebe a tabela atualizada da sua região, as condições de entrega e os prazos.</p>
       </div>
 
       <div class="pdp-specs">
-        {% if p.weight_avg %}<div class="info-item">Peso médio: {{ preco_br(p.weight_avg) }}kg</div>{% endif %}
+        {% if p.weight_avg %}<div class="info-item">Peso médio: {{ num_br(p.weight_avg) }}kg</div>{% endif %}
         <div class="info-item">Unidade: {{ p.unit or 'KG' }}</div>
         {% if attrs.get('x_LINHA') %}<div class="info-item">Linha: {{ attrs.get('x_LINHA') }}</div>{% endif %}
         {% if attrs.get('x_recomendadoPara') %}<div class="info-item">Recomendado para: {{ attrs.get('x_recomendadoPara') }}</div>{% endif %}
@@ -172,19 +168,19 @@
 
     <div class="accordion-item">
       <button class="accordion-head" type="button" data-acc-toggle aria-expanded="false">
-        <h2>Entenda peso e preço final</h2>
+        <h2>Entenda peso e embalagem</h2>
         <span class="acc-arrow" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M5 8l5 5 5-5z"/></svg></span>
       </button>
       <div class="accordion-body">
         {% if _caixa %}<p>{{ _caixa }}.</p>{% endif %}
         <p>
-          O peso final da caixa pode variar dentro da faixa informada. O valor cobrado é calculado
-          sobre o peso real do produto separado no momento da expedição, com preço por
-          {{ (p.unit or 'KG')|lower }}.
+          O peso final da caixa pode variar dentro da faixa informada. Na cotação, o representante
+          do seu estado confirma o peso real do produto separado no momento da expedição e as
+          condições para a unidade {{ (p.unit or 'KG')|upper }}.
         </p>
         <p>
           Código: {{ p.sku if p.sku else p.id }}{% if p.ean %} · EAN {{ p.ean }}{% endif %}
-          {% if p.weight_avg %} · Peso médio: {{ preco_br(p.weight_avg) }} kg{% endif %}
+          {% if p.weight_avg %} · Peso médio: {{ num_br(p.weight_avg) }} kg{% endif %}
         </p>
       </div>
     </div>

@@ -3,24 +3,15 @@
    Qualquer template que precise de um card usa product_card(p, ...)
    ========================================================================== #}
 
-{% macro preco_br(v) -%}
-{#- Formata número no padrão brasileiro: 9999.0 -> 9.999,00 (sem o R$) -#}
-{%- if v is none or v == '' -%}0,00{%- else -%}
-{%- set s = "{:,.2f}".format(v|float) -%}
-{{ s|replace(",", "@")|replace(".", ",")|replace("@", ".") }}
-{%- endif -%}
-{%- endmacro %}
+{#-
+   Sem preço: a loja vende por cotação com o representante do estado.
+   Nenhum macro desta biblioteca formata valor monetário.
+-#}
 
 
-{% macro preco(v, espaco=False) -%}
-{#- Valor completo: R$9.999,00 (card) ou R$ 9.999,00 (PDP) -#}
-R${{ " " if espaco else "" }}{{ preco_br(v) }}
-{%- endmacro %}
-
-
-{#- alias histórico: brl() devolve só o número -#}
-{% macro brl(v) -%}
-{{ preco_br(v) }}
+{% macro num_br(v) -%}
+{#- Formata número "neutro" no padrão brasileiro (peso médio, etc.): 15.5 -> 15,5 -#}
+{%- if v is none or v == '' -%}-{%- else -%}{{ '%.1f'|format(v|float)|replace('.', ',') }}{%- endif -%}
 {%- endmacro %}
 
 
@@ -65,14 +56,8 @@ Peças: {{ p.max_qty }}
 {%- set attrs = p.attrs if p.attrs else {} -%}
 {%- set temp = (attrs.get('x_TEMPERATURA') or 'Congelado')|string|trim -%}
 {%- set in_stock = p.in_stock if p.in_stock is defined else ((p.stock or '')|lower).startswith('dispon') -%}
-{%- set sale = p.sale_price if p.sale_price else none -%}
-{%- set price = p.price if p.price is not none else 0 -%}
-{%- set effective = sale if sale and (sale|float) < (price|float) else price -%}
 <article class="product-card{% if not in_stock %} unavailable{% endif %}" data-product-id="{{ p.id }}" data-slug="{{ p.slug }}">
   <span class="product-tag temperatura">{{ temp|capitalize if temp else 'Congelado' }}</span>
-  {% if sale and (sale|float) < (price|float) %}
-    <span class="product-tag oferta">Oferta</span>
-  {% endif %}
 
   <a class="product-image-container" href="/produto/{{ p.slug }}" aria-label="{{ p.name }}">
     {% if p.image_url %}
@@ -101,21 +86,13 @@ Peças: {{ p.max_qty }}
       <div class="info-item unidade">Unidade: {{ p.unit or 'KG' }}</div>
     </div>
 
-    <div class="product-pricing">
-      {% if sale and (sale|float) < (price|float) %}
-        <div class="price-old-wrapper">
-          <span class="price-label">De</span>
-          <span class="price-old">{{ preco(price) }}</span>
-        </div>
-      {% endif %}
-      <div class="price-now-wrapper">
-        <span class="price-label">Por</span>
-        <span class="price-now">{{ preco(effective) }}</span>
-        <span class="price-unit">/{{ (p.unit or 'KG')|lower }}</span>
-      </div>
-    </div>
+    {#- Sem preço: a loja trabalha por cotação com o representante do estado. -#}
+    <p class="product-quote">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5.19 3.41 10.05 8 11 4.59-.95 8-5.81 8-11V5L12 2z"/><path d="M8.5 12.5 11 15l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Preço sob consulta
+    </p>
 
-    <a class="ver-produto-btn" href="/produto/{{ p.slug }}">Ver Produto</a>
+    <a class="ver-produto-btn js-ver-produto" href="/produto/{{ p.slug }}" data-slug="{{ p.slug }}">Ver Produto</a>
   </div>
 </article>
 {% endmacro %}

@@ -19,8 +19,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 try:  # pacote (python -m server.app)
     from .db import Base
+    from .ufs import nome_uf
 except ImportError:  # módulo solto (uvicorn app:app dentro de server/)
     from db import Base  # type: ignore[no-redef]
+    from ufs import nome_uf  # type: ignore[no-redef]
 
 
 def utcnow() -> datetime:
@@ -236,8 +238,15 @@ def image_url(image_path: str | None) -> str | None:
 
 
 def product_to_dict(product: Product, full: bool = False) -> dict:
-    price = _money(product.price) or 0.0
-    sale_price = _money(product.sale_price)
+    """Serialização pública do produto.
+
+    ADENDO v2 do CONTRATO: a loja não exibe preço (venda por cotação com o
+    representante do estado). ``price``/``sale_price`` continuam no banco
+    (ordenação e relatórios), mas NÃO saem em nenhum dict público — nem
+    ``effective_price``/``discount_percent``, que derivam deles. ``on_sale`` fica
+    como booleano (sem valor) porque filtro/vitrine de promoções depende dele.
+    """
+    on_sale = product.sale_price is not None and Decimal(product.sale_price) < Decimal(product.price)
     data = {
         "id": product.id,
         "sku": product.sku or product.id,
@@ -245,13 +254,7 @@ def product_to_dict(product: Product, full: bool = False) -> dict:
         "slug": product.slug,
         "brand": product.brand,
         "category_id": product.category_id,
-        "price": price,
-        "sale_price": sale_price,
-        "effective_price": sale_price if sale_price is not None else price,
-        "on_sale": sale_price is not None and sale_price < price,
-        "discount_percent": (
-            round((1 - sale_price / price) * 100) if sale_price and price and sale_price < price else 0
-        ),
+        "on_sale": on_sale,
         "unit": product.unit,
         "weight_min": _num(product.weight_min),
         "weight_avg": _num(product.weight_avg),
@@ -275,3 +278,48 @@ def product_to_dict(product: Product, full: bool = False) -> dict:
             }
         )
     return data
+
+
+# ---------------------------------------------------------------------------
+# Cotação (ADENDO v2 do CONTRATO) — a loja não vende com preço: o cliente manda
+# os itens e o representante do estado devolve a tabela atualizada.
+# ---------------------------------------------------------------------------
+class QuoteRequest(Base):
+    """Solicitação de cotação enviada pela página ``/cotacao`` ou por ``/api/cotacao``."""
+
+    __tablename__ = "quote_requests"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nome: Mapped[str] = mapped_column(String(120), nullable=False)
+    email: Mapped[str] = mapped_column(String(190), nullable=False, index=True)
+    telefone: Mapped[str] = mapped_column(String(30), nullable=False)
+    uf: Mapped[str] = mapped_column(String(2), nullable=False, index=True)
+    cidade: Mapped[str | None] = mapped_column(String(120))
+    mensagem: Mapped[str | None] = mapped_column(Text)
+    items_json: Mapped[str | None] = mapped_column(Text)
+    origem: Mapped[str | None] = mapped_column(String(40))
+    status: Mapped[str] = mapped_column(String(40), default="recebida", nullable=False, index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, nullable=False, index=True)
+
+    def itens(self) -> list[dict]:
+        """Itens normalizados gravados em ``items_json`` (``[]`` quando vazio/inválido)."""
+        data = json_load(self.items_json, [])
+        return data if isinstance(data, list) else []
+
+    def as_dict(self) -> dict:
+        """Resposta pública da cotação (sem qualquer valor monetário)."""
+        return {
+            "id": self.id,
+            "status": self.status,
+            "nome": self.nome,
+            "email": self.email,
+            "telefone": self.telefone,
+            "uf": self.uf,
+            "uf_nome": nome_uf(self.uf),
+            "cidade": self.cidade,
+            "mensagem": self.mensagem,
+            "itens": self.itens(),
+            "origem": self.origem,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+

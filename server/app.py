@@ -5,13 +5,16 @@ Implementa o CONTRATO (docs/CONTRATO.md):
 - Banco: SQLite em data/store.db via SQLAlchemy 2.0 (models.py)
 - Auth: bcrypt + JWT HS256 em cookie httpOnly ``auth_token`` (e ``access_token`` no JSON)
 - Carrinho: cookie ``cart_token`` (funciona anônimo e logado, funde no login)
-- Pedidos: checkout 100% calculado no servidor a partir do preço do banco
+- Cotação (ADENDO v2): a loja NÃO exibe preço; ``POST /api/cotacao`` grava em
+  ``quote_requests`` e o representante do estado devolve a tabela. ``/checkout``
+  virou 303 para ``/cotacao?carrinho=1``.
 
 Rodar: ``cd server && ./run.sh`` (uvicorn 127.0.0.1:8099).
 """
 
 from __future__ import annotations
 
+import json
 import logging
 import math
 import os
@@ -24,13 +27,14 @@ from pathlib import Path
 from typing import Annotated, Any, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from jinja2 import TemplateNotFound
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from pydantic import BaseModel, Field, field_validator
+from pydantic import AliasChoices, BaseModel, Field, field_validator
 from sqlalchemy import case, delete, func, or_, select
 from sqlalchemy.orm import Session
 
@@ -47,6 +51,7 @@ try:  # pacote (python -m server.app)
         init_db,
     )
     from .textutil import fold_text
+    from .ufs import nome_uf, normalizar_uf, ufs_payload
     from .models import (
         Cart,
         CartItem,
@@ -54,6 +59,7 @@ try:  # pacote (python -m server.app)
         Order,
         OrderItem,
         Product,
+        QuoteRequest,
         User,
         image_url,
         json_load,
@@ -72,6 +78,7 @@ except ImportError:  # módulo solto (uvicorn app:app rodando de dentro de serve
         init_db,
     )
     from textutil import fold_text  # type: ignore[no-redef]
+    from ufs import nome_uf, normalizar_uf, ufs_payload  # type: ignore[no-redef]
     from models import (  # type: ignore[no-redef]
         Cart,
         CartItem,
@@ -79,6 +86,7 @@ except ImportError:  # módulo solto (uvicorn app:app rodando de dentro de serve
         Order,
         OrderItem,
         Product,
+        QuoteRequest,
         User,
         image_url,
         json_load,
@@ -127,8 +135,8 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(
     title="Friboi Online",
-    description="Loja própria: catálogo, autenticação, carrinho e pedidos.",
-    version="1.0.0",
+    description="Loja própria: catálogo, autenticação, carrinho e cotação com o representante.",
+    version="2.0.0",
     docs_url="/api/docs",
     redoc_url=None,
     openapi_url="/api/openapi.json",
@@ -266,11 +274,92 @@ class ShipIn(BaseModel):
 
 
 class CheckoutIn(BaseModel):
-    payment: Literal["pix", "boleto", "cartao"]
+    payment: Literal["pix", "boleto", "cartao"] = "pix"
     ship: ShipIn | None = None
     notes: str | None = Field(default=None, max_length=500)
-    # Preço/frete enviados pelo cliente são IGNORADOS de propósito: tudo é calculado no servidor.
+    # Preço/frete enviados pelo cliente são IGNORADOS de propósito: não há preço.
     shipping: Any = Field(default=None)
+
+
+class QuoteItemIn(BaseModel):
+    """Item de uma cotação: só produto e quantidade (preço não existe mais)."""
+
+    product_id: str = Field(max_length=80)
+    qty: int = Field(default=1, ge=1, le=999)
+
+    @field_validator("product_id", mode="before")
+    @classmethod
+    def _strip(cls, v):
+        return v.strip() if isinstance(v, str) else v
+
+    @field_validator("product_id")
+    @classmethod
+    def _required(cls, v: str) -> str:
+        if not v:
+            raise ValueError("Informe o produto")
+        return v
+
+
+class QuoteIn(BaseModel):
+    """``POST /api/cotacao`` — dados do cliente + itens (produto único ou carrinho).
+
+    Mensagens de erro em PT-BR, sempre no formato ``{"detail": ..., "errors": {campo: msg}}``
+    (ver ``validation_exception_handler``).
+    """
+
+    nome: str = Field(max_length=120)
+    email: str = Field(max_length=190)
+    telefone: str = Field(max_length=30)
+    uf: str = Field(max_length=40)
+    cidade: str | None = Field(default=None, max_length=120)
+    mensagem: str | None = Field(default=None, max_length=2000)
+    produto_id: str | None = Field(default=None, max_length=80)
+    items: list[QuoteItemIn] = Field(default_factory=list, validation_alias=AliasChoices("items", "itens"))
+    origem: str | None = Field(default=None, max_length=40)
+
+    @field_validator(
+        "nome", "email", "telefone", "uf", "cidade", "mensagem", "produto_id", "origem", mode="before"
+    )
+    @classmethod
+    def _strip(cls, v):
+        if isinstance(v, str):
+            v = v.strip()
+            return v or None
+        return v
+
+    @field_validator("nome")
+    @classmethod
+    def _nome(cls, v: str | None) -> str:
+        nome = (v or "").strip()
+        if len(nome) < 3:
+            raise ValueError("Informe o nome completo (mínimo 3 letras)")
+        return nome
+
+    @field_validator("email")
+    @classmethod
+    def _email(cls, v: str | None) -> str:
+        email = (v or "").strip().lower()
+        if not EMAIL_RE.match(email):
+            raise ValueError("Informe um e-mail válido")
+        return email
+
+    @field_validator("telefone")
+    @classmethod
+    def _telefone(cls, v: str | None) -> str:
+        digitos = re.sub(r"\D", "", v or "")
+        if len(digitos) < 10:
+            raise ValueError("Informe o telefone com DDD (mínimo 10 dígitos)")
+        if len(digitos) > 13:
+            raise ValueError("Telefone inválido (máximo 13 dígitos com DDI)")
+        return digitos
+
+    @field_validator("uf")
+    @classmethod
+    def _uf(cls, v: str | None) -> str:
+        sigla = normalizar_uf(v)
+        if sigla is None:
+            raise ValueError("Selecione uma UF válida")
+        return sigla
 
 
 # ---------------------------------------------------------------------------
@@ -449,14 +538,31 @@ def resolve_cart_by_token(db: Session, token: str, user: User) -> Cart:
     return cart
 
 
-def unit_price(product: Product) -> Decimal:
-    """Preço efetivo SEMPRE vindo do banco (promoção quando válida)."""
-    if product.sale_price is not None and Decimal(product.sale_price) > 0:
-        return money(product.sale_price)
-    return money(product.price)
+def cart_item_payload(product: Product, qty: int) -> dict:
+    """Item de carrinho/cotação: identificação + quantidade. Nunca valor monetário."""
+    return {
+        "product_id": product.id,
+        "id": product.id,
+        "name": product.name,
+        "slug": product.slug,
+        "sku": product.sku or product.id,
+        "brand": product.brand,
+        "unit": product.unit,
+        "qty": qty,
+        "quantity": qty,
+        "image_url": image_url(product.image_path),
+        "max_qty": product.max_qty or 999,
+        "stock": product.stock,
+        "in_stock": (product.stock or "").strip().lower().startswith("dispon"),
+    }
 
 
 def cart_payload(db: Session, cart: Cart) -> dict:
+    """Payload público do carrinho — SEM ``price``/``subtotal``/``total`` (ADENDO v2).
+
+    A loja vende por cotação: o carrinho é só a lista de produtos/quantidades que o
+    cliente manda para o representante do estado.
+    """
     rows = db.execute(
         select(CartItem, Product)
         .join(Product, CartItem.product_id == Product.id)
@@ -464,49 +570,21 @@ def cart_payload(db: Session, cart: Cart) -> dict:
         .order_by(CartItem.id)
     ).all()
     items: list[dict] = []
-    subtotal = Decimal("0.00")
     count = 0
     for cart_item, product in rows:
         if product is None:
             continue
-        price = unit_price(product)
-        line = money(price * cart_item.qty)
-        subtotal += line
         count += cart_item.qty
-        items.append(
-            {
-                "product_id": product.id,
-                "id": product.id,
-                "name": product.name,
-                "slug": product.slug,
-                "sku": product.sku or product.id,
-                "brand": product.brand,
-                "unit": product.unit,
-                "price": float(price),
-                "list_price": as_float(product.price),
-                "sale_price": as_float(product.sale_price) if product.sale_price is not None else None,
-                "qty": cart_item.qty,
-                "quantity": cart_item.qty,
-                "subtotal": float(line),
-                "total": float(line),
-                "image_url": image_url(product.image_path),
-                "max_qty": product.max_qty or 999,
-                "stock": product.stock,
-                "in_stock": (product.stock or "").strip().lower().startswith("dispon"),
-            }
-        )
+        items.append(cart_item_payload(product, cart_item.qty))
     return {
         "id": cart.id,
         "token": cart.token,
         "items": items,
         "count": count,
-        "subtotal": float(money(subtotal)),
-        "total": float(money(subtotal)),
-        "shipping": 0.0,
     }
 
 
-EMPTY_CART = {"id": None, "token": "", "items": [], "count": 0, "subtotal": 0.0, "total": 0.0, "shipping": 0.0}
+EMPTY_CART = {"id": None, "token": "", "items": [], "count": 0}
 
 
 def apply_cart_cookie(response: Response, cart: Cart) -> None:
@@ -710,14 +788,17 @@ def related_products(db: Session, product: Product, limit: int = 8) -> list[Prod
 # ---------------------------------------------------------------------------
 # Helpers: pedidos
 # ---------------------------------------------------------------------------
-def order_payload(order: Order) -> dict:
-    return {
+def order_payload(order: Order, montantes: bool = False) -> dict:
+    """Pedido/cotação — SEM valores monetários (ADENDO v2: nada de preço em JSON público).
+
+    ``montantes=True`` preenche apenas ZEROS (``total=0``) para o ``POST /api/checkout``
+    legado continuar respondendo com o mesmo formato de chaves — nenhum valor real,
+    nenhum cálculo de preço.
+    """
+    data = {
         "id": order.id,
         "user_id": order.user_id,
         "status": order.status,
-        "subtotal": as_float(order.subtotal),
-        "shipping": as_float(order.shipping),
-        "total": as_float(order.total),
         "payment": order.payment,
         "created_at": order.created_at.isoformat() if order.created_at else None,
         "ship": {
@@ -736,13 +817,55 @@ def order_payload(order: Order) -> dict:
             {
                 "product_id": item.product_id,
                 "name": item.name,
-                "unit_price": as_float(item.unit_price),
                 "qty": item.qty,
-                "subtotal": as_float(item.subtotal),
             }
             for item in order.items
         ],
     }
+    if montantes:
+        data.update({"subtotal": 0.0, "shipping": 0.0, "total": 0.0})
+        for item in data["items"]:
+            item.update({"unit_price": 0.0, "subtotal": 0.0})
+    return data
+
+
+# ---------------------------------------------------------------------------
+# Helpers: cotação (ADENDO v2) — a loja não vende com preço
+# ---------------------------------------------------------------------------
+def quote_item(product: Product, qty: int) -> dict:
+    """Item normalizado gravado em ``quote_requests.items_json`` (formato do CONTRATO)."""
+    return {
+        "product_id": product.id,
+        "name": product.name,
+        "qty": qty,
+        "unit": product.unit,
+        "image_url": image_url(product.image_path),
+    }
+
+
+def resolve_quote_items(db: Session, payload: "QuoteIn") -> list[tuple[Product, int]]:
+    """Resolve ``produto_id`` + ``items`` para produtos reais (404 se algum não existir).
+
+    Deduplica por produto (soma as quantidades, teto de 999) para o representante
+    receber uma linha por item, como no carrinho.
+    """
+    selecionados: dict[str, list] = {}
+
+    def add(slug_or_id: str, qty: int) -> None:
+        product = find_product(db, slug_or_id)
+        if product is None:
+            raise HTTPException(status_code=404, detail=f"Produto não encontrado: {slug_or_id}")
+        atual = selecionados.get(product.id)
+        if atual is None:
+            selecionados[product.id] = [product, min(max(1, qty), 999)]
+        else:
+            atual[1] = min(999, atual[1] + max(1, qty))
+
+    if payload.produto_id:
+        add(payload.produto_id, 1)
+    for item in payload.items or []:
+        add(item.product_id, item.qty)
+    return [(product, qty) for product, qty in selecionados.values()]
 
 
 # ---------------------------------------------------------------------------
@@ -861,9 +984,9 @@ def page_index(request: Request, db: Annotated[Session, Depends(get_db)]):
         ],
         beneficios=[
             {"titulo": "Entrega para todo o Brasil", "texto": "Receba no seu estabelecimento com agilidade."},
-            {"titulo": "Preço de atacado", "texto": "Condições especiais para o seu negócio."},
+            {"titulo": "Condição de atacado", "texto": "Condições especiais para o seu negócio."},
             {"titulo": "Qualidade Friboi", "texto": "Carnes selecionadas e rastreadas."},
-            {"titulo": "Compra segura", "texto": "Pagamento protegido em ambiente criptografado."},
+            {"titulo": "Atendimento por estado", "texto": "Cotação direto com o representante da sua região."},
         ],
     )
 
@@ -1102,29 +1225,58 @@ def page_carrinho(request: Request, db: Annotated[Session, Depends(get_db)]):
         db=db,
         user=user,
         page_title=f"Carrinho | {STORE_NAME}",
-        frete=0.0,
-        shipping=0.0,
     )
 
 
-@app.get("/checkout", response_class=HTMLResponse)
-def page_checkout(request: Request, db: Annotated[Session, Depends(get_db)]):
+@app.get("/cotacao", response_class=HTMLResponse)
+def page_cotacao(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+    produto: str | None = None,
+    carrinho: str | None = None,
+):
+    """Formulário de cotação (ADENDO v2): substitui o checkout.
+
+    - ``?produto=<slug>``: resumo de 1 item;
+    - ``?carrinho=1``: resumo dos itens do carrinho (tem precedência);
+    - sem parâmetro: formulário "geral" (só contato).
+    """
     user = user_or_none(request, db)
+    product = find_product(db, produto) if produto else None
+    if produto and product is None:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+
+    itens: list[dict] = []
+    origem = "geral"
+    if _flag(carrinho):
+        cart = resolve_cart(db, request, user)
+        itens = cart_payload(db, cart)["items"]
+        origem = "carrinho"
+    elif product is not None:
+        itens = [cart_item_payload(product, 1)]
+        origem = "produto"
+
+    produto_dict = product.as_dict(full=True) if product is not None else None
     return render(
         request,
-        "checkout.html",
+        "cotacao.html",
         db=db,
         user=user,
-        page_title=f"Finalizar compra | {STORE_NAME}",
-        frete=0.0,
-        shipping=0.0,
-        requires_login=user is None,
-        payments=[
-            {"value": "pix", "label": "Pix"},
-            {"value": "boleto", "label": "Boleto"},
-            {"value": "cartao", "label": "Cartão de crédito"},
-        ],
+        page_title=f"Solicitar cotação | {STORE_NAME}",
+        produto=produto_dict,
+        product=produto_dict,
+        itens=itens,
+        items=itens,
+        ufs=ufs_payload(),
+        origem=origem,
+        carrinho=_flag(carrinho),
     )
+
+
+@app.get("/checkout")
+def page_checkout():
+    """Checkout descontinuado: toda compra é uma cotação com o representante."""
+    return RedirectResponse(url="/cotacao?carrinho=1", status_code=303)
 
 
 @app.get("/conta", response_class=HTMLResponse)
@@ -1166,8 +1318,8 @@ PAGINAS_INSTITUCIONAIS: dict[str, dict] = {
         "titulo": "Login ou Cadastre-se",
         "html": (
             "<p>Para comprar no Friboi Online você precisa ter uma conta. O cadastro é gratuito, "
-            "leva menos de dois minutos e libera a tabela de preços, o histórico de pedidos e as "
-            "condições da sua região.</p>"
+            "leva menos de dois minutos e libera a cotação com o representante do seu estado, o "
+            "histórico de pedidos e as condições da sua região.</p>"
             "<p>Com a conta ativa você acompanha pedidos, salva seus endereços de entrega e recebe "
             "as ofertas da sua unidade de atendimento.</p>"
             '<p><a href="/cadastro">Criar minha conta</a> &middot; <a href="/login">Já tenho conta</a></p>'
@@ -1182,7 +1334,7 @@ PAGINAS_INSTITUCIONAIS: dict[str, dict] = {
         "html": (
             "<p>O Friboi Online atende estabelecimentos comerciais em todo o Brasil por meio de "
             "unidades regionais de atendimento. Cada unidade tem o seu próprio mix de produtos, "
-            "tabela de preços e calendário de entregas.</p>"
+            "condições de cotação e calendário de entregas.</p>"
             "<p>Ao se cadastrar, sua conta é vinculada à unidade que atende o CEP do seu negócio. "
             "Se precisar trocar de unidade, fale com o nosso time pelo telefone ou WhatsApp do "
             "atendimento da sua região.</p>"
@@ -1191,7 +1343,7 @@ PAGINAS_INSTITUCIONAIS: dict[str, dict] = {
         ),
         "paragrafos": [
             "O Friboi Online atende estabelecimentos comerciais em todo o Brasil por meio de unidades regionais.",
-            "Cada unidade tem o seu próprio mix de produtos, tabela de preços e calendário de entregas.",
+            "Cada unidade tem o seu próprio mix de produtos, condições de cotação e calendário de entregas.",
         ],
     },
     "boleto": {
@@ -1230,8 +1382,8 @@ PAGINAS_INSTITUCIONAIS: dict[str, dict] = {
         "titulo": "Entregas",
         "html": (
             "<p>Cada unidade de atendimento define a sua região de entrega, os dias de "
-            "carregamento e o valor do frete. O prazo é informado no <a href=\"/checkout\">checkout</a> "
-            "antes de você concluir o pedido.</p>"
+            "carregamento e as condições de frete. O prazo é informado na sua "
+            "<a href=\"/cotacao\">cotação</a>, antes de você fechar o pedido.</p>"
             "<p>As carnes são transportadas em temperatura controlada. No recebimento, confira a "
             "embalagem e a nota fiscal com o motorista; qualquer divergência deve ser registrada na "
             "hora da entrega.</p>"
@@ -1239,8 +1391,8 @@ PAGINAS_INSTITUCIONAIS: dict[str, dict] = {
             "dia útil de antecedência.</p>"
         ),
         "paragrafos": [
-            "Cada unidade define a região de entrega, os dias de carregamento e o valor do frete.",
-            "O prazo de entrega é informado no checkout antes de concluir o pedido.",
+            "Cada unidade define a região de entrega, os dias de carregamento e as condições de frete.",
+            "O prazo de entrega é informado na cotação antes de fechar o pedido.",
         ],
     },
     "marcas": {
@@ -1268,15 +1420,15 @@ PAGINAS_INSTITUCIONAIS: dict[str, dict] = {
         "html": (
             "<p>O Friboi Online nasceu para simplificar a compra de carne no atacado: a mesma "
             "qualidade das grandes marcas da JBS, com a praticidade de comprar de onde você estiver.</p>"
-            "<p>A plataforma reúne o portfólio das unidades regionais em um só lugar, com tabela de "
-            "preços para o seu negócio, pedido em poucos cliques e logística refrigerada até a "
-            "porta do seu estabelecimento.</p>"
+            "<p>A plataforma reúne o portfólio das unidades regionais em um só lugar, com cotação "
+            "direta com o representante do seu estado, pedido em poucos cliques e logística "
+            "refrigerada até a porta do seu estabelecimento.</p>"
             "<p>Somos a loja de quem vive de carne: açougues, restaurantes, hamburguerias, "
             "rotisseries, cozinhas industriais e distribuidores.</p>"
         ),
         "paragrafos": [
             "O Friboi Online simplifica a compra de carne no atacado, com a qualidade das marcas da JBS.",
-            "Reunimos o portfólio das unidades regionais com preço para o seu negócio e entrega refrigerada.",
+            "Reunimos o portfólio das unidades regionais com cotação pelo representante do seu estado e entrega refrigerada.",
         ],
     },
     "privacidade": {
@@ -1319,9 +1471,10 @@ PAGINAS_INSTITUCIONAIS: dict[str, dict] = {
             "<h3>Preciso ter CNPJ para comprar?</h3>"
             "<p>Sim. O Friboi Online atende exclusivamente estabelecimentos comerciais, com pedido "
             "mínimo e condições definidos pela unidade de atendimento da sua região.</p>"
-            "<h3>Como vejo o preço dos produtos?</h3>"
-            "<p>A tabela de preços aparece depois do login, de acordo com a unidade que atende o seu "
-            "CEP. Antes disso o site mostra o valor de referência.</p>"
+            "<h3>Como recebo o preço dos produtos?</h3>"
+            "<p>Os preços são negociados pelo representante do seu estado. Envie uma "
+            "<a href=\"/cotacao\">cotação</a> com os itens e o responsável da sua região retorna "
+            "com a tabela atualizada, as condições de entrega e os prazos.</p>"
             "<h3>Quais são as formas de pagamento?</h3>"
             "<p>Pix, boleto bancário e cartão de crédito, conforme as condições da sua unidade.</p>"
             "<h3>Como acompanho meu pedido?</h3>"
@@ -1333,7 +1486,7 @@ PAGINAS_INSTITUCIONAIS: dict[str, dict] = {
         ),
         "paragrafos": [
             "O Friboi Online atende exclusivamente estabelecimentos comerciais (CNPJ).",
-            "A tabela de preços aparece depois do login, conforme a unidade que atende o seu CEP.",
+            "Os preços são negociados pelo representante do seu estado a partir da cotação enviada no site.",
             "Formas de pagamento: Pix, boleto e cartão de crédito.",
         ],
     },
@@ -1728,6 +1881,49 @@ def api_cart_clear(request: Request, response: Response, db: Annotated[Session, 
 
 
 # ===========================================================================
+# API — COTAÇÃO (ADENDO v2: sem preço, cotação com o representante do estado)
+# ===========================================================================
+@app.get("/api/cotacao/ufs")
+def api_cotacao_ufs() -> list[dict]:
+    """As 27 UFs em ordem alfabética: ``[{sigla, nome}]``."""
+    return ufs_payload()
+
+
+@app.post("/api/cotacao", status_code=status.HTTP_201_CREATED)
+def api_cotacao_create(payload: QuoteIn, db: Annotated[Session, Depends(get_db)]):
+    """Recebe a solicitação de cotação e grava em ``quote_requests``.
+
+    Body: ``{nome, email, telefone, uf, cidade?, mensagem?, produto_id?,
+    items?[{product_id,qty}], origem?}`` → 201 com o protocolo (``id``).
+    """
+    selecionados = resolve_quote_items(db, payload)
+    itens = [quote_item(product, qty) for product, qty in selecionados]
+
+    quote = QuoteRequest(
+        nome=payload.nome,
+        email=payload.email,
+        telefone=payload.telefone,
+        uf=payload.uf,
+        cidade=payload.cidade,
+        mensagem=payload.mensagem,
+        items_json=json.dumps(itens, ensure_ascii=False) if itens else None,
+        origem=payload.origem or "site",
+        status="recebida",
+    )
+    db.add(quote)
+    db.commit()
+    db.refresh(quote)
+    logger.info(
+        "Cotação %s recebida (uf=%s, origem=%s, %d itens)",
+        quote.id,
+        quote.uf,
+        quote.origem,
+        len(itens),
+    )
+    return quote.as_dict()
+
+
+# ===========================================================================
 # API — PEDIDOS
 # ===========================================================================
 @app.post("/api/checkout", status_code=status.HTTP_201_CREATED)
@@ -1760,31 +1956,26 @@ def api_checkout(
             detail="Informe o nome do destinatário e o CEP para concluir o pedido",
         )
 
-    subtotal = Decimal("0.00")
-    order_items: list[OrderItem] = []
-    for cart_item, product in rows:
-        price = unit_price(product)
-        line = money(price * cart_item.qty)
-        subtotal += line
-        order_items.append(
-            OrderItem(
-                product_id=product.id,
-                name=product.name,
-                unit_price=price,
-                qty=cart_item.qty,
-                subtotal=line,
-            )
+    # ADENDO v2: checkout descontinuado — o pedido é registrado como COTAÇÃO,
+    # sem nenhum valor (subtotal/frete/total = 0, itens com unit_price 0).
+    zerado = Decimal("0.00")
+    order_items: list[OrderItem] = [
+        OrderItem(
+            product_id=product.id,
+            name=product.name,
+            unit_price=zerado,
+            qty=cart_item.qty,
+            subtotal=zerado,
         )
-    subtotal = money(subtotal)
-    shipping = Decimal("0.00")  # frete calculado no servidor (grátis nesta versão)
-    total = money(subtotal + shipping)
+        for cart_item, product in rows
+    ]
 
     order = Order(
         user_id=user.id,
-        status="pendente",
-        subtotal=subtotal,
-        shipping=shipping,
-        total=total,
+        status="cotacao",
+        subtotal=zerado,
+        shipping=zerado,
+        total=zerado,
         payment=payload.payment,
         ship_name=ship_name,
         ship_email=(ship.email or user.email),
@@ -1804,12 +1995,22 @@ def api_checkout(
     db.commit()
     db.refresh(order)
     apply_cart_cookie(response, cart)
-    logger.info("Pedido %s criado (usuário %s) total=%.2f", order.id, user.id, float(total))
-    return {"order": order_payload(order)}
+    logger.info(
+        "Checkout legado virou cotação: pedido %s (usuário %s, %d itens, total=0)",
+        order.id,
+        user.id,
+        len(order_items),
+    )
+    return {"order": order_payload(order, montantes=True)}
 
 
 @app.get("/api/orders")
 def api_orders(request: Request, db: Annotated[Session, Depends(get_db)]):
+    """Histórico do usuário: só status/itens/entrega — nenhum valor monetário.
+
+    O contador da resposta é ``count`` (antes era ``total``; ``total`` agora só
+    existiria como valor de pedido, que não existe mais).
+    """
     user = auth.require_user(request, db)
     orders = list(
         db.scalars(
@@ -1818,7 +2019,7 @@ def api_orders(request: Request, db: Annotated[Session, Depends(get_db)]):
             .order_by(Order.created_at.desc(), Order.id.desc())
         )
     )
-    return {"orders": [order_payload(o) for o in orders], "total": len(orders)}
+    return {"orders": [order_payload(o) for o in orders], "count": len(orders)}
 
 
 @app.get("/api/orders/{order_id}")
@@ -1875,6 +2076,11 @@ def _render_404(request: Request) -> HTMLResponse:
 DIAG_TOKEN: str = os.environ.get("VG_DIAG_TOKEN", "diag-9f2c")
 
 
+def path_is_api(path: str) -> bool:
+    """True para ``/api`` e ``/api/...`` — usado para responder JSON em caso de erro."""
+    return path == "/api" or path.startswith("/api/")
+
+
 def _diag_requested(request: Request) -> bool:
     received = request.query_params.get("vg_diag") or request.headers.get("x-vg-diag") or ""
     return bool(received) and received.strip() == DIAG_TOKEN
@@ -1914,15 +2120,62 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     return PlainTextResponse(str(exc.detail), status_code=exc.status_code)
 
 
+def _campo_msg_ptbr(err: dict) -> tuple[str, str]:
+    """Extrai ``(campo, mensagem PT-BR)`` de um erro de validação do pydantic v2."""
+    loc = [str(p) for p in err.get("loc", ()) if p not in ("body", "query", "path")]
+    campo = ".".join(loc)
+    tipo = err.get("type") or ""
+    curto = campo.rsplit(".", 1)[-1]
+    mensagem = str(err.get("msg") or "valor inválido")
+    mensagem = mensagem.removeprefix("Value error, ").removeprefix("Assertion failed, ").strip()
+    if tipo == "missing":
+        mensagem = "Campo obrigatório"
+    elif tipo in ("string_too_short", "too_short"):
+        mensagem = "Texto muito curto"
+    elif tipo in ("string_too_long", "too_long"):
+        mensagem = "Texto muito longo"
+    elif tipo in ("int_parsing", "int_type", "float_parsing"):
+        mensagem = "Informe um número inteiro"
+    elif tipo.startswith(("greater_than", "less_than", "int_too", "string_does_not_match")):
+        mensagem = (
+            "Informe uma quantidade entre 1 e 999"
+            if curto in ("qty", "quantity")
+            else "Valor fora do intervalo permitido"
+        )
+    elif tipo == "literal_error":
+        mensagem = "Opção inválida"
+    elif tipo in ("json_invalid", "model_attributes_type"):
+        mensagem = "Corpo da requisição inválido"
+    return campo, mensagem
+
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    errors = []
+    """422 com mensagem PT-BR por campo (e o ``detail`` em string para quem já consome).
+
+    Formato: ``{"detail": "Dados inválidos — email: ...", "errors": {"email": "..."},
+    "fields": {...}, "details": [<pydantic cru>]}`` — o front pinta ``errors``.
+    """
+    planos: list[str] = []
+    campos: dict[str, str] = {}
     for err in exc.errors():
-        loc = ".".join(str(p) for p in err.get("loc", []) if p not in ("body", "query"))
-        errors.append(f"{loc}: {err.get('msg', 'valor inválido')}" if loc else err.get("msg", "valor inválido"))
-    detail = "Dados inválidos — " + "; ".join(errors[:5])
-    if request.url.path.startswith("/api/"):
-        return JSONResponse({"detail": detail, "errors": exc.errors()}, status_code=422)
+        campo, mensagem = _campo_msg_ptbr(err)
+        planos.append(f"{campo}: {mensagem}" if campo else mensagem)
+        if campo:
+            campos[campo] = mensagem
+            # também na chave curta ("items.0.product_id" -> "product_id")
+            campos.setdefault(campo.rsplit(".", 1)[-1], mensagem)
+    detail = "Dados inválidos — " + "; ".join(planos[:5])
+    if path_is_api(request.url.path):
+        return JSONResponse(
+            {
+                "detail": detail,
+                "errors": campos,
+                "fields": campos,
+                "details": jsonable_encoder(exc.errors()),
+            },
+            status_code=422,
+        )
     return PlainTextResponse(detail, status_code=422)
 
 

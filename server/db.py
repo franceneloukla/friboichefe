@@ -370,6 +370,25 @@ def _ensure_product_search_blob() -> None:
 _auto_seed_running = False
 
 
+def _ensure_quote_requests() -> None:
+    """Garante a tabela ``quote_requests`` (ADENDO v2) em bancos anteriores à feature.
+
+    ``create_all`` já cria o que falta, mas ele só roda depois de copiar o
+    ``data/seed.db`` — e um banco antigo/restaurado pode continuar sem a tabela.
+    Aqui a criação é idempotente (``checkfirst``), independe do dialeto e é barata:
+    a loja não pode cair por causa de uma tabela de cotação ausente.
+    """
+    try:
+        try:  # pacote
+            from .models import QuoteRequest
+        except ImportError:  # módulo solto
+            from models import QuoteRequest  # type: ignore[no-redef]
+
+        QuoteRequest.__table__.create(bind=engine, checkfirst=True)
+    except Exception:  # noqa: BLE001 - boot nunca deve cair por causa da migração
+        logger.exception("Falha ao garantir a tabela quote_requests (a cotação pode falhar)")
+
+
 def init_db(seed_if_empty: bool = True) -> None:
     """Cria o schema e (opcionalmente) popula o banco se estiver vazio.
 
@@ -388,6 +407,7 @@ def init_db(seed_if_empty: bool = True) -> None:
 
     Base.metadata.create_all(bind=engine)
     _ensure_product_search_blob()
+    _ensure_quote_requests()
 
     if not seed_if_empty or _auto_seed_running:
         return

@@ -1,37 +1,42 @@
 {% extends "base.html" %}
-{% from "_macros.html" import brl, preco, preco_br with context %}
+{#- Carrinho sem valores: a loja vende por cotação com o representante do estado. -#}
 
 {% block title %}{{ page_title if page_title else 'Carrinho | Friboi Online' }}{% endblock %}
 
 {% block content %}
 {%- set _cart = cart if cart else {} -%}
 {%- set _itens = _cart.get('items', []) if _cart else [] -%}
-{%- set _subtotal = _cart.get('subtotal', 0) if _cart else 0 -%}
+{%- set _count = _cart.get('count', _itens|length) if _cart else _itens|length -%}
 
 <div class="cart-page">
   <nav class="breadcrumb" aria-label="Você está aqui">
     <a href="/">Home</a><span class="sep">/</span><span class="current">Carrinho</span>
   </nav>
   <h1 class="page-title">Meu carrinho</h1>
+  <p class="page-subtitle">Monte a sua lista e solicite uma cotação — o representante do seu estado responde com a tabela da região.</p>
 
   {% if not _itens %}
     <div class="empty-state" style="margin-top:20px" data-cart-empty>
       <h2>Seu carrinho está vazio</h2>
-      <p>Explore as categorias e monte o seu pedido com os preços do atacado.</p>
+      <p>Explore as categorias e monte a sua lista de cotação com os produtos do atacado.</p>
       <a class="btn-outline" href="/">Ver produtos</a>
     </div>
   {% else %}
   <div class="cart-layout" data-cart-layout>
     <div class="cart-list" data-cart-list>
       {% for it in _itens %}
-        <article class="cart-item" data-cart-item="{{ it.product_id }}" data-price="{{ it.price }}">
+        <article class="cart-item" data-cart-item="{{ it.product_id }}">
           <a class="thumb" href="/produto/{{ it.slug }}">
             {% if it.image_url %}<img src="{{ it.image_url }}" alt="{{ it.name }}" loading="lazy">{% endif %}
           </a>
 
           <div class="item-name-block">
             <p class="item-name"><a href="/produto/{{ it.slug }}">{{ it.name }}</a></p>
-            <p class="item-meta">CÓD. {{ it.sku if it.sku else it.product_id }} · {{ preco(it.price, true) }} / {{ (it.unit or 'KG')|lower }}</p>
+            <p class="item-meta">
+              CÓD. {{ it.sku if it.sku else it.product_id }}
+              · Unidade: {{ it.unit or 'KG' }}
+              · <span class="item-quote">Preço sob consulta</span>
+            </p>
           </div>
 
           <div class="item-qty">
@@ -43,8 +48,6 @@
             </div>
           </div>
 
-          <div class="item-subtotal" data-cart-subtotal>{{ preco(it.subtotal, true) }}</div>
-
           <button class="remove" type="button" data-cart-remove aria-label="Remover {{ it.name }}">
             <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
           </button>
@@ -53,20 +56,20 @@
     </div>
 
     <aside class="summary-card">
-      <h2>Resumo do pedido</h2>
+      <h2>Resumo da cotação</h2>
       <div class="summary-line">
-        <span>Subtotal ({{ _cart.get('count', 0) }} {{ 'item' if _cart.get('count', 0) == 1 else 'itens' }})</span>
-        <span data-cart-subtotal-total>{{ preco(_subtotal, true) }}</span>
+        <span>Itens</span>
+        <span data-cart-count-line>{{ _count }}</span>
       </div>
       <div class="summary-line">
-        <span>Frete</span>
-        <span class="free">Grátis</span>
+        <span>Unidades</span>
+        <span>Caixa fechada</span>
       </div>
-      <div class="summary-line total">
-        <span>Total</span>
-        <span data-cart-total>{{ preco(_subtotal, true) }}</span>
-      </div>
-      <a class="btn-primary" href="/checkout">Finalizar compra</a>
+      <p class="summary-note">
+        Os valores — tabela da sua região, condições de entrega e prazos — são enviados pelo
+        representante do seu estado depois que você envia a cotação.
+      </p>
+      <a class="btn-primary" href="/cotacao?carrinho=1">Solicitar cotação</a>
       <a class="continue" href="/">Continuar comprando</a>
     </aside>
   </div>

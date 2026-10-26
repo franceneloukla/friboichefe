@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import preco, preco_br with context %}
+{#- Sem preço: a loja vende por cotação com o representante do estado. -#}
 
 {% block title %}{{ page_title if page_title else titulo if titulo else 'Catálogo' }}{% endblock %}
 
@@ -69,8 +69,6 @@
         <div class="group-body">
           <select id="sort" name="sort" data-auto-submit aria-label="Ordenar por">
             <option value="relevance" {% if _sort == 'relevance' %}selected{% endif %}>Relevância</option>
-            <option value="price_asc" {% if _sort == 'price_asc' %}selected{% endif %}>Menor preço</option>
-            <option value="price_desc" {% if _sort == 'price_desc' %}selected{% endif %}>Maior preço</option>
             <option value="name" {% if _sort == 'name' %}selected{% endif %}>Nome (A-Z)</option>
             <option value="newest" {% if _sort == 'newest' %}selected{% endif %}>Novidades</option>
           </select>
@@ -147,9 +145,6 @@
         {% for p in _itens %}
           {%- set attrs = p.attrs if p.attrs else {} -%}
           {%- set temp = (attrs.get('x_TEMPERATURA') or 'Congelado')|string|trim -%}
-          {%- set sale = p.sale_price if p.sale_price else none -%}
-          {%- set has_sale = sale and (sale|float) < (p.price|float) -%}
-          {%- set effective = sale if has_sale else p.price -%}
           {%- set caixa = '' -%}
           {%- if p.weight_min and p.weight_max and (p.weight_min|float) != (p.weight_max|float) -%}
             {%- set caixa = 'Caixa: ' ~ ((p.weight_min|float)|round(0,'floor')|int) ~ 'kg a ' ~ ((p.weight_max|float)|round(0,'floor')|int) ~ 'kg' -%}
@@ -172,12 +167,9 @@
               <p class="lc-meta">
                 {{ caixa }}{% if caixa and pecas %}, {% endif %}{% if pecas %}{{ pecas }} peças por caixa{% endif %}
               </p>
-              <p class="lc-price">
-                {% if has_sale %}<s>{{ preco(p.price) }}</s> {% endif %}
-                {{ preco(effective) }} <span class="unit">/ {{ (p.unit or 'KG')|lower }}</span>
-              </p>
+              <p class="lc-quote">Preço sob consulta</p>
             </div>
-            <a class="lc-btn" href="/produto/{{ p.slug }}">Ver Produto</a>
+            <a class="lc-btn ver-produto-btn js-ver-produto" href="/produto/{{ p.slug }}" data-slug="{{ p.slug }}">Ver Produto</a>
           </article>
         {% endfor %}
       </div>

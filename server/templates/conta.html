@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% from "_macros.html" import brl, preco, preco_br with context %}
 
 {% block title %}{{ page_title if page_title else 'Minha conta | Friboi Online' }}{% endblock %}
 
@@ -14,7 +13,7 @@
   <div class="account-head">
     <div>
       <h1>Olá, {{ user.name.split(' ')[0] if user else 'cliente' }}</h1>
-      <p class="page-subtitle">Aqui ficam seus dados e o histórico de pedidos.</p>
+      <p class="page-subtitle">Aqui ficam seus dados e o histórico das suas cotações.</p>
     </div>
     <a class="btn-outline" href="/api/auth/logout" data-logout>Sair da conta</a>
   </div>
@@ -32,16 +31,15 @@
     </aside>
 
     <section class="account-card">
-      <h2>Histórico de pedidos</h2>
+      <h2>Histórico de cotações</h2>
       {% if _pedidos %}
         <div style="overflow-x:auto">
           <table class="orders-table">
             <thead>
               <tr>
-                <th>Pedido</th>
+                <th>Protocolo</th>
                 <th>Data</th>
                 <th>Itens</th>
-                <th>Total</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -54,8 +52,10 @@
                     {%- set _it = o.get('items', []) -%}
                     {{ _it|length }} {{ 'item' if _it|length == 1 else 'itens' }}
                   </td>
-                  <td class="strong">{{ preco(o.get('total', 0), true) }}</td>
-                  <td><span class="status-pill {{ (o.get('status') or 'pendente')|lower }}">{{ o.get('status') or 'pendente' }}</span></td>
+                  <td>
+                    {%- set _status = (o.get('status') or 'recebida')|lower -%}
+                    <span class="status-pill {{ _status }}">{{ _status|capitalize }}</span>
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -63,8 +63,8 @@
         </div>
       {% else %}
         <div class="empty-state">
-          <h2>Nenhum pedido ainda</h2>
-          <p>Quando você finalizar uma compra, ela aparece aqui.</p>
+          <h2>Nenhuma cotação ainda</h2>
+          <p>Quando você enviar uma solicitação de cotação, ela aparece aqui.</p>
           <a class="btn-outline" href="/">Ver produtos</a>
         </div>
       {% endif %}
