@@ -143,3 +143,73 @@ cd server && ./run.sh        # uvicorn em 127.0.0.1:8099
 2. Nenhum asset pode vir da internet em runtime — tudo local em `web/static` e `data/images`.
 3. Sem CDN externo obrigatório (Google Fonts, jquery): fontes e libs locais.
 4. Tabela de preços vem 100% do nosso SQLite, nunca do site original.
+
+---
+
+# ADENDO v2 — Sem preços + cotação com o representante
+
+Decisão do cliente: **a loja não exibe preço**. Todo produto é vendido por cotação
+com o representante do estado.
+
+## Regra dura
+
+Nenhum valor monetário em **nenhuma** página e em **nenhuma** resposta JSON pública.
+Some com `R$`, "Por R$...", "a partir de", subtotal, total, frete e desconto.
+
+## API — o que muda
+
+- `Product` (dict): **remover** `price`, `sale_price`, `effective_price`.
+  Continua existindo no banco (ordenação e relatórios), mas não sai na resposta.
+- `GET /api/cart` → `{token, count, items:[{product_id,name,slug,unit,qty,image_url}]}`
+  (sem `price`, sem `subtotal`, sem `subtotal` na raiz).
+- `POST /api/checkout` → descontinuado na UI; se chamado, grava pedido com
+  `status="cotacao"` e `total=0`.
+- **Novo** `POST /api/cotacao` → body:
+  `{nome, email, telefone, uf, cidade?, mensagem?, produto_id?, items?[{product_id,qty}], origem?}`
+  → **201** `{id, status:"recebida", uf, uf_nome, itens:[...], created_at}`
+  Validação: nome ≥ 3, e-mail válido, telefone ≥ 10 dígitos, UF em uma das 27.
+- **Novo** `GET /api/cotacao/ufs` → `[{sigla, nome}]` (27 UFs).
+
+## Banco
+
+```
+quote_requests(id PK, nome, email, telefone, uf, cidade, mensagem,
+               items_json TEXT, origem TEXT, status TEXT DEFAULT 'recebida',
+               created_at DATETIME)
+```
+
+## Páginas
+
+| Rota | Comportamento |
+|---|---|
+| `/` `/categoria/{slug}` `/busca` `/promocoes` | cards **sem preço**; botão `Ver Produto` abre o modal |
+| `/produto/{slug}` | sem bloco de preço; caixa "Preço sob consulta" + botão `Solicitar cotação` |
+| `/carrinho` | itens e quantidades, **sem valores**; botão `Solicitar cotação` → `/cotacao?carrinho=1` |
+| `/checkout` | **303 → `/cotacao?carrinho=1`** (mantido só como redirect) |
+| `/cotacao` | formulário (nome, e-mail, telefone, **UF**, cidade, mensagem) + resumo dos itens; sucesso = mensagem "Cotação enviada" |
+| `/conta` | histórico sem valores, mostrando status da cotação |
+
+## Modal (obrigatório no base.html)
+
+```html
+<div class="modal" id="modal-cotacao" hidden aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-cotacao-title">
+    ... título "Preço sob consulta" ...
+    <p>Os preços desta loja são negociados pelo <strong>representante do seu estado</strong>.</p>
+    <a class="btn-primary" data-modal-cotacao href="/cotacao?produto=SLUG">Solicitar cotação</a>
+    <a class="btn-ghost" data-modal-detalhes href="/produto/SLUG">Ver detalhes do produto</a>
+  </div>
+</div>
+```
+
+- Todo botão "Ver Produto"/"VER PRODUTO" vira `class="ver-produto-btn js-ver-produto"` com
+  `data-slug="{{ p.slug }}"` e `href="/produto/{{ p.slug }}"` (o `href` é o fallback sem JS).
+- JS (`app.js`): `preventDefault()` → abre o modal, preenche os dois links com o slug,
+  foca no título, prende o foco, fecha com ESC, clique fora e botão ✕.
+
+## Textos
+
+- Título do modal: `Preço sob consulta`
+- Corpo: `Os preços desta loja são definidos pelo representante do seu estado. Solicite uma cotação e receba a tabela atualizada, condições de entrega e prazos.`
+- CTA primário: `Solicitar cotação` · secundário: `Ver detalhes do produto`
+- PDP: `Preço sob consulta — fale com o representante do seu estado.`
